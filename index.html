@@ -1,1445 +1,1742 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexeShort - Monetized URL Shortener</title>
+    <title>NexeNews - Platform Berita Viral Indonesia</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.5/dist/quill.snow.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.5/dist/quill.js"></script>
+    
+    <!-- FAVICON -->
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    
+    <!-- ADS SCRIPTS -->
+    <!-- In-Page Push -->
+    <script>(function(s){s.dataset.zone='10380895',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    
+    <!-- Push Notification -->
+    <script src="https://3nbf4.com/act/files/tag.min.js?z=10381259" data-cfasync="false" async></script>
+    
+    <!-- Vignette -->
+    <script>(function(s){s.dataset.zone='10381513',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    
     <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --primary-gradient-reverse: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.36);
-            --text-primary: #f8f9fa;
-            --text-secondary: #c1c3c6;
-            --bg-dark: #0f172a;
-            --bg-darker: #020617;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --primary:#2563EB; --secondary:#7C3AED; --accent:#F59E0B; 
+            --white:#fff; --dark:#1E293B; --gray:#94A3B8; --light:#F8FAFC;
+            --success:#10B981; --danger:#EF4444; --warning:#F59E0B; --info:#3B82F6;
+            --radius:12px; --shadow:0 4px 20px rgba(0,0,0,0.1); --shadow-lg:0 10px 40px rgba(0,0,0,0.15);
+            --sidebar-width:280px; --header-height:70px;
+        }
+        body { font-family:'Poppins',sans-serif; color:var(--dark); background:var(--light); line-height:1.6; }
+        .container { max-width:1400px; margin:0 auto; padding:0 20px; }
+        .btn { border:none; border-radius:var(--radius); padding:12px 24px; font-weight:600; cursor:pointer; transition:0.3s; display:inline-flex; align-items:center; gap:8px; }
+        .btn-primary { background:var(--primary); color:var(--white); }
+        .btn-primary:hover { background:#1D4ED8; transform:translateY(-2px); box-shadow:var(--shadow); }
+        .btn-secondary { background:transparent; color:var(--primary); border:2px solid var(--primary); }
+        .btn-secondary:hover { background:var(--primary); color:white; }
+        .btn-success { background:var(--success); color:white; }
+        .btn-danger { background:var(--danger); color:white; }
+        .btn-warning { background:var(--warning); color:white; }
+        .btn-sm { padding:8px 16px; font-size:0.9rem; }
+        .btn-lg { padding:16px 32px; font-size:1.1rem; }
+        
+        /* HEADER */
+        .header { background:var(--white); box-shadow:0 2px 20px rgba(0,0,0,0.08); position:sticky; top:0; z-index:1000; height:var(--header-height); }
+        .header-container { display:flex; align-items:center; padding:0 20px; height:100%; }
+        .logo { display:flex; align-items:center; gap:12px; font-size:1.8rem; font-weight:800; color:var(--dark); text-decoration:none; }
+        .logo img { height:40px; width:auto; }
+        .logo-text { background:linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        
+        .search-container { flex:1; max-width:600px; margin:0 30px; position:relative; }
+        .search-box { width:100%; padding:14px 50px 14px 20px; border:2px solid #e2e8f0; border-radius:50px; font-size:1rem; transition:0.3s; }
+        .search-box:focus { border-color:var(--primary); outline:none; box-shadow:0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .search-icon { position:absolute; right:20px; top:50%; transform:translateY(-50%); color:var(--gray); font-size:1.2rem; }
+        .search-results { position:absolute; top:100%; left:0; right:0; background:white; border-radius:var(--radius); box-shadow:var(--shadow-lg); margin-top:10px; display:none; max-height:500px; overflow-y:auto; z-index:1000; }
+        .search-results.active { display:block; }
+        
+        .nav-actions { display:flex; align-items:center; gap:15px; }
+        .user-avatar { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; cursor:pointer; border:3px solid #e2e8f0; transition:0.3s; }
+        .user-avatar:hover { border-color:var(--primary); transform:scale(1.05); }
+        
+        /* POPUP PROFILE (DIBAGUSIN) */
+        .profile-popup { position:fixed; top:80px; right:20px; width:320px; background:white; border-radius:var(--radius); box-shadow:var(--shadow-lg); z-index:1000; display:none; animation:slideDown 0.3s ease; }
+        @keyframes slideDown {
+            from { transform:translateY(-20px); opacity:0; }
+            to { transform:translateY(0); opacity:1; }
+        }
+        .profile-popup.active { display:block; }
+        .profile-popup-header { padding:25px; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; border-radius:var(--radius) var(--radius) 0 0; }
+        .profile-popup-avatar { width:80px; height:80px; border-radius:50%; border:4px solid white; background:white; display:flex; align-items:center; justify-content:center; font-size:2.5rem; color:var(--primary); margin:0 auto 15px; }
+        .profile-popup-body { padding:20px; }
+        .profile-popup-info { text-align:center; margin-bottom:20px; }
+        .profile-popup-actions { display:flex; flex-direction:column; gap:10px; }
+        .profile-popup-btn { padding:12px; border:none; border-radius:var(--radius); background:#f8fafc; color:var(--dark); cursor:pointer; display:flex; align-items:center; gap:10px; transition:0.2s; }
+        .profile-popup-btn:hover { background:#e2e8f0; }
+        
+        /* ADS */
+        .ad-banner { background:#f8fafc; border:2px dashed #cbd5e1; border-radius:var(--radius); margin:20px 0; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; }
+        .ad-banner.horizontal { height:90px; }
+        .ad-banner.vertical { height:600px; width:160px; }
+        .ad-banner.medium { height:250px; width:300px; }
+        .ad-label { position:absolute; top:8px; right:8px; background:var(--primary); color:white; padding:3px 10px; border-radius:20px; font-size:0.7rem; z-index:1; }
+        
+        /* MAIN CONTENT */
+        .main-content { display:flex; margin-top:20px; gap:20px; }
+        .content-area { flex:1; min-width:0; }
+        .sidebar-left { width:160px; flex-shrink:0; }
+        .sidebar-right { width:300px; flex-shrink:0; }
+        
+        /* ARTICLE */
+        .article-header { margin-bottom:30px; }
+        .article-meta { display:flex; gap:15px; color:var(--gray); margin-bottom:15px; flex-wrap:wrap; }
+        .article-title { font-size:2.2rem; line-height:1.2; margin-bottom:15px; }
+        .article-image { width:100%; height:400px; object-fit:cover; border-radius:var(--radius); margin:20px 0; }
+        .article-content { font-size:1.1rem; line-height:1.8; position:relative; }
+        .article-content p { margin-bottom:20px; }
+        .article-content img { max-width:100%; height:auto; border-radius:var(--radius); margin:20px auto; display:block; }
+        
+        /* INLINE ADS DI ARTIKEL */
+        .inline-ad { margin:30px 0; text-align:center; }
+        
+        /* ACTION BUTTONS */
+        .article-actions { display:flex; gap:10px; margin:30px 0; flex-wrap:wrap; }
+        .action-btn { display:flex; align-items:center; gap:8px; padding:10px 20px; background:#f8fafc; border:none; border-radius:var(--radius); cursor:pointer; transition:0.2s; }
+        .action-btn:hover { background:#e2e8f0; }
+        .action-btn.liked { color:#EF4444; }
+        
+        /* COMMENTS */
+        .comments-section { margin-top:40px; }
+        .comment-form { background:#f8fafc; padding:20px; border-radius:var(--radius); margin-bottom:30px; }
+        .comment-input { width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius); margin-bottom:10px; resize:vertical; min-height:100px; }
+        .comment-list { margin-top:20px; }
+        .comment-item { background:white; padding:20px; border-radius:var(--radius); margin-bottom:15px; border:1px solid #e2e8f0; }
+        .comment-header { display:flex; justify-content:space-between; margin-bottom:10px; }
+        .comment-author { font-weight:600; display:flex; align-items:center; gap:10px; }
+        .comment-author-avatar { width:30px; height:30px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-size:0.9rem; }
+        .comment-time { font-size:0.85rem; color:var(--gray); }
+        .comment-actions { margin-top:15px; display:flex; gap:15px; }
+        .comment-reply { margin-left:40px; margin-top:15px; padding-left:20px; border-left:3px solid #e2e8f0; }
+        
+        /* ALGORITHM BADGE */
+        .trending-badge { background:linear-gradient(135deg, #FF6B35, #E55A2B); color:white; padding:5px 15px; border-radius:20px; font-size:0.8rem; font-weight:600; display:inline-block; margin-left:10px; }
+        .new-badge { background:var(--success); color:white; padding:5px 15px; border-radius:20px; font-size:0.8rem; font-weight:600; display:inline-block; margin-left:10px; }
+        
+        /* MODAL MONETIZATION */
+        .monetize-modal { background:linear-gradient(135deg, #FF6B35, #E55A2B); color:white; }
+        .monetize-modal .modal-content { background:white; color:var(--dark); }
+        .monetize-content { text-align:center; padding:30px; }
+        .monetize-icon { font-size:4rem; margin-bottom:20px; color:var(--warning); }
+        
+        /* ARTICLE CARD */
+        .article-card { background:white; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transition:0.3s; cursor:pointer; }
+        .article-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-lg); }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .sidebar-left { display:none; }
+            .sidebar-right { width:250px; }
+        }
+        @media (max-width: 992px) {
+            .sidebar-right { display:none; }
+            .search-container { display:none; }
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-darker);
-            color: var(--text-primary);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(103, 126, 234, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 20%);
-            z-index: -1;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Header */
-        header {
-            padding: 20px 0;
-            position: relative;
-            z-index: 10;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-decoration: none;
-        }
-        
-        .logo-icon {
-            font-size: 2.2rem;
-        }
-        
-        /* Main Layout */
-        .main-content {
-            display: flex;
-            gap: 30px;
-            padding: 30px 0;
-        }
-        
-        .content-area {
-            flex: 1;
-        }
-        
-        .sidebar {
-            width: 300px;
-            flex-shrink: 0;
-        }
-        
-        /* Glassmorphism Cards */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            box-shadow: var(--glass-shadow);
-            padding: 24px;
-            margin-bottom: 24px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-        }
-        
-        /* Form */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-        
-        .input-group {
-            display: flex;
-            gap: 10px;
-        }
-        
-        input {
-            flex: 1;
-            padding: 14px 18px;
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: var(--text-primary);
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-        }
-        
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 14px 28px;
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        /* Result Section */
-        .result-container {
-            margin-top: 30px;
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .result-container.active {
-            display: block;
-        }
-        
-        .short-url {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            word-break: break-all;
-        }
-        
-        .short-url-text {
-            flex: 1;
-            font-size: 18px;
-            font-weight: 500;
-            color: var(--success);
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .btn-copy, .btn-share {
-            flex: 1;
-            min-width: 120px;
-        }
-        
-        /* History */
-        .history-list {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-top: 20px;
-        }
-        
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            margin-bottom: 12px;
-            border-left: 4px solid #667eea;
-            transition: all 0.3s ease;
-        }
-        
-        .history-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-        }
-        
-        .history-info {
-            flex: 1;
-            overflow: hidden;
-        }
-        
-        .history-original {
-            font-size: 14px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 4px;
-        }
-        
-        .history-short {
-            font-size: 16px;
-            color: var(--success);
-            font-weight: 500;
-        }
-        
-        .history-stats {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        
-        .history-clicks {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        /* Stats */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .stat-card {
-            background: var(--primary-gradient);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            color: white;
-        }
-        
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        
-        .stat-label {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-        
-        /* Ads */
-        .ad-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        
-        .ad-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-align: center;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .ad-728x90 {
-            width: 728px;
-            height: 90px;
-        }
-        
-        .ad-468x60 {
-            width: 468px;
-            height: 60px;
-        }
-        
-        .ad-300x250 {
-            width: 300px;
-            height: 250px;
-        }
-        
-        .ad-160x600 {
-            width: 160px;
-            height: 600px;
-        }
-        
-        .ad-placeholder {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px dashed rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-        
-        .ad-placeholder i {
-            font-size: 24px;
-            margin-bottom: 10px;
-            opacity: 0.7;
-        }
-        
-        /* Premium Section */
-        .premium-card {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            text-align: center;
-            padding: 30px;
-            border-radius: 16px;
-            margin-top: 20px;
-        }
-        
-        .premium-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        
-        .premium-features {
-            list-style: none;
-            margin: 20px 0;
-            text-align: left;
-        }
-        
-        .premium-features li {
-            padding: 8px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .premium-features li i {
-            color: #10b981;
-        }
-        
-        .btn-premium {
-            background: white;
-            color: #d97706;
-            font-weight: 700;
-            padding: 16px 32px;
-            width: 100%;
-            margin-top: 20px;
-        }
-        
-        .btn-premium:hover {
-            background: rgba(255, 255, 255, 0.9);
-            color: #b45309;
-        }
-        
-        /* Notifications */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 16px 24px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.5s ease;
-        }
-        
-        .notification.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        
-        .notification-success {
-            border-left: 4px solid var(--success);
-        }
-        
-        .notification-error {
-            border-left: 4px solid var(--danger);
-        }
-        
-        .notification-info {
-            border-left: 4px solid #3b82f6;
-        }
-        
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 30px 0;
-            color: var(--text-secondary);
-            font-size: 14px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            margin-top: 40px;
-        }
-        
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 15px;
-        }
-        
-        .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .footer-links a:hover {
-            color: var(--text-primary);
-        }
-        
-        /* Mobile Responsive */
-        @media (max-width: 1024px) {
-            .main-content {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-            }
-            
-            .ad-160x600 {
-                display: none;
-            }
-            
-            .input-group {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-        }
-        
         @media (max-width: 768px) {
-            .ad-728x90, .ad-468x60 {
-                width: 100%;
-                max-width: 100%;
-            }
-            
-            .ad-728x90 .ad-placeholder {
-                width: 100%;
-                height: 90px;
-            }
-            
-            .ad-468x60 .ad-placeholder {
-                width: 100%;
-                height: 60px;
-            }
-            
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .history-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .history-stats {
-                align-self: flex-end;
-            }
-        }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease forwards;
-        }
-        
-        /* Loading */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Redirect Page */
-        .redirect-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .redirect-message {
-            max-width: 600px;
-            margin-bottom: 40px;
-        }
-        
-        .redirect-countdown {
-            font-size: 3rem;
-            font-weight: 700;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin: 30px 0;
-        }
-        
-        .redirect-ad {
-            margin: 40px 0;
+            .header-container { padding:0 10px; }
+            .logo-text { font-size:1.4rem; }
+            .article-title { font-size:1.8rem; }
+            .article-image { height:250px; }
+            .profile-popup { width:280px; right:10px; }
         }
     </style>
 </head>
 <body>
-    <!-- PropellerAds Scripts -->
-    <!-- Vignette -->
-    <script>
-        (function(s){
-            s.dataset.zone='10381513',
-            s.src='https://gizokraijaw.net/vignette.min.js'
-        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
-    </script>
-    
-    <!-- Push Notification 1 -->
-    <script src="https://3nbf4.com/act/files/tag.min.js?z=10381259" data-cfasync="false" async></script>
-    
-    <!-- Push Notification 2 -->
-    <script src="https://3nbf4.com/act/files/tag.min.js?z=10381292" data-cfasync="false" async></script>
-    
-    <!-- In-Page Push (will be triggered manually) -->
-    <script id="inpage-push-script" src="https://nap5k.com/tag.min.js?z=10380895" async></script>
-    
-    <!-- Popunder (will be triggered manually) -->
-    <script id="popunder-script" src="https://al5sm.com/tag.min.js?z=10380855" async></script>
-    
-    <!-- Main Content -->
-    <div id="app">
-        <!-- Header -->
-        <header>
-            <div class="container">
-                <a href="#" class="logo">
-                    <i class="fas fa-link logo-icon"></i>
-                    <span>NexeShort</span>
-                </a>
-            </div>
-        </header>
-        
-        <!-- Top Ad - 728x90 -->
-        <div class="container">
-            <div class="ad-label">Advertisement</div>
-            <div class="ad-container ad-728x90">
-                <div class="ad-placeholder" id="ad-728x90">
-                    <i class="fas fa-ad"></i>
-                    <span>728×90 Banner Ad</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Main Content -->
-        <div class="container main-content">
-            <!-- Content Area -->
-            <div class="content-area">
-                <!-- Hero Section -->
-                <div class="glass-card fade-in">
-                    <h1 style="font-size: 2.5rem; margin-bottom: 10px; background: var(--primary-gradient); -webkit-background-clip: text; background-clip: text; color: transparent;">
-                        Shorten Links, Maximize Revenue
-                    </h1>
-                    <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 30px;">
-                        Create short URLs instantly. No registration required. Permanent links with detailed analytics.
-                    </p>
-                    
-                    <!-- URL Shortener Form -->
-                    <div class="form-group">
-                        <label for="url-input"><i class="fas fa-link"></i> Enter your long URL</label>
-                        <div class="input-group">
-                            <input type="url" id="url-input" placeholder="https://example.com/very-long-url-path" required>
-                            <button id="shorten-btn" class="btn">
-                                <i class="fas fa-magic"></i> Shorten URL
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Middle Ad - 468x60 -->
-                    <div class="ad-label">Advertisement</div>
-                    <div class="ad-container ad-468x60">
-                        <div class="ad-placeholder" id="ad-468x60">
-                            <i class="fas fa-ad"></i>
-                            <span>468×60 Banner Ad</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Result Section -->
-                    <div id="result-container" class="result-container">
-                        <div class="short-url">
-                            <i class="fas fa-link" style="color: #667eea;"></i>
-                            <div class="short-url-text" id="short-url-text"></div>
-                        </div>
-                        <div class="action-buttons">
-                            <button id="copy-btn" class="btn btn-copy">
-                                <i class="far fa-copy"></i> Copy Link
-                            </button>
-                            <button id="share-btn" class="btn btn-secondary btn-share">
-                                <i class="fas fa-share-alt"></i> Share
-                            </button>
-                            <button id="new-btn" class="btn btn-secondary">
-                                <i class="fas fa-plus"></i> New Link
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Stats Section -->
-                <div class="glass-card fade-in">
-                    <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-chart-line"></i> Your Statistics
-                    </h2>
-                    <div class="stats-container">
-                        <div class="stat-card">
-                            <div class="stat-value" id="total-links">0</div>
-                            <div class="stat-label">Total Links Created</div>
-                        </div>
-                        <div class="stat-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                            <div class="stat-value" id="total-clicks">0</div>
-                            <div class="stat-label">Total Clicks</div>
-                        </div>
-                        <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
-                            <div class="stat-value" id="today-clicks">0</div>
-                            <div class="stat-label">Today's Clicks</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- History Section -->
-                <div class="glass-card fade-in">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h2 style="display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-history"></i> Recent Links
-                        </h2>
-                        <button id="clear-history" class="btn btn-secondary" style="padding: 10px 20px;">
-                            <i class="fas fa-trash"></i> Clear
-                        </button>
-                    </div>
-                    <div class="history-list" id="history-list">
-                        <!-- History items will be inserted here -->
-                        <div class="history-empty" style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                            <i class="fas fa-link" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
-                            <p>No links created yet. Create your first short URL above!</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Bottom Ad - 300x250 -->
-                <div class="ad-label">Advertisement</div>
-                <div class="ad-container ad-300x250">
-                    <div class="ad-placeholder" id="ad-300x250">
-                        <i class="fas fa-ad"></i>
-                        <span>300×250 Banner Ad</span>
-                    </div>
-                </div>
+    <!-- ==================== HEADER ==================== -->
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo" onclick="showHomePage(); return false;">
+                <img src="logo.png" alt="NexeNews Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                <i class="fas fa-newspaper" style="display:none; font-size:2rem; color:var(--primary);"></i>
+                <span class="logo-text">NexeNews</span>
+            </a>
+            
+            <div class="search-container">
+                <input type="text" class="search-box" id="searchBox" placeholder="Cari artikel...">
+                <i class="fas fa-search search-icon"></i>
+                <div class="search-results" id="searchResults"></div>
             </div>
             
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <!-- Sidebar Ad - 160x600 -->
-                <div class="ad-label">Advertisement</div>
-                <div class="ad-container ad-160x600">
-                    <div class="ad-placeholder" id="ad-160x600">
-                        <i class="fas fa-ad"></i>
-                        <span>160×600 Banner Ad</span>
-                    </div>
-                </div>
-                
-                <!-- Premium Section -->
-                <div class="premium-card glass-card">
-                    <div class="premium-title">
-                        <i class="fas fa-crown"></i> Premium Features
-                    </div>
-                    <p>Unlock advanced features and remove ads!</p>
-                    
-                    <ul class="premium-features">
-                        <li><i class="fas fa-check-circle"></i> No ads on your short links</li>
-                        <li><i class="fas fa-check-circle"></i> Advanced analytics dashboard</li>
-                        <li><i class="fas fa-check-circle"></i> Custom domain support</li>
-                        <li><i class="fas fa-check-circle"></i> Bulk URL shortening</li>
-                        <li><i class="fas fa-check-circle"></i> Priority support</li>
-                    </ul>
-                    
-                    <a href="https://otieu.com/4/10381160" target="_blank" class="btn btn-premium">
-                        <i class="fas fa-rocket"></i> Upgrade to Premium
-                    </a>
-                </div>
-                
-                <!-- Info Section -->
-                <div class="glass-card">
-                    <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-info-circle"></i> How It Works
-                    </h3>
-                    <div style="color: var(--text-secondary); line-height: 1.6;">
-                        <p style="margin-bottom: 15px;">
-                            <strong>1.</strong> Paste your long URL in the input field
-                        </p>
-                        <p style="margin-bottom: 15px;">
-                            <strong>2.</strong> Click "Shorten URL" to generate a short link
-                        </p>
-                        <p style="margin-bottom: 15px;">
-                            <strong>3.</strong> Copy and share your short link anywhere
-                        </p>
-                        <p>
-                            <strong>4.</strong> Track clicks and analytics in your history
-                        </p>
-                    </div>
-                </div>
+            <div class="nav-actions">
+                <button class="btn btn-primary" id="writeArticleBtn" style="display:none;">
+                    <i class="fas fa-pen"></i> Buat Artikel
+                </button>
+                <div class="user-avatar" id="userAvatar">?</div>
             </div>
         </div>
-        
-        <!-- Footer -->
-        <footer>
-            <div class="container">
-                <p>© 2023 NexeShort. All rights reserved.</p>
-                <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.7;">
-                    Monetized URL Shortener - Maximizing revenue through advanced advertising
-                </p>
-                <div class="footer-links">
-                    <a href="#"><i class="fas fa-question-circle"></i> Help</a>
-                    <a href="#"><i class="fas fa-shield-alt"></i> Privacy</a>
-                    <a href="#"><i class="fas fa-file-contract"></i> Terms</a>
-                    <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+    </header>
+    
+    <!-- ==================== POPUP PROFILE ==================== -->
+    <div class="profile-popup" id="profilePopup">
+        <div class="profile-popup-header">
+            <div class="profile-popup-avatar" id="popupAvatar">U</div>
+            <h3 id="popupUsername">Username</h3>
+            <p id="popupEmail" style="opacity:0.8; font-size:0.9rem;">user@email.com</p>
+        </div>
+        <div class="profile-popup-body">
+            <div class="profile-popup-info">
+                <div style="display:flex; gap:30px; justify-content:center; margin-bottom:20px;">
+                    <div style="text-align:center;">
+                        <div style="font-size:1.5rem; font-weight:700;" id="popupArticles">0</div>
+                        <div style="font-size:0.85rem; color:var(--gray);">Artikel</div>
+                    </div>
+                    <div style="text-align:center;">
+                        <div style="font-size:1.5rem; font-weight:700;" id="popupLikes">0</div>
+                        <div style="font-size:0.85rem; color:var(--gray);">Likes</div>
+                    </div>
                 </div>
             </div>
-        </footer>
-        
-        <!-- Notification -->
-        <div id="notification" class="notification">
-            <i class="fas fa-check-circle" id="notification-icon"></i>
-            <div>
-                <div id="notification-title">Success</div>
-                <div id="notification-message">Operation completed successfully</div>
+            <div class="profile-popup-actions">
+                <button class="profile-popup-btn" id="popupProfileBtn">
+                    <i class="fas fa-user"></i> Profil Saya
+                </button>
+                <button class="profile-popup-btn" id="popupMyArticlesBtn">
+                    <i class="fas fa-newspaper"></i> Artikel Saya
+                </button>
+                <button class="profile-popup-btn" id="popupAdminBtn" style="display:none;">
+                    <i class="fas fa-crown"></i> Admin Panel
+                </button>
+                <button class="profile-popup-btn" id="popupLogoutBtn" style="color:var(--danger);">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </div>
     </div>
     
-    <!-- Redirect Page (hidden by default) -->
-    <div id="redirect-page" style="display: none;">
-        <div class="redirect-container">
-            <div class="glass-card" style="max-width: 800px;">
-                <h1 style="font-size: 2.5rem; margin-bottom: 20px;">
-                    <i class="fas fa-external-link-alt"></i> Redirecting...
-                </h1>
-                <div class="redirect-message">
-                    <p>You are being redirected to the destination URL. Please wait while we verify your request.</p>
-                    <p style="margin-top: 15px; color: var(--text-secondary);">
-                        This page is supported by advertisements. Thank you for your patience.
-                    </p>
+    <!-- ==================== MONETIZATION MODAL ==================== -->
+    <div class="modal" id="monetizeModal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header" style="background:linear-gradient(135deg, #FF6B35, #E55A2B); color:white;">
+                <h2><i class="fas fa-coins"></i> Dukung Kami!</h2>
+                <button class="modal-close" id="closeMonetizeModal">&times;</button>
+            </div>
+            <div class="monetize-content">
+                <div class="monetize-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <h3>Butuh Dukunganmu!</h3>
+                <p style="margin:20px 0;">Klik tombol di bawah untuk mendukung platform ini tetap gratis untuk semua orang!</p>
+                <a href="https://otieu.com/4/10381160" target="_blank" class="btn btn-warning btn-lg" style="margin-bottom:20px;">
+                    <i class="fas fa-external-link-alt"></i> Klik untuk Support
+                </a>
+                <p style="font-size:0.9rem; color:var(--gray);">Setelah klik, silahkan tutup tab yang terbuka dan kembali ke halaman ini</p>
+                <button class="btn btn-success" id="continueAfterMonetize" style="margin-top:20px;">
+                    <i class="fas fa-check"></i> Saya Sudah Klik
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ==================== CREATE ARTICLE MODAL ==================== -->
+    <div class="modal" id="createArticleModal">
+        <div class="modal-content" style="max-width:800px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> Buat Artikel Baru</h2>
+                <button class="modal-close" id="closeCreateModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="display:block; margin-bottom:8px; font-weight:500;">Judul Artikel</label>
+                    <input type="text" id="articleTitleInput" placeholder="Judul yang menarik..." style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius);">
                 </div>
                 
-                <div class="redirect-countdown" id="countdown">5</div>
-                
-                <div class="redirect-ad">
-                    <div class="ad-label">Advertisement</div>
-                    <div class="ad-container ad-300x250">
-                        <div class="ad-placeholder">
-                            <i class="fas fa-ad"></i>
-                            <span>Redirect Ad</span>
-                        </div>
-                    </div>
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="display:block; margin-bottom:8px; font-weight:500;">Kategori</label>
+                    <select id="articleCategoryInput" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius);">
+                        <option value="misteri">🔮 Misteri & Horor</option>
+                        <option value="fakta">💡 Fakta Unik</option>
+                        <option value="sejarah">🏛️ Sejarah</option>
+                        <option value="teknologi">💻 Teknologi</option>
+                        <option value="viral">🔥 Viral</option>
+                        <option value="hiburan">🎬 Hiburan</option>
+                        <option value="olahraga">⚽ Olahraga</option>
+                    </select>
                 </div>
                 
-                <div style="margin-top: 30px;">
-                    <p id="destination-url" style="word-break: break-all; color: var(--text-secondary);"></p>
-                    <button id="cancel-redirect" class="btn btn-secondary" style="margin-top: 20px;">
-                        <i class="fas fa-times"></i> Cancel Redirect
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="display:block; margin-bottom:8px; font-weight:500;">Gambar Utama (URL)</label>
+                    <input type="text" id="articleImageInput" placeholder="https://example.com/gambar.jpg" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius);">
+                </div>
+                
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="display:block; margin-bottom:8px; font-weight:500;">Konten Artikel</label>
+                    <div id="articleEditor" style="height:300px;"></div>
+                </div>
+                
+                <div class="form-group" style="margin-bottom:25px;">
+                    <label style="display:block; margin-bottom:8px; font-weight:500;">Slug URL (otomatis dari judul)</label>
+                    <input type="text" id="articleSlugInput" readonly style="width:100%; padding:12px; background:#f8fafc; border:2px solid #e2e8f0; border-radius:var(--radius); color:var(--gray);">
+                </div>
+                
+                <div style="text-align:center; padding:20px; background:#f8fafc; border-radius:var(--radius); margin-bottom:20px;">
+                    <h4><i class="fas fa-exclamation-circle"></i> Penting!</h4>
+                    <p style="margin:10px 0;">Sebelum membuat artikel, kamu harus mendukung platform ini terlebih dahulu</p>
+                    <button class="btn btn-warning" id="monetizeBeforeCreate">
+                        <i class="fas fa-hand-holding-usd"></i> Klik untuk Support
                     </button>
                 </div>
+                
+                <button class="btn btn-success" id="publishArticleBtn" style="width:100%;" disabled>
+                    <i class="fas fa-paper-plane"></i> Terbitkan Artikel
+                </button>
             </div>
         </div>
     </div>
-
-    <!-- Adsterra Ads Scripts -->
-    <script>
-        // Adsterra 728x90 Banner
-        (function() {
-            try {
-                atOptions = {
-                    'key' : '90a2a0e622b40caa605de8a06516879d',
-                    'format' : 'iframe',
-                    'height' : 90,
-                    'width' : 728,
-                    'params' : {}
-                };
-                document.write('<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/90a2a0e622b40caa605de8a06516879d/invoke.js"></scr' + 'ipt>');
-            } catch(e) {
-                console.log("Adsterra 728x90 failed to load");
-            }
-        })();
-    </script>
     
-    <script>
-        // Adsterra 468x60 Banner
-        (function() {
-            try {
-                atOptions = {
-                    'key' : '90a2a0e622b40caa605de8a06516879d',
-                    'format' : 'iframe',
-                    'height' : 60,
-                    'width' : 468,
-                    'params' : {}
-                };
-                document.write('<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/90a2a0e622b40caa605de8a06516879d/invoke.js"></scr' + 'ipt>');
-            } catch(e) {
-                console.log("Adsterra 468x60 failed to load");
-            }
-        })();
-    </script>
-    
-    <script>
-        // Adsterra 300x250 Banner
-        (function() {
-            try {
-                atOptions = {
-                    'key' : 'df392223eb071195b98c897f97cb395d',
-                    'format' : 'iframe',
-                    'height' : 250,
-                    'width' : 300,
-                    'params' : {}
-                };
-                document.write('<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.js"></scr' + 'ipt>');
-            } catch(e) {
-                console.log("Adsterra 300x250 failed to load");
-            }
-        })();
-    </script>
-    
-    <script>
-        // Adsterra 160x600 Banner
-        (function() {
-            try {
-                atOptions = {
-                    'key' : '5e0812e16f5b229c05c8d853fc6f9253',
-                    'format' : 'iframe',
-                    'height' : 600,
-                    'width' : 160,
-                    'params' : {}
-                };
-                document.write('<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/5e0812e16f5b229c05c8d853fc6f9253/invoke.js"></scr' + 'ipt>');
-            } catch(e) {
-                console.log("Adsterra 160x600 failed to load");
-            }
-        })();
-    </script>
-
-    <!-- Main JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize app
-            const app = {
-                // Storage keys
-                STORAGE_KEYS: {
-                    LINKS: 'nexeshort_links',
-                    STATS: 'nexeshort_stats',
-                    CLICKS: 'nexeshort_clicks'
-                },
-                
-                // DOM Elements
-                elements: {
-                    urlInput: document.getElementById('url-input'),
-                    shortenBtn: document.getElementById('shorten-btn'),
-                    resultContainer: document.getElementById('result-container'),
-                    shortUrlText: document.getElementById('short-url-text'),
-                    copyBtn: document.getElementById('copy-btn'),
-                    shareBtn: document.getElementById('share-btn'),
-                    newBtn: document.getElementById('new-btn'),
-                    historyList: document.getElementById('history-list'),
-                    clearHistory: document.getElementById('clear-history'),
-                    totalLinks: document.getElementById('total-links'),
-                    totalClicks: document.getElementById('total-clicks'),
-                    todayClicks: document.getElementById('today-clicks'),
-                    notification: document.getElementById('notification'),
-                    notificationIcon: document.getElementById('notification-icon'),
-                    notificationTitle: document.getElementById('notification-title'),
-                    notificationMessage: document.getElementById('notification-message'),
-                    redirectPage: document.getElementById('redirect-page'),
-                    countdown: document.getElementById('countdown'),
-                    destinationUrl: document.getElementById('destination-url'),
-                    cancelRedirect: document.getElementById('cancel-redirect')
-                },
-                
-                // State
-                state: {
-                    links: [],
-                    stats: {
-                        totalLinks: 0,
-                        totalClicks: 0,
-                        todayClicks: 0
-                    },
-                    linkCount: 0,
-                    currentShortCode: null
-                },
-                
-                // Initialize
-                init() {
-                    this.loadData();
-                    this.setupEventListeners();
-                    this.updateStatsDisplay();
-                    this.renderHistory();
-                    this.handleRouting();
-                    
-                    // Load ads with delay for better UX
-                    setTimeout(() => this.loadAds(), 1000);
-                },
-                
-                // Load data from localStorage
-                loadData() {
-                    // Load links
-                    const savedLinks = localStorage.getItem(this.STORAGE_KEYS.LINKS);
-                    if (savedLinks) {
-                        this.state.links = JSON.parse(savedLinks);
-                    }
-                    
-                    // Load stats
-                    const savedStats = localStorage.getItem(this.STORAGE_KEYS.STATS);
-                    if (savedStats) {
-                        this.state.stats = JSON.parse(savedStats);
-                    } else {
-                        // Initialize stats
-                        this.state.stats = {
-                            totalLinks: this.state.links.length,
-                            totalClicks: this.state.links.reduce((sum, link) => sum + (link.clicks || 0), 0),
-                            todayClicks: 0
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <div class="container main-content">
+        <!-- LEFT SIDEBAR ADS -->
+        <aside class="sidebar-left">
+            <div class="ad-banner vertical">
+                <span class="ad-label">IKLAN</span>
+                <script>
+                    atOptions = {
+                        'key' : '5e0812e16f5b229c05c8d853fc6f9253',
+                        'format' : 'iframe',
+                        'height' : 600,
+                        'width' : 160,
+                        'params' : {}
+                    };
+                </script>
+                <script src="https://www.highperformanceformat.com/5e0812e16f5b229c05c8d853fc6f9253/invoke.js"></script>
+            </div>
+        </aside>
+        
+        <!-- MAIN CONTENT AREA -->
+        <main class="content-area">
+            <!-- HOME PAGE -->
+            <div id="homePage">
+                <!-- TOP ADS -->
+                <div class="ad-banner horizontal">
+                    <span class="ad-label">IKLAN</span>
+                    <script>
+                        atOptions = {
+                            'key' : '7d3f7dcf6c27eb36646280d85dba51ed',
+                            'format' : 'iframe',
+                            'height' : 90,
+                            'width' : 728,
+                            'params' : {}
                         };
-                    }
-                    
-                    // Update today's clicks
-                    this.updateTodayClicks();
-                },
+                    </script>
+                    <script src="https://www.highperformanceformat.com/7d3f7dcf6c27eb36646280d85dba51ed/invoke.js"></script>
+                </div>
                 
-                // Update today's clicks
-                updateTodayClicks() {
-                    const today = new Date().toDateString();
-                    const todayClicks = this.state.links.reduce((sum, link) => {
-                        if (link.lastClickDate === today) {
-                            return sum + (link.todayClicks || 0);
-                        }
-                        return sum;
-                    }, 0);
-                    
-                    this.state.stats.todayClicks = todayClicks;
-                    this.saveStats();
-                },
+                <!-- TRENDING ARTICLES -->
+                <section style="margin:30px 0;">
+                    <h2 style="margin-bottom:20px; color:var(--primary); display:flex; align-items:center; gap:10px;">
+                        <i class="fas fa-fire"></i> Trending Viral
+                        <span style="font-size:0.9rem; color:var(--gray); font-weight:normal;">(Algoritma: Views + Likes + Comments)</span>
+                    </h2>
+                    <div id="trendingArticles" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:25px;">
+                        <!-- Trending articles loaded here -->
+                    </div>
+                </section>
                 
-                // Save data to localStorage
-                saveData() {
-                    localStorage.setItem(this.STORAGE_KEYS.LINKS, JSON.stringify(this.state.links));
-                    this.saveStats();
-                },
-                
-                // Save stats to localStorage
-                saveStats() {
-                    localStorage.setItem(this.STORAGE_KEYS.STATS, JSON.stringify(this.state.stats));
-                },
-                
-                // Setup event listeners
-                setupEventListeners() {
-                    // Shorten button
-                    this.elements.shortenBtn.addEventListener('click', () => this.shortenUrl());
-                    
-                    // Enter key in input
-                    this.elements.urlInput.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter') {
-                            this.shortenUrl();
-                        }
-                    });
-                    
-                    // Copy button
-                    this.elements.copyBtn.addEventListener('click', () => this.copyShortUrl());
-                    
-                    // Share button
-                    this.elements.shareBtn.addEventListener('click', () => this.shareShortUrl());
-                    
-                    // New button
-                    this.elements.newBtn.addEventListener('click', () => this.resetForm());
-                    
-                    // Clear history
-                    this.elements.clearHistory.addEventListener('click', () => this.clearHistory());
-                    
-                    // Cancel redirect
-                    this.elements.cancelRedirect.addEventListener('click', () => this.cancelRedirect());
-                },
-                
-                // Generate short code
-                generateShortCode() {
-                    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                    let result = '';
-                    for (let i = 0; i < 6; i++) {
-                        result += characters.charAt(Math.floor(Math.random() * characters.length));
-                    }
-                    
-                    // Check for duplicates
-                    const existing = this.state.links.find(link => link.shortCode === result);
-                    if (existing) {
-                        return this.generateShortCode(); // Recursive if duplicate
-                    }
-                    
-                    return result;
-                },
-                
-                // Shorten URL
-                shortenUrl() {
-                    const urlInput = this.elements.urlInput.value.trim();
-                    
-                    // Validate URL
-                    if (!urlInput) {
-                        this.showNotification('Error', 'Please enter a URL', 'error');
-                        return;
-                    }
-                    
-                    // Add https:// if missing
-                    let url = urlInput;
-                    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                        url = 'https://' + url;
-                    }
-                    
-                    // Validate URL format
-                    try {
-                        new URL(url);
-                    } catch (e) {
-                        this.showNotification('Error', 'Please enter a valid URL', 'error');
-                        return;
-                    }
-                    
-                    // Show loading state
-                    const originalText = this.elements.shortenBtn.innerHTML;
-                    this.elements.shortenBtn.innerHTML = '<div class="loading"></div> Shortening...';
-                    this.elements.shortenBtn.disabled = true;
-                    
-                    // Simulate API delay
-                    setTimeout(() => {
-                        // Generate short code
-                        const shortCode = this.generateShortCode();
-                        const shortUrl = `${window.location.origin}/${shortCode}`;
-                        
-                        // Create link object
-                        const link = {
-                            id: Date.now(),
-                            originalUrl: url,
-                            shortCode: shortCode,
-                            shortUrl: shortUrl,
-                            clicks: 0,
-                            todayClicks: 0,
-                            createdAt: new Date().toISOString(),
-                            lastClickDate: null
-                        };
-                        
-                        // Add to state
-                        this.state.links.unshift(link);
-                        this.state.stats.totalLinks++;
-                        this.state.linkCount++;
-                        
-                        // Save to localStorage
-                        this.saveData();
-                        
-                        // Update UI
-                        this.elements.shortUrlText.textContent = shortUrl;
-                        this.elements.resultContainer.classList.add('active');
-                        this.elements.urlInput.value = '';
-                        
-                        // Reset button
-                        this.elements.shortenBtn.innerHTML = originalText;
-                        this.elements.shortenBtn.disabled = false;
-                        
-                        // Update stats and history
-                        this.updateStatsDisplay();
-                        this.renderHistory();
-                        
-                        // Show success notification
-                        this.showNotification('Success', 'URL shortened successfully!', 'success');
-                        
-                        // Increment link count for ad triggers
-                        this.incrementLinkCount();
-                        
-                        // Trigger in-page push ad after 3 links
-                        if (this.state.linkCount >= 3) {
-                            this.triggerInPagePush();
-                        }
-                        
-                        // Scroll to result
-                        this.elements.resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        
-                    }, 800);
-                },
-                
-                // Increment link count for ad triggers
-                incrementLinkCount() {
-                    this.state.linkCount = (this.state.linkCount || 0) + 1;
-                },
-                
-                // Copy short URL to clipboard
-                copyShortUrl() {
-                    const shortUrl = this.elements.shortUrlText.textContent;
-                    
-                    navigator.clipboard.writeText(shortUrl).then(() => {
-                        this.showNotification('Copied!', 'Short URL copied to clipboard', 'success');
-                        
-                        // Trigger popunder ad after copy
-                        this.triggerPopunder();
-                        
-                    }).catch(err => {
-                        console.error('Failed to copy: ', err);
-                        this.showNotification('Error', 'Failed to copy to clipboard', 'error');
-                    });
-                },
-                
-                // Share short URL
-                shareShortUrl() {
-                    const shortUrl = this.elements.shortUrlText.textContent;
-                    
-                    if (navigator.share) {
-                        navigator.share({
-                            title: 'Check out this short URL',
-                            text: 'I created a short URL using NexeShort',
-                            url: shortUrl
-                        }).then(() => {
-                            this.showNotification('Shared!', 'URL shared successfully', 'success');
-                        }).catch(err => {
-                            console.error('Error sharing:', err);
-                            this.showNotification('Error', 'Failed to share URL', 'error');
-                        });
-                    } else {
-                        // Fallback to copying
-                        this.copyShortUrl();
-                    }
-                },
-                
-                // Reset form
-                resetForm() {
-                    this.elements.resultContainer.classList.remove('active');
-                    this.elements.urlInput.focus();
-                },
-                
-                // Clear history
-                clearHistory() {
-                    if (confirm('Are you sure you want to clear all history? This cannot be undone.')) {
-                        this.state.links = [];
-                        this.state.stats.totalLinks = 0;
-                        this.state.stats.totalClicks = 0;
-                        this.state.stats.todayClicks = 0;
-                        this.saveData();
-                        this.renderHistory();
-                        this.updateStatsDisplay();
-                        this.showNotification('Cleared', 'All history cleared', 'info');
-                    }
-                },
-                
-                // Update stats display
-                updateStatsDisplay() {
-                    this.elements.totalLinks.textContent = this.state.stats.totalLinks;
-                    this.elements.totalClicks.textContent = this.state.stats.totalClicks;
-                    this.elements.todayClicks.textContent = this.state.stats.todayClicks;
-                },
-                
-                // Render history list
-                renderHistory() {
-                    const historyList = this.elements.historyList;
-                    
-                    if (this.state.links.length === 0) {
-                        historyList.innerHTML = `
-                            <div class="history-empty" style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                                <i class="fas fa-link" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
-                                <p>No links created yet. Create your first short URL above!</p>
+                <!-- NEWEST ARTICLES -->
+                <section style="margin:40px 0;">
+                    <h2 style="margin-bottom:20px; color:var(--primary); display:flex; align-items:center; gap:10px;">
+                        <i class="fas fa-clock"></i> Terbaru
+                    </h2>
+                    <div id="newestArticles" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:25px;">
+                        <!-- Newest articles loaded here -->
+                    </div>
+                </section>
+            </div>
+            
+            <!-- ARTICLE READING PAGE -->
+            <div id="articlePage" style="display:none;">
+                <article>
+                    <div class="article-header">
+                        <div class="article-meta">
+                            <span><i class="far fa-calendar"></i> <span id="articleDate"></span></span>
+                            <span><i class="far fa-eye"></i> <span id="articleViews">0</span> views</span>
+                            <span><i class="fas fa-heart"></i> <span id="articleLikes">0</span> likes</span>
+                            <span><i class="fas fa-comment"></i> <span id="articleComments">0</span> komentar</span>
+                        </div>
+                        <h1 class="article-title" id="articleTitle"></h1>
+                        <div style="display:flex; align-items:center; gap:15px; margin-top:15px;">
+                            <div id="authorAvatar" style="width:50px; height:50px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.2rem;"></div>
+                            <div>
+                                <div style="font-weight:600;" id="authorName"></div>
+                                <div style="font-size:0.9rem; color:var(--gray);" id="articleTimestamp"></div>
                             </div>
-                        `;
-                        return;
-                    }
+                        </div>
+                    </div>
                     
-                    let html = '';
-                    this.state.links.forEach(link => {
-                        const displayUrl = link.originalUrl.length > 50 
-                            ? link.originalUrl.substring(0, 50) + '...' 
-                            : link.originalUrl;
+                    <img id="articleImage" class="article-image" alt="Article Image">
+                    
+                    <div class="article-content" id="articleContent">
+                        <!-- Content loaded here -->
+                    </div>
+                    
+                    <!-- INLINE ADS DI TENGAH ARTIKEL -->
+                    <div class="inline-ad">
+                        <div class="ad-banner medium" style="margin:0 auto;">
+                            <span class="ad-label">IKLAN</span>
+                            <script>
+                                atOptions = {
+                                    'key' : 'df392223eb071195b98c897f97cb395d',
+                                    'format' : 'iframe',
+                                    'height' : 250,
+                                    'width' : 300,
+                                    'params' : {}
+                                };
+                            </script>
+                            <script src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.js"></script>
+                        </div>
+                    </div>
+                    
+                    <!-- ACTION BUTTONS -->
+                    <div class="article-actions">
+                        <button class="action-btn" id="likeArticleBtn">
+                            <i class="far fa-heart"></i> <span id="likeText">Suka</span>
+                        </button>
+                        <button class="action-btn" id="shareArticleBtn">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                        <button class="btn btn-primary" id="readMoreBtn" style="margin-left:auto;">
+                            <i class="fas fa-book"></i> Baca Juga
+                        </button>
+                    </div>
+                    
+                    <!-- COMMENTS SECTION -->
+                    <div class="comments-section">
+                        <h3 style="margin-bottom:20px;"><i class="fas fa-comments"></i> Komentar (<span id="commentCount">0</span>)</h3>
                         
-                        html += `
-                            <div class="history-item" data-id="${link.id}">
-                                <div class="history-info">
-                                    <div class="history-original">${displayUrl}</div>
-                                    <div class="history-short">${link.shortUrl}</div>
-                                </div>
-                                <div class="history-stats">
-                                    <div class="history-clicks">
-                                        <i class="fas fa-mouse-pointer"></i>
-                                        <span>${link.clicks || 0}</span>
+                        <!-- COMMENT FORM -->
+                        <div class="comment-form" id="commentForm" style="display:none;">
+                            <textarea class="comment-input" id="commentInput" placeholder="Tulis komentarmu..."></textarea>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <button class="btn btn-primary" id="submitCommentBtn">
+                                    <i class="fas fa-paper-plane"></i> Kirim Komentar
+                                </button>
+                                <span style="font-size:0.85rem; color:var(--gray);">Max 500 karakter</span>
+                            </div>
+                        </div>
+                        <div id="loginToComment" style="text-align:center; padding:30px; background:#f8fafc; border-radius:var(--radius);">
+                            <p style="margin-bottom:15px;">Login untuk menambahkan komentar</p>
+                            <button class="btn btn-primary" id="loginForCommentBtn">
+                                <i class="fas fa-sign-in-alt"></i> Login Sekarang
+                            </button>
+                        </div>
+                        
+                        <!-- COMMENTS LIST -->
+                        <div class="comment-list" id="commentList"></div>
+                    </div>
+                </article>
+            </div>
+            
+            <!-- PROFILE PAGE -->
+            <div id="profilePage" style="display:none;">
+                <div style="max-width:800px; margin:0 auto;">
+                    <div style="background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; padding:40px; border-radius:var(--radius); margin-bottom:30px;">
+                        <div style="display:flex; align-items:center; gap:30px; flex-wrap:wrap;">
+                            <div id="profileBigAvatar" style="width:120px; height:120px; border-radius:50%; border:5px solid white; background:white; display:flex; align-items:center; justify-content:center; font-size:3rem; color:var(--primary);"></div>
+                            <div style="flex:1;">
+                                <h1 id="profileBigUsername" style="font-size:2.5rem; margin-bottom:10px;"></h1>
+                                <p id="profileBigEmail" style="opacity:0.9; margin-bottom:20px;"></p>
+                                <div style="display:flex; gap:30px;">
+                                    <div style="text-align:center;">
+                                        <div style="font-size:2rem; font-weight:700;" id="profileBigArticles">0</div>
+                                        <div>Artikel</div>
+                                    </div>
+                                    <div style="text-align:center;">
+                                        <div style="font-size:2rem; font-weight:700;" id="profileBigLikes">0</div>
+                                        <div>Likes</div>
+                                    </div>
+                                    <div style="text-align:center;">
+                                        <div style="font-size:2rem; font-weight:700;" id="profileBigViews">0</div>
+                                        <div>Views</div>
                                     </div>
                                 </div>
                             </div>
-                        `;
+                        </div>
+                    </div>
+                    
+                    <!-- EDIT PROFILE -->
+                    <div style="background:white; padding:30px; border-radius:var(--radius); margin-bottom:30px;">
+                        <h3 style="margin-bottom:20px; color:var(--primary);"><i class="fas fa-user-edit"></i> Edit Profil</h3>
+                        <div style="margin-bottom:20px;">
+                            <label style="display:block; margin-bottom:8px; font-weight:500;">Username</label>
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" id="editUsername" style="flex:1; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius);">
+                                <button class="btn btn-primary" id="saveUsernameBtn">Simpan</button>
+                            </div>
+                        </div>
+                        <div style="margin-bottom:20px;">
+                            <label style="display:block; margin-bottom:8px; font-weight:500;">Avatar URL</label>
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" id="editAvatarUrl" placeholder="https://example.com/avatar.jpg" style="flex:1; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius);">
+                                <button class="btn btn-primary" id="saveAvatarBtn">Simpan</button>
+                            </div>
+                        </div>
+                        <div style="background:#f8fafc; padding:20px; border-radius:var(--radius);">
+                            <h4 style="margin-bottom:10px; color:var(--dark);"><i class="fas fa-id-card"></i> Informasi Akun</h4>
+                            <p style="margin-bottom:8px;">User ID: <span id="profileUserId" style="font-family:monospace; background:#e2e8f0; padding:5px 10px; border-radius:4px;"></span></p>
+                            <p>Bergabung: <span id="profileJoinDate"></span></p>
+                        </div>
+                    </div>
+                    
+                    <!-- MY ARTICLES -->
+                    <div style="background:white; padding:30px; border-radius:var(--radius);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                            <h3 style="color:var(--primary);"><i class="fas fa-newspaper"></i> Artikel Saya</h3>
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" id="searchMyArticles" placeholder="Cari artikel saya..." style="padding:10px; border:2px solid #e2e8f0; border-radius:var(--radius); width:200px;">
+                                <button class="btn btn-secondary" id="refreshMyArticlesBtn">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="myArticlesList">
+                            <!-- My articles loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ADMIN PANEL -->
+            <div id="adminPage" style="display:none;">
+                <div style="background:white; border-radius:var(--radius); overflow:hidden; margin-bottom:30px;">
+                    <div style="background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; padding:30px;">
+                        <h1><i class="fas fa-crown"></i> Admin Panel</h1>
+                        <p>Kelola semua konten dan pengguna</p>
+                    </div>
+                    <div style="padding:20px;">
+                        <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+                            <button class="btn btn-primary" id="adminAllArticlesBtn">
+                                <i class="fas fa-list"></i> Semua Artikel
+                            </button>
+                            <button class="btn btn-secondary" id="adminPendingBtn">
+                                <i class="fas fa-clock"></i> Menunggu (0)
+                            </button>
+                            <button class="btn btn-warning" id="adminStatsBtn">
+                                <i class="fas fa-chart-bar"></i> Statistik
+                            </button>
+                            <button class="btn btn-danger" id="adminUsersBtn">
+                                <i class="fas fa-users"></i> Pengguna
+                            </button>
+                        </div>
+                        <div id="adminContent">
+                            <!-- Admin content loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- RIGHT SIDEBAR -->
+        <aside class="sidebar-right">
+            <!-- ADS -->
+            <div class="ad-banner medium" style="margin-bottom:25px;">
+                <span class="ad-label">IKLAN</span>
+                <script>
+                    atOptions = {
+                        'key' : 'df392223eb071195b98c897f97cb395d',
+                        'format' : 'iframe',
+                        'height' : 250,
+                        'width' : 300,
+                        'params' : {}
+                    };
+                </script>
+                <script src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.js"></script>
+            </div>
+            
+            <!-- RECOMMENDED ARTICLES -->
+            <div style="background:white; border-radius:var(--radius); padding:20px; margin-bottom:25px; box-shadow:var(--shadow);">
+                <h3 style="margin-bottom:15px; color:var(--primary);"><i class="fas fa-star"></i> Rekomendasi</h3>
+                <div id="recommendedArticles"></div>
+            </div>
+            
+            <!-- DIRECT LINK -->
+            <div style="text-align:center; padding:15px; background:#f8fafc; border-radius:var(--radius);">
+                <p style="margin-bottom:10px; font-size:0.9rem;">Support kami dengan klik link ini</p>
+                <a href="https://otieu.com/4/10381160" target="_blank" class="btn btn-warning btn-sm">
+                    <i class="fas fa-external-link-alt"></i> Support NexeNews
+                </a>
+            </div>
+        </aside>
+    </div>
+    
+    <!-- ==================== NOTIFICATION ==================== -->
+    <div class="notification" id="notification">
+        <span id="notificationText"></span>
+    </div>
+    
+    <!-- ==================== SCRIPT ==================== -->
+    <script>
+        // ========== FIREBASE CONFIG ==========
+        const firebaseConfig = {
+            apiKey: "AIzaSyAP7lzXcSwmkOk88rXIx77j8s4gsfUs6k0",
+            authDomain: "unews-4db42.firebaseapp.com",
+            databaseURL: "https://unews-4db42-default-rtdb.firebaseio.com",
+            projectId: "unews-4db42",
+            storageBucket: "unews-4db42.firebasestorage.app",
+            messagingSenderId: "382914552995",
+            appId: "1:382914552995:web:ca6f2c0f6a250c39fc4b16",
+            measurementId: "G-38CHL8F98F"
+        };
+
+        // ========== GLOBAL VARIABLES ==========
+        let currentUser = null;
+        let articles = [];
+        let currentArticle = null;
+        let comments = [];
+        let userProfile = null;
+        let articleEditor = null;
+        let isAdmin = false;
+        let hasMonetized = false;
+        let userLikes = {};
+        let commentEditId = null;
+
+        // ========== INITIALIZE ==========
+        async function initializeApp() {
+            try {
+                // Initialize Firebase
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                // Initialize Quill Editor
+                if (document.getElementById('articleEditor')) {
+                    articleEditor = new Quill('#articleEditor', {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: [
+                                [{ 'header': [1, 2, 3, false] }],
+                                ['bold', 'italic', 'underline', 'strike'],
+                                [{ 'color': [] }, { 'background': [] }],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                ['link', 'image'],
+                                ['clean']
+                            ]
+                        }
+                    });
+                }
+                
+                // Auth state listener
+                firebase.auth().onAuthStateChanged(async (user) => {
+                    currentUser = user;
+                    updateUI();
+                    
+                    if (user) {
+                        await loadUserProfile();
+                        await checkAdminStatus();
+                        loadUserLikes();
+                    }
+                    
+                    await loadArticles();
+                    setupEventListeners();
+                });
+                
+                // Initial load
+                loadArticles();
+                
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showNotification('Error loading application', 'error');
+            }
+        }
+
+        // ========== LOAD ARTICLES WITH ALGORITHM ==========
+        async function loadArticles() {
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref('articles').once('value');
+                
+                if (snapshot.exists()) {
+                    const articlesData = snapshot.val();
+                    articles = Object.entries(articlesData).map(([id, data]) => ({
+                        id,
+                        ...data
+                    }));
+                    
+                    // Calculate score for algorithm
+                    articles.forEach(article => {
+                        article.score = calculateArticleScore(article);
                     });
                     
-                    historyList.innerHTML = html;
+                    // Sort by algorithm score (trending)
+                    const trending = [...articles]
+                        .filter(a => a.status === 'published')
+                        .sort((a, b) => b.score - a.score);
                     
-                    // Add click listeners to history items
-                    document.querySelectorAll('.history-item').forEach(item => {
-                        item.addEventListener('click', (e) => {
-                            const id = parseInt(item.getAttribute('data-id'));
-                            const link = this.state.links.find(l => l.id === id);
-                            if (link) {
-                                this.elements.shortUrlText.textContent = link.shortUrl;
-                                this.elements.resultContainer.classList.add('active');
-                                this.elements.resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                            }
-                        });
-                    });
-                },
+                    // Sort by newest
+                    const newest = [...articles]
+                        .filter(a => a.status === 'published')
+                        .sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    displayTrendingArticles(trending);
+                    displayNewestArticles(newest);
+                    displayRecommendedArticles();
+                    
+                } else {
+                    // Create sample article
+                    await createSampleArticle();
+                }
+                
+            } catch (error) {
+                console.error('Error loading articles:', error);
+            }
+        }
+
+        // ========== ARTICLE ALGORITHM SCORING ==========
+        function calculateArticleScore(article) {
+            const now = Date.now();
+            const articleAge = now - article.timestamp;
+            const ageInHours = articleAge / (1000 * 60 * 60);
+            
+            // Base score from engagement
+            let score = 0;
+            
+            // Views weight (logarithmic)
+            score += Math.log10((article.views || 0) + 1) * 10;
+            
+            // Likes weight
+            score += (article.likes || 0) * 15;
+            
+            // Comments weight
+            score += (article.comments || 0) * 20;
+            
+            // Time decay (newer articles get boost)
+            if (ageInHours < 24) {
+                score *= 1.5; // 50% boost for articles less than 24 hours
+            } else if (ageInHours < 168) { // 1 week
+                score *= 1.2; // 20% boost for articles less than 1 week
+            } else {
+                // Exponential decay after 1 week
+                const weeksOld = ageInHours / 168;
+                score *= Math.exp(-weeksOld * 0.5);
+            }
+            
+            // Minimum threshold untuk muncul di trending
+            const minScore = 100; // Minimal 100 score untuk trending
+            
+            // Jika artikel baru, beri bonus
+            if (ageInHours < 2 && (article.likes || 0) > 10) {
+                score += 50; // Bonus untuk artikel baru yang populer cepat
+            }
+            
+            return Math.max(score, 0);
+        }
+
+        // ========== DISPLAY FUNCTIONS ==========
+        function displayTrendingArticles(trendingArticles) {
+            const container = document.getElementById('trendingArticles');
+            if (!container) return;
+            
+            // Filter hanya yang score > 100 untuk trending
+            const trending = trendingArticles.filter(a => a.score > 100).slice(0, 6);
+            
+            if (trending.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--gray);">
+                        <i class="fas fa-fire" style="font-size:3rem; margin-bottom:20px;"></i>
+                        <p>Belum ada artikel trending</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = trending.map(article => `
+                <div class="article-card" onclick="openArticle('${article.id}')">
+                    <div style="position:relative;">
+                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop'}" alt="${article.title}" style="width:100%; height:200px; object-fit:cover;">
+                        <span class="trending-badge">TRENDING</span>
+                    </div>
+                    <div style="padding:20px;">
+                        <h3 style="margin-bottom:10px; font-size:1.1rem; line-height:1.4;">${article.title}</h3>
+                        <div style="display:flex; justify-content:space-between; color:var(--gray); font-size:0.85rem; margin-top:15px;">
+                            <span><i class="far fa-eye"></i> ${formatNumber(article.views || 0)}</span>
+                            <span><i class="far fa-heart"></i> ${formatNumber(article.likes || 0)}</span>
+                            <span><i class="far fa-comment"></i> ${formatNumber(article.comments || 0)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayNewestArticles(newestArticles) {
+            const container = document.getElementById('newestArticles');
+            if (!container) return;
+            
+            const newest = newestArticles.slice(0, 6);
+            
+            if (newest.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--gray);">
+                        <i class="fas fa-clock" style="font-size:3rem; margin-bottom:20px;"></i>
+                        <p>Belum ada artikel</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = newest.map(article => `
+                <div class="article-card" onclick="openArticle('${article.id}')">
+                    <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop'}" alt="${article.title}" style="width:100%; height:180px; object-fit:cover;">
+                    <div style="padding:20px;">
+                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px;">
+                            <span style="background:#f0f9ff; color:var(--primary); padding:4px 12px; border-radius:20px; font-size:0.8rem;">${getCategoryName(article.category)}</span>
+                            ${Date.now() - article.timestamp < 86400000 ? '<span class="new-badge">BARU</span>' : ''}
+                        </div>
+                        <h3 style="margin-bottom:10px; font-size:1rem; line-height:1.4;">${article.title}</h3>
+                        <div style="font-size:0.85rem; color:var(--gray);">
+                            ${timeAgo(article.timestamp)}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayRecommendedArticles() {
+            const container = document.getElementById('recommendedArticles');
+            if (!container) return;
+            
+            // Randomize recommended articles
+            const recommended = [...articles]
+                .filter(a => a.status === 'published')
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3);
+            
+            container.innerHTML = recommended.map(article => `
+                <div style="margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="openArticle('${article.id}')">
+                    <div style="display:flex; gap:10px;">
+                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=400&auto=format&fit=crop'}" alt="${article.title}" style="width:80px; height:60px; border-radius:8px; object-fit:cover;">
+                        <div>
+                            <h4 style="font-size:0.95rem; margin-bottom:5px; line-height:1.3;">${article.title.substring(0, 60)}...</h4>
+                            <div style="font-size:0.8rem; color:var(--gray);">${timeAgo(article.timestamp)}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ========== OPEN ARTICLE ==========
+        async function openArticle(articleId, skipMonetize = false) {
+            // RANDOM MONETIZATION (30% chance untuk redirect ke ads)
+            if (!skipMonetize && Math.random() < 0.3) {
+                showMonetizeModal(articleId);
+                return;
+            }
+            
+            const article = articles.find(a => a.id === articleId);
+            if (!article) return;
+            
+            currentArticle = article;
+            
+            // Update view count (REAL)
+            await updateViewCount(articleId);
+            
+            // Show article page
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('articlePage').style.display = 'block';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'none';
+            
+            // Set article data
+            document.getElementById('articleTitle').textContent = article.title;
+            document.getElementById('articleDate').textContent = new Date(article.timestamp).toLocaleDateString('id-ID');
+            document.getElementById('articleViews').textContent = formatNumber(article.views || 0);
+            document.getElementById('articleLikes').textContent = formatNumber(article.likes || 0);
+            document.getElementById('articleComments').textContent = formatNumber(article.comments || 0);
+            document.getElementById('authorName').textContent = article.author || 'Anonymous';
+            document.getElementById('authorAvatar').textContent = article.author?.charAt(0) || 'A';
+            document.getElementById('articleTimestamp').textContent = timeAgo(article.timestamp);
+            document.getElementById('articleImage').src = article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop';
+            document.getElementById('articleContent').innerHTML = article.content || '<p>Artikel tidak memiliki konten.</p>';
+            
+            // Check if user liked this article
+            const likeBtn = document.getElementById('likeArticleBtn');
+            const liked = userLikes[articleId];
+            if (liked) {
+                likeBtn.classList.add('liked');
+                likeBtn.innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
+            } else {
+                likeBtn.classList.remove('liked');
+                likeBtn.innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
+            }
+            
+            // Set comment count
+            document.getElementById('commentCount').textContent = formatNumber(article.comments || 0);
+            
+            // Load comments
+            await loadComments(articleId);
+            
+            // Auto-add inline ads to content
+            injectInlineAds();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Start view timer (count view after 5 seconds)
+            setTimeout(() => {
+                if (document.getElementById('articlePage').style.display === 'block') {
+                    updateViewCount(articleId);
+                }
+            }, 5000);
+        }
+
+        // ========== MONETIZATION SYSTEM ==========
+        function showMonetizeModal(articleId) {
+            document.getElementById('monetizeModal').classList.add('active');
+            localStorage.setItem('pendingArticle', articleId);
+        }
+
+        // ========== CREATE ARTICLE ==========
+        function showCreateArticleModal() {
+            if (!currentUser) {
+                showNotification('Login dulu untuk membuat artikel', 'error');
+                return;
+            }
+            
+            // Reset form
+            document.getElementById('articleTitleInput').value = '';
+            document.getElementById('articleImageInput').value = '';
+            document.getElementById('articleSlugInput').value = '';
+            if (articleEditor) articleEditor.setText('');
+            
+            // Show monetization first
+            showMonetizeModal('new');
+            
+            // Update slug when title changes
+            document.getElementById('articleTitleInput').addEventListener('input', function() {
+                const slug = this.value.toLowerCase()
+                    .replace(/[^\w\s]/g, '')
+                    .replace(/\s+/g, '-')
+                    .substring(0, 50);
+                document.getElementById('articleSlugInput').value = slug;
+            });
+        }
+
+        async function publishArticle() {
+            if (!currentUser) {
+                showNotification('Login dulu untuk publish', 'error');
+                return;
+            }
+            
+            const title = document.getElementById('articleTitleInput').value.trim();
+            const category = document.getElementById('articleCategoryInput').value;
+            const image = document.getElementById('articleImageInput').value.trim();
+            const content = articleEditor ? articleEditor.root.innerHTML : '';
+            const slug = document.getElementById('articleSlugInput').value.trim() || 
+                        title.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, '-').substring(0, 50);
+            
+            if (!title || !content) {
+                showNotification('Judul dan konten harus diisi', 'error');
+                return;
+            }
+            
+            // Check slug uniqueness
+            const existingSlug = articles.find(a => a.slug === slug);
+            if (existingSlug) {
+                showNotification('Slug sudah digunakan, coba judul lain', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                
+                const newArticle = {
+                    title,
+                    category,
+                    image: image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop',
+                    content,
+                    excerpt: content.replace(/<[^>]*>/g, '').substring(0, 150) + '...',
+                    slug,
+                    author: currentUser.displayName || currentUser.email.split('@')[0],
+                    authorId: currentUser.uid,
+                    authorAvatar: userProfile?.avatar || '',
+                    timestamp: Date.now(),
+                    views: 0,
+                    likes: 0,
+                    comments: 0,
+                    status: isAdmin ? 'published' : 'pending'
+                };
+                
+                const newArticleRef = await db.ref('articles').push(newArticle);
+                
+                // Update user stats
+                await updateUserStats('articles', 1);
+                
+                // Close modal
+                document.getElementById('createArticleModal').classList.remove('active');
+                
+                if (isAdmin) {
+                    showNotification('Artikel berhasil dipublish!', 'success');
+                    openArticle(newArticleRef.key);
+                } else {
+                    showNotification('Artikel berhasil dikirim, menunggu approval admin', 'success');
+                }
+                
+                // Reload articles
+                await loadArticles();
+                
+            } catch (error) {
+                console.error('Error publishing article:', error);
+                showNotification('Gagal publish artikel', 'error');
+            }
+        }
+
+        // ========== LIKE SYSTEM ==========
+        async function toggleLike(articleId) {
+            if (!currentUser) {
+                showNotification('Login dulu untuk like artikel', 'error');
+                return;
+            }
+            
+            const article = articles.find(a => a.id === articleId);
+            if (!article) return;
+            
+            const alreadyLiked = userLikes[articleId];
+            
+            try {
+                const db = firebase.database();
+                
+                if (alreadyLiked) {
+                    // Unlike
+                    await db.ref(`articleLikes/${articleId}/${currentUser.uid}`).remove();
+                    await db.ref(`articles/${articleId}/likes`).transaction(current => (current || 0) - 1);
+                    userLikes[articleId] = false;
+                    
+                    // Update UI
+                    document.getElementById('likeText').textContent = 'Suka';
+                    document.getElementById('likeArticleBtn').classList.remove('liked');
+                    document.getElementById('likeArticleBtn').innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
+                    
+                    // Update user stats
+                    await updateUserStats('likes', -1);
+                    
+                } else {
+                    // Like
+                    await db.ref(`articleLikes/${articleId}/${currentUser.uid}`).set(true);
+                    await db.ref(`articles/${articleId}/likes`).transaction(current => (current || 0) + 1);
+                    userLikes[articleId] = true;
+                    
+                    // Update UI
+                    document.getElementById('likeText').textContent = 'Disukai';
+                    document.getElementById('likeArticleBtn').classList.add('liked');
+                    document.getElementById('likeArticleBtn').innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
+                    
+                    // Update user stats
+                    await updateUserStats('likes', 1);
+                }
+                
+                // Reload article data
+                await loadArticles();
+                
+            } catch (error) {
+                console.error('Error toggling like:', error);
+                showNotification('Gagal update like', 'error');
+            }
+        }
+
+        // ========== COMMENT SYSTEM ==========
+        async function loadComments(articleId) {
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref(`comments/${articleId}`).once('value');
+                
+                if (snapshot.exists()) {
+                    const commentsData = snapshot.val();
+                    comments = Object.entries(commentsData).map(([id, data]) => ({
+                        id,
+                        ...data
+                    }));
+                    
+                    // Sort by timestamp
+                    comments.sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    displayComments();
+                } else {
+                    comments = [];
+                    displayComments();
+                }
+                
+            } catch (error) {
+                console.error('Error loading comments:', error);
+                comments = [];
+                displayComments();
+            }
+        }
+
+        function displayComments() {
+            const container = document.getElementById('commentList');
+            if (!container) return;
+            
+            if (comments.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px; color:var(--gray);">
+                        <i class="far fa-comment" style="font-size:2rem; margin-bottom:10px;"></i>
+                        <p>Belum ada komentar. Jadilah yang pertama!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = comments.map(comment => `
+                <div class="comment-item" id="comment-${comment.id}">
+                    <div class="comment-header">
+                        <div class="comment-author">
+                            <div class="comment-author-avatar">${comment.authorName?.charAt(0) || 'A'}</div>
+                            ${comment.authorName || 'Anonymous'}
+                        </div>
+                        <div class="comment-time">${timeAgo(comment.timestamp)}</div>
+                    </div>
+                    <div class="comment-content">${comment.text}</div>
+                    <div class="comment-actions">
+                        ${comment.authorId === currentUser?.uid ? `
+                            <button class="btn btn-sm btn-secondary" onclick="editComment('${comment.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteComment('${comment.id}')">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function submitComment() {
+            if (!currentUser) {
+                showNotification('Login dulu untuk komentar', 'error');
+                return;
+            }
+            
+            const text = document.getElementById('commentInput').value.trim();
+            if (!text) {
+                showNotification('Komentar tidak boleh kosong', 'error');
+                return;
+            }
+            
+            if (text.length > 500) {
+                showNotification('Komentar maksimal 500 karakter', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                
+                const newComment = {
+                    text,
+                    authorId: currentUser.uid,
+                    authorName: currentUser.displayName || currentUser.email.split('@')[0],
+                    authorAvatar: userProfile?.avatar || '',
+                    timestamp: Date.now()
+                };
+                
+                await db.ref(`comments/${currentArticle.id}`).push(newComment);
+                
+                // Update comment count
+                await db.ref(`articles/${currentArticle.id}/comments`).transaction(current => (current || 0) + 1);
+                
+                // Clear input
+                document.getElementById('commentInput').value = '';
                 
                 // Show notification
-                showNotification(title, message, type = 'success') {
-                    const notification = this.elements.notification;
-                    const icon = this.elements.notificationIcon;
-                    const titleEl = this.elements.notificationTitle;
-                    const messageEl = this.elements.notificationMessage;
-                    
-                    // Set content
-                    titleEl.textContent = title;
-                    messageEl.textContent = message;
-                    
-                    // Set type
-                    notification.className = 'notification';
-                    notification.classList.add(`notification-${type}`);
-                    
-                    // Set icon
-                    if (type === 'success') {
-                        icon.className = 'fas fa-check-circle';
-                    } else if (type === 'error') {
-                        icon.className = 'fas fa-exclamation-circle';
-                    } else {
-                        icon.className = 'fas fa-info-circle';
-                    }
-                    
-                    // Show notification
-                    notification.classList.add('show');
-                    
-                    // Auto hide after 3 seconds
-                    setTimeout(() => {
-                        notification.classList.remove('show');
-                    }, 3000);
-                },
+                showNotification('Komentar berhasil ditambahkan', 'success');
                 
-                // Handle routing for short URLs
-                handleRouting() {
-                    const path = window.location.pathname;
-                    
-                    // Check if path is a short code (6 characters)
-                    if (path.length === 7 && path.startsWith('/')) { // / + 6 characters
-                        const shortCode = path.substring(1);
-                        
-                        // Check if short code exists
-                        const link = this.state.links.find(l => l.shortCode === shortCode);
-                        
-                        if (link) {
-                            // Show redirect page
-                            document.getElementById('app').style.display = 'none';
-                            this.elements.redirectPage.style.display = 'block';
-                            
-                            // Update destination URL
-                            this.elements.destinationUrl.textContent = `Destination: ${link.originalUrl}`;
-                            
-                            // Start countdown
-                            let countdown = 5;
-                            this.elements.countdown.textContent = countdown;
-                            
-                            const countdownInterval = setInterval(() => {
-                                countdown--;
-                                this.elements.countdown.textContent = countdown;
-                                
-                                if (countdown <= 0) {
-                                    clearInterval(countdownInterval);
-                                    this.redirectToUrl(link.originalUrl);
-                                }
-                            }, 1000);
-                            
-                            // Update link stats
-                            this.updateLinkStats(link.id);
-                        } else {
-                            // Show 404 error
-                            this.showNotification('Error', 'Short URL not found', 'error');
+                // Reload comments
+                await loadComments(currentArticle.id);
+                await loadArticles();
+                
+            } catch (error) {
+                console.error('Error submitting comment:', error);
+                showNotification('Gagal menambahkan komentar', 'error');
+            }
+        }
+
+        async function editComment(commentId) {
+            const comment = comments.find(c => c.id === commentId);
+            if (!comment) return;
+            
+            const newText = prompt('Edit komentar:', comment.text);
+            if (!newText || newText.trim() === '') return;
+            
+            try {
+                const db = firebase.database();
+                await db.ref(`comments/${currentArticle.id}/${commentId}/text`).set(newText.trim());
+                showNotification('Komentar berhasil diedit', 'success');
+                await loadComments(currentArticle.id);
+            } catch (error) {
+                console.error('Error editing comment:', error);
+                showNotification('Gagal mengedit komentar', 'error');
+            }
+        }
+
+        async function deleteComment(commentId) {
+            if (!confirm('Hapus komentar ini?')) return;
+            
+            try {
+                const db = firebase.database();
+                await db.ref(`comments/${currentArticle.id}/${commentId}`).remove();
+                
+                // Update comment count
+                await db.ref(`articles/${currentArticle.id}/comments`).transaction(current => (current || 0) - 1);
+                
+                showNotification('Komentar berhasil dihapus', 'success');
+                await loadComments(currentArticle.id);
+                await loadArticles();
+            } catch (error) {
+                console.error('Error deleting comment:', error);
+                showNotification('Gagal menghapus komentar', 'error');
+            }
+        }
+
+        // ========== PROFILE FUNCTIONS ==========
+        async function loadUserProfile() {
+            if (!currentUser) return;
+            
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref(`users/${currentUser.uid}`).once('value');
+                
+                if (snapshot.exists()) {
+                    userProfile = snapshot.val();
+                } else {
+                    // Create new user profile
+                    userProfile = {
+                        username: currentUser.displayName || currentUser.email.split('@')[0],
+                        email: currentUser.email,
+                        avatar: currentUser.photoURL || '',
+                        joinDate: Date.now(),
+                        stats: {
+                            articles: 0,
+                            likes: 0,
+                            views: 0
                         }
-                    }
-                },
-                
-                // Update link stats when clicked
-                updateLinkStats(linkId) {
-                    const linkIndex = this.state.links.findIndex(l => l.id === linkId);
-                    if (linkIndex !== -1) {
-                        const today = new Date().toDateString();
-                        const link = this.state.links[linkIndex];
-                        
-                        // Update click counts
-                        link.clicks = (link.clicks || 0) + 1;
-                        this.state.stats.totalClicks++;
-                        
-                        // Update today's clicks
-                        if (link.lastClickDate === today) {
-                            link.todayClicks = (link.todayClicks || 0) + 1;
-                        } else {
-                            link.todayClicks = 1;
-                            link.lastClickDate = today;
-                        }
-                        
-                        // Update today's total clicks
-                        this.updateTodayClicks();
-                        
-                        // Save data
-                        this.saveData();
-                    }
-                },
-                
-                // Redirect to URL
-                redirectToUrl(url) {
-                    // Add delay for ad viewing
-                    setTimeout(() => {
-                        window.location.href = url;
-                    }, 500);
-                },
-                
-                // Cancel redirect
-                cancelRedirect() {
-                    window.location.href = '/';
-                },
-                
-                // Load ads
-                loadAds() {
-                    console.log('Loading ads...');
-                    
-                    // Replace ad placeholders with actual ads
-                    // Note: Actual ads are loaded via the Adsterra scripts above
-                    // This is just for simulation
-                    
-                    // Simulate ad loading delay
-                    setTimeout(() => {
-                        const adPlaceholders = document.querySelectorAll('.ad-placeholder');
-                        adPlaceholders.forEach(placeholder => {
-                            // In a real scenario, the ad scripts would replace these
-                            // For demo purposes, we'll just change the text
-                            placeholder.innerHTML = '<i class="fas fa-ad"></i><span>Ad loaded</span>';
-                            placeholder.style.background = 'rgba(102, 126, 234, 0.1)';
-                        });
-                    }, 1500);
-                },
-                
-                // Trigger in-page push ad
-                triggerInPagePush() {
-                    console.log('Triggering in-page push ad...');
-                    // In a real implementation, this would trigger the PropellerAds in-page push
-                    // For demo, we'll show a notification
-                    this.showNotification('Ad', 'In-page push ad would trigger here', 'info');
-                },
-                
-                // Trigger popunder ad
-                triggerPopunder() {
-                    console.log('Triggering popunder ad...');
-                    // In a real implementation, this would trigger the PropellerAds popunder
-                    // For demo, we'll show a notification
-                    this.showNotification('Ad', 'Popunder ad would trigger here', 'info');
+                    };
+                    await db.ref(`users/${currentUser.uid}`).set(userProfile);
                 }
+                
+                updateProfileUI();
+                
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+            }
+        }
+
+        async function updateUserStats(type, delta) {
+            if (!currentUser || !userProfile) return;
+            
+            try {
+                const db = firebase.database();
+                const statPath = `users/${currentUser.uid}/stats/${type}`;
+                await db.ref(statPath).transaction(current => (current || 0) + delta);
+                
+                // Update local profile
+                if (userProfile.stats) {
+                    userProfile.stats[type] = (userProfile.stats[type] || 0) + delta;
+                }
+                
+                updateProfileUI();
+                
+            } catch (error) {
+                console.error('Error updating user stats:', error);
+            }
+        }
+
+        function updateProfileUI() {
+            if (!currentUser) return;
+            
+            // Update header avatar
+            const avatar = document.getElementById('userAvatar');
+            if (userProfile?.avatar) {
+                avatar.style.backgroundImage = `url('${userProfile.avatar}')`;
+                avatar.style.backgroundSize = 'cover';
+                avatar.textContent = '';
+            } else {
+                avatar.style.backgroundImage = 'none';
+                avatar.textContent = userProfile?.username?.charAt(0).toUpperCase() || 'U';
+            }
+            
+            // Update profile popup
+            if (userProfile) {
+                document.getElementById('popupUsername').textContent = userProfile.username;
+                document.getElementById('popupEmail').textContent = userProfile.email;
+                document.getElementById('popupAvatar').textContent = userProfile.username.charAt(0).toUpperCase();
+                document.getElementById('popupArticles').textContent = userProfile.stats?.articles || 0;
+                document.getElementById('popupLikes').textContent = userProfile.stats?.likes || 0;
+                
+                // Update profile page if visible
+                if (document.getElementById('profilePage').style.display !== 'none') {
+                    document.getElementById('profileBigUsername').textContent = userProfile.username;
+                    document.getElementById('profileBigEmail').textContent = userProfile.email;
+                    document.getElementById('profileBigAvatar').textContent = userProfile.username.charAt(0).toUpperCase();
+                    document.getElementById('profileBigArticles').textContent = userProfile.stats?.articles || 0;
+                    document.getElementById('profileBigLikes').textContent = userProfile.stats?.likes || 0;
+                    document.getElementById('profileBigViews').textContent = userProfile.stats?.views || 0;
+                    document.getElementById('editUsername').value = userProfile.username;
+                    document.getElementById('editAvatarUrl').value = userProfile.avatar || '';
+                    document.getElementById('profileUserId').textContent = currentUser.uid;
+                    document.getElementById('profileJoinDate').textContent = new Date(userProfile.joinDate).toLocaleDateString('id-ID');
+                }
+            }
+            
+            // Show/hide write button
+            document.getElementById('writeArticleBtn').style.display = currentUser ? 'block' : 'none';
+        }
+
+        // ========== UTILITY FUNCTIONS ==========
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function timeAgo(timestamp) {
+            const seconds = Math.floor((Date.now() - timestamp) / 1000);
+            
+            let interval = Math.floor(seconds / 31536000);
+            if (interval >= 1) return interval + ' tahun lalu';
+            
+            interval = Math.floor(seconds / 2592000);
+            if (interval >= 1) return interval + ' bulan lalu';
+            
+            interval = Math.floor(seconds / 86400);
+            if (interval >= 1) return interval + ' hari lalu';
+            
+            interval = Math.floor(seconds / 3600);
+            if (interval >= 1) return interval + ' jam lalu';
+            
+            interval = Math.floor(seconds / 60);
+            if (interval >= 1) return interval + ' menit lalu';
+            
+            return 'Baru saja';
+        }
+
+        function getCategoryName(category) {
+            const categories = {
+                'misteri': '🔮 Misteri',
+                'fakta': '💡 Fakta Unik',
+                'sejarah': '🏛️ Sejarah',
+                'teknologi': '💻 Teknologi',
+                'viral': '🔥 Viral',
+                'hiburan': '🎬 Hiburan',
+                'olahraga': '⚽ Olahraga'
+            };
+            return categories[category] || 'Artikel';
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            
+            text.textContent = message;
+            notification.style.background = type === 'error' ? '#EF4444' : 
+                                          type === 'success' ? '#10B981' : 
+                                          type === 'warning' ? '#F59E0B' : 
+                                          '#2563EB';
+            
+            notification.classList.add('active');
+            setTimeout(() => notification.classList.remove('active'), 3000);
+        }
+
+        // ========== EVENT LISTENERS ==========
+        function setupEventListeners() {
+            // User avatar click
+            document.getElementById('userAvatar').addEventListener('click', () => {
+                if (!currentUser) {
+                    // Show login modal
+                    showNotification('Login dulu untuk mengakses profil', 'warning');
+                    return;
+                }
+                document.getElementById('profilePopup').classList.toggle('active');
+            });
+            
+            // Close popup when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#userAvatar') && !e.target.closest('.profile-popup')) {
+                    document.getElementById('profilePopup').classList.remove('active');
+                }
+                if (e.target.classList.contains('modal')) {
+                    document.getElementById('monetizeModal').classList.remove('active');
+                    document.getElementById('createArticleModal').classList.remove('active');
+                }
+            });
+            
+            // Profile popup buttons
+            document.getElementById('popupProfileBtn').addEventListener('click', () => {
+                document.getElementById('profilePopup').classList.remove('active');
+                showProfilePage();
+            });
+            
+            document.getElementById('popupMyArticlesBtn').addEventListener('click', () => {
+                document.getElementById('profilePopup').classList.remove('active');
+                showProfilePage();
+                loadMyArticles();
+            });
+            
+            document.getElementById('popupLogoutBtn').addEventListener('click', async () => {
+                try {
+                    await firebase.auth().signOut();
+                    document.getElementById('profilePopup').classList.remove('active');
+                    showNotification('Logout berhasil', 'success');
+                    showHomePage();
+                } catch (error) {
+                    showNotification('Logout gagal', 'error');
+                }
+            });
+            
+            // Write article button
+            document.getElementById('writeArticleBtn').addEventListener('click', showCreateArticleModal);
+            
+            // Monetization modal
+            document.getElementById('closeMonetizeModal').addEventListener('click', () => {
+                document.getElementById('monetizeModal').classList.remove('active');
+            });
+            
+            document.getElementById('continueAfterMonetize').addEventListener('click', () => {
+                document.getElementById('monetizeModal').classList.remove('active');
+                hasMonetized = true;
+                
+                // Continue to create article
+                document.getElementById('createArticleModal').classList.add('active');
+                document.getElementById('publishArticleBtn').disabled = false;
+            });
+            
+            document.getElementById('monetizeBeforeCreate').addEventListener('click', () => {
+                window.open('https://otieu.com/4/10381160', '_blank');
+                hasMonetized = true;
+                document.getElementById('publishArticleBtn').disabled = false;
+            });
+            
+            // Create article modal
+            document.getElementById('closeCreateModal').addEventListener('click', () => {
+                document.getElementById('createArticleModal').classList.remove('active');
+            });
+            
+            document.getElementById('publishArticleBtn').addEventListener('click', publishArticle);
+            
+            // Like button
+            document.getElementById('likeArticleBtn').addEventListener('click', () => {
+                if (currentArticle) {
+                    toggleLike(currentArticle.id);
+                }
+            });
+            
+            // Share button
+            document.getElementById('shareArticleBtn').addEventListener('click', () => {
+                if (currentArticle) {
+                    shareArticle(currentArticle);
+                }
+            });
+            
+            // Comment form
+            if (document.getElementById('submitCommentBtn')) {
+                document.getElementById('submitCommentBtn').addEventListener('click', submitComment);
+            }
+            
+            if (document.getElementById('loginForCommentBtn')) {
+                document.getElementById('loginForCommentBtn').addEventListener('click', () => {
+                    showNotification('Fitur login akan segera tersedia', 'info');
+                });
+            }
+            
+            // Profile edit buttons
+            document.getElementById('saveUsernameBtn').addEventListener('click', async () => {
+                const newUsername = document.getElementById('editUsername').value.trim();
+                if (!newUsername) {
+                    showNotification('Username tidak boleh kosong', 'error');
+                    return;
+                }
+                
+                try {
+                    const db = firebase.database();
+                    await db.ref(`users/${currentUser.uid}/username`).set(newUsername);
+                    userProfile.username = newUsername;
+                    showNotification('Username berhasil diperbarui', 'success');
+                    updateProfileUI();
+                } catch (error) {
+                    showNotification('Gagal memperbarui username', 'error');
+                }
+            });
+            
+            document.getElementById('saveAvatarBtn').addEventListener('click', async () => {
+                const newAvatar = document.getElementById('editAvatarUrl').value.trim();
+                
+                try {
+                    const db = firebase.database();
+                    await db.ref(`users/${currentUser.uid}/avatar`).set(newAvatar);
+                    userProfile.avatar = newAvatar;
+                    showNotification('Avatar berhasil diperbarui', 'success');
+                    updateProfileUI();
+                } catch (error) {
+                    showNotification('Gagal memperbarui avatar', 'error');
+                }
+            });
+            
+            // Search
+            document.getElementById('searchBox').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const resultsContainer = document.getElementById('searchResults');
+                
+                if (searchTerm.length < 2) {
+                    resultsContainer.classList.remove('active');
+                    return;
+                }
+                
+                const filtered = articles.filter(article => 
+                    article.title.toLowerCase().includes(searchTerm) ||
+                    article.content.toLowerCase().includes(searchTerm) ||
+                    article.author?.toLowerCase().includes(searchTerm)
+                ).slice(0, 5);
+                
+                if (filtered.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div class="search-result-item" style="cursor:default;">
+                            <div class="search-result-content">
+                                <p>Tidak ditemukan artikel</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultsContainer.innerHTML = filtered.map(article => `
+                        <div class="search-result-item" onclick="openArticle('${article.id}')">
+                            <img src="${article.image || 'https://via.placeholder.com/80x60'}" class="search-result-image">
+                            <div class="search-result-content">
+                                <h4>${article.title.substring(0, 50)}...</h4>
+                                <p>${getCategoryName(article.category)} • ${timeAgo(article.timestamp)}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                resultsContainer.classList.add('active');
+            });
+            
+            // Close search results
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-container')) {
+                    document.getElementById('searchResults').classList.remove('active');
+                }
+            });
+        }
+
+        // ========== PAGE NAVIGATION ==========
+        function showHomePage() {
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('articlePage').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('profilePopup').classList.remove('active');
+        }
+
+        function showProfilePage() {
+            if (!currentUser) {
+                showNotification('Login dulu untuk melihat profil', 'warning');
+                return;
+            }
+            
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('articlePage').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'block';
+            document.getElementById('adminPage').style.display = 'none';
+            
+            loadMyArticles();
+        }
+
+        // ========== HELPER FUNCTIONS ==========
+        async function updateViewCount(articleId) {
+            try {
+                const db = firebase.database();
+                await db.ref(`articles/${articleId}/views`).transaction(current => (current || 0) + 1);
+                
+                // Update user stats if author
+                const article = articles.find(a => a.id === articleId);
+                if (article && article.authorId === currentUser?.uid) {
+                    await updateUserStats('views', 1);
+                }
+                
+                // Reload articles
+                await loadArticles();
+                
+            } catch (error) {
+                console.error('Error updating view count:', error);
+            }
+        }
+
+        async function loadUserLikes() {
+            if (!currentUser) return;
+            
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref('articleLikes').once('value');
+                
+                if (snapshot.exists()) {
+                    const likesData = snapshot.val();
+                    userLikes = {};
+                    
+                    Object.keys(likesData).forEach(articleId => {
+                        if (likesData[articleId][currentUser.uid]) {
+                            userLikes[articleId] = true;
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading user likes:', error);
+            }
+        }
+
+        function shareArticle(article) {
+            const url = window.location.origin + window.location.pathname + '?article=' + article.slug;
+            const text = `Baca artikel: ${article.title} di NexeNews`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: article.title,
+                    text: text,
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(url);
+                showNotification('Link artikel disalin!', 'success');
+            }
+        }
+
+        async function loadMyArticles() {
+            if (!currentUser) return;
+            
+            const myArticles = articles.filter(article => article.authorId === currentUser.uid);
+            const container = document.getElementById('myArticlesList');
+            
+            if (myArticles.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px; color:var(--gray);">
+                        <i class="fas fa-newspaper" style="font-size:2rem; margin-bottom:15px;"></i>
+                        <p>Belum ada artikel</p>
+                        <button class="btn btn-primary" onclick="showCreateArticleModal()" style="margin-top:15px;">
+                            <i class="fas fa-plus"></i> Buat Artikel Pertama
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = myArticles.map(article => `
+                <div style="background:#f8fafc; padding:15px; border-radius:var(--radius); margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h4 style="margin-bottom:5px;">${article.title}</h4>
+                        <div style="font-size:0.85rem; color:var(--gray); display:flex; gap:15px;">
+                            <span><i class="far fa-eye"></i> ${article.views || 0}</span>
+                            <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
+                            <span><i class="far fa-comment"></i> ${article.comments || 0}</span>
+                            <span>${article.status === 'published' ? '<span style="color:var(--success);">Published</span>' : '<span style="color:var(--warning);">Pending</span>'}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)">
+                            <i class="fas fa-external-link-alt"></i> Buka
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteArticle('${article.id}')">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteArticle(articleId) {
+            if (!confirm('Hapus artikel ini? Tindakan ini tidak dapat dibatalkan.')) return;
+            
+            try {
+                const db = firebase.database();
+                await db.ref(`articles/${articleId}`).remove();
+                showNotification('Artikel berhasil dihapus', 'success');
+                await loadArticles();
+                if (document.getElementById('profilePage').style.display === 'block') {
+                    loadMyArticles();
+                }
+            } catch (error) {
+                console.error('Error deleting article:', error);
+                showNotification('Gagal menghapus artikel', 'error');
+            }
+        }
+
+        function injectInlineAds() {
+            const contentDiv = document.getElementById('articleContent');
+            const paragraphs = contentDiv.querySelectorAll('p');
+            
+            // Insert ad after every 3rd paragraph
+            paragraphs.forEach((p, index) => {
+                if ((index + 1) % 3 === 0) {
+                    const adDiv = document.createElement('div');
+                    adDiv.className = 'inline-ad';
+                    adDiv.innerHTML = `
+                        <div class="ad-banner small-h">
+                            <span class="ad-label">IKLAN</span>
+                            <script>
+                                atOptions = {
+                                    'key' : '90a2a0e622b40caa605de8a06516879d',
+                                    'format' : 'iframe',
+                                    'height' : 60,
+                                    'width' : 468,
+                                    'params' : {}
+                                };
+                            <\/script>
+                            <script src="https://www.highperformanceformat.com/90a2a0e622b40caa605de8a06516879d/invoke.js"><\/script>
+                        </div>
+                    `;
+                    p.after(adDiv);
+                }
+            });
+        }
+
+        async function checkAdminStatus() {
+            if (!currentUser) {
+                isAdmin = false;
+                return;
+            }
+            
+            // Simple admin check (in production, use Firebase Admin SDK)
+            // For demo, check if email contains 'admin'
+            isAdmin = currentUser.email.includes('admin') || currentUser.uid === 'admin';
+            
+            if (isAdmin) {
+                document.getElementById('popupAdminBtn').style.display = 'block';
+            }
+        }
+
+        async function createSampleArticle() {
+            const db = firebase.database();
+            
+            const sampleArticle = {
+                title: "Selamat datang di NexeNews!",
+                category: "fakta",
+                image: "https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1",
+                content: "<h2>Platform Berita Viral Indonesia</h2><p>NexeNews adalah platform untuk berbagi cerita, fakta unik, dan konten viral dari Indonesia. Mulai buat artikel pertamamu sekarang!</p>",
+                excerpt: "Platform berita viral Indonesia",
+                author: "Admin NexeNews",
+                authorId: "admin",
+                timestamp: Date.now(),
+                views: 150,
+                likes: 25,
+                comments: 5,
+                status: "published"
             };
             
-            // Initialize the app
-            app.init();
-        });
+            await db.ref('articles').push(sampleArticle);
+            await loadArticles();
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>
