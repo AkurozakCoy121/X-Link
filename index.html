@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NexeID - Free URL Shortener</title>
     
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
+    
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyAP7lzXcSwmkOk88rXIx77j8s4gsfUs6k0",
+        authDomain: "unews-4db42.firebaseapp.com",
+        projectId: "unews-4db42",
+        storageBucket: "unews-4db42.firebasestorage.app",
+        messagingSenderId: "382914552995",
+        appId: "1:382914552995:web:ca6f2c0f6a250c39fc4b16",
+        measurementId: "G-38CHL8F98F"
+      };
+
+      // Initialize Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+    </script>
+    
     <!-- ADS SCRIPT -->
     <script>
         self.options = { domain: '3nbf4.com', zoneId: 10380831 };
@@ -28,6 +49,7 @@
         input:focus { border-color: #1a5fb4; }
         button { padding: 14px 28px; background: #1a5fb4; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; }
         button:hover { background: #0d4a9c; }
+        button:disabled { background: #cccccc; cursor: not-allowed; }
         
         /* RESULT */
         .result { margin-top: 24px; padding: 20px; background: #f1f8ff; border-radius: 8px; border-left: 4px solid #1a5fb4; display: none; }
@@ -40,6 +62,11 @@
         .recent { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e1e4e8; }
         .recent-list { max-height: 200px; overflow-y: auto; margin-top: 12px; }
         .recent-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-family: monospace; font-size: 14px; }
+        
+        /* LOADING */
+        .loader { display: none; text-align: center; margin: 20px 0; }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #1a5fb4; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         footer { margin-top: 40px; text-align: center; color: #999; font-size: 13px; }
         
@@ -58,7 +85,13 @@
         <!-- FORM -->
         <div class="form-group">
             <input type="url" id="urlInput" placeholder="https://very-long-url.com/very/long/path" required>
-            <button onclick="shortenUrl()">Shorten URL</button>
+            <button onclick="shortenUrl()" id="shortenBtn">Shorten URL</button>
+        </div>
+        
+        <!-- LOADING -->
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <p>Creating short link...</p>
         </div>
         
         <!-- RESULT -->
@@ -76,13 +109,14 @@
         
         <!-- RECENT LINKS -->
         <div class="recent" id="recentSection" style="display:none;">
-            <h3 style="font-size: 16px; color: #666; margin-bottom: 12px;">Your Recent Links:</h3>
+            <h3 style="font-size: 16px; color: #666; margin-bottom: 12px;">Recent Short Links:</h3>
             <div class="recent-list" id="recentList"></div>
         </div>
         
         <div style="margin-top: 32px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
             <p><strong>How it works:</strong> Enter any long URL, get a short random code.</p>
             <p><strong>Example:</strong> <code>nexeid.my.id/Q247</code> → short and easy to share!</p>
+            <p><strong>Note:</strong> All short links are stored in Firebase (shared database).</p>
         </div>
     </div>
     
@@ -91,10 +125,7 @@
     </footer>
     
     <script>
-        // DATABASE: Simpan mapping shortCode -> longUrl
-        let urlDatabase = JSON.parse(localStorage.getItem('nexeid_urls')) || {};
-        
-        // GENERATE RANDOM SHORT CODE (4-6 karakter)
+        // GENERATE RANDOM SHORT CODE (5 karakter)
         function generateShortCode() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let code = '';
@@ -104,21 +135,58 @@
             return code;
         }
         
-        // CEK PATH SAAT INI (apakah ini short code request?)
-        const currentPath = window.location.pathname.substring(1); // Hapus slash depan
+        // CHECK CURRENT PATH (short code request?)
+        const currentPath = window.location.pathname.substring(1);
         
         if (currentPath && currentPath !== '') {
-            // INI SHORT CODE REQUEST!
-            if (urlDatabase[currentPath]) {
-                // Redirect langsung ke URL tujuan
-                window.location.href = urlDatabase[currentPath];
+            // SHORT CODE REQUEST - Check Firebase
+            checkAndRedirect(currentPath);
+        }
+        
+        // CHECK FIREBASE & REDIRECT
+        async function checkAndRedirect(shortCode) {
+            try {
+                const snapshot = await database.ref('shortcodes/' + shortCode).once('value');
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    // Redirect to URL
+                    window.location.href = data.url;
+                    
+                    // Increment click count
+                    database.ref('shortcodes/' + shortCode + '/clicks').transaction(current => {
+                        return (current || 0) + 1;
+                    });
+                } else {
+                    // Show "not found" page
+                    showNotFoundPage(shortCode);
+                }
+            } catch (error) {
+                console.error('Firebase error:', error);
+                showNotFoundPage(shortCode);
             }
-            // Kalau ngga ada di database, tetap tampilkan homepage (biar user bisa shorten URL)
+        }
+        
+        // SHOW NOT FOUND PAGE
+        function showNotFoundPage(shortCode) {
+            document.body.innerHTML = `
+                <div class="container">
+                    <div class="logo">🔍</div>
+                    <h1>Short Code Not Found</h1>
+                    <p>The code <code>${shortCode}</code> doesn't exist or has expired.</p>
+                    <p>Want to create this short link now?</p>
+                    <div class="form-group">
+                        <input type="url" id="createUrl" placeholder="https://destination.com">
+                        <button onclick="createExistingCode('${shortCode}')">Create ${shortCode}</button>
+                    </div>
+                    <p><a href="/">← Back to homepage</a></p>
+                </div>
+            `;
         }
         
         // SHORTEN URL
-        function shortenUrl() {
+        async function shortenUrl() {
             const longUrlInput = document.getElementById('urlInput');
+            const shortenBtn = document.getElementById('shortenBtn');
             let longUrl = longUrlInput.value.trim();
             
             if (!longUrl) {
@@ -127,12 +195,12 @@
                 return;
             }
             
-            // Tambah https jika perlu
+            // Add https if needed
             if (!longUrl.startsWith('http://') && !longUrl.startsWith('https://')) {
                 longUrl = 'https://' + longUrl;
             }
             
-            // Validasi URL
+            // Validate URL
             try {
                 new URL(longUrl);
             } catch {
@@ -140,56 +208,138 @@
                 return;
             }
             
-            // Generate short code
-            let shortCode;
-            do {
-                shortCode = generateShortCode();
-            } while (urlDatabase[shortCode]); // Pastikan unik
+            // Disable button & show loader
+            shortenBtn.disabled = true;
+            document.getElementById('loader').style.display = 'block';
             
-            // Simpan ke database
-            urlDatabase[shortCode] = longUrl;
-            localStorage.setItem('nexeid_urls', JSON.stringify(urlDatabase));
-            
-            // Tampilkan hasil
-            const shortUrl = `https://nexeid.my.id/${shortCode}`;
-            document.getElementById('shortUrl').textContent = shortUrl;
-            document.getElementById('result').style.display = 'block';
-            
-            // Update recent links
-            updateRecentLinks();
-            
-            // Scroll ke hasil
-            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+            try {
+                // Generate unique short code
+                let shortCode;
+                let isUnique = false;
+                let attempts = 0;
+                
+                while (!isUnique && attempts < 10) {
+                    shortCode = generateShortCode();
+                    const snapshot = await database.ref('shortcodes/' + shortCode).once('value');
+                    if (!snapshot.exists()) {
+                        isUnique = true;
+                    }
+                    attempts++;
+                }
+                
+                if (!isUnique) {
+                    throw new Error('Failed to generate unique short code');
+                }
+                
+                // Save to Firebase
+                const shortcodeData = {
+                    url: longUrl,
+                    createdAt: new Date().toISOString(),
+                    clicks: 0
+                };
+                
+                await database.ref('shortcodes/' + shortCode).set(shortcodeData);
+                
+                // Show result
+                const shortUrl = `https://nexeid.my.id/${shortCode}`;
+                document.getElementById('shortUrl').textContent = shortUrl;
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('loader').style.display = 'none';
+                
+                // Update recent links
+                updateRecentLinks();
+                
+                // Scroll to result
+                document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to create short link. Please try again.');
+            } finally {
+                shortenBtn.disabled = false;
+                document.getElementById('loader').style.display = 'none';
+            }
         }
         
-        // UPDATE RECENT LINKS
-        function updateRecentLinks() {
-            const recentList = document.getElementById('recentList');
-            const recentSection = document.getElementById('recentSection');
+        // CREATE EXISTING CODE (from not found page)
+        async function createExistingCode(shortCode) {
+            const urlInput = document.getElementById('createUrl');
+            let longUrl = urlInput.value.trim();
             
-            if (Object.keys(urlDatabase).length === 0) {
-                recentSection.style.display = 'none';
+            if (!longUrl) {
+                alert('Please enter a URL');
                 return;
             }
             
-            recentSection.style.display = 'block';
+            if (!longUrl.startsWith('http://') && !longUrl.startsWith('https://')) {
+                longUrl = 'https://' + longUrl;
+            }
             
-            // Ambil 5 terbaru
-            const entries = Object.entries(urlDatabase);
-            const recent = entries.slice(-5).reverse();
+            try {
+                new URL(longUrl);
+            } catch {
+                alert('Please enter a valid URL');
+                return;
+            }
             
-            let html = '';
-            recent.forEach(([code, url]) => {
-                const displayUrl = url.length > 40 ? url.substring(0, 40) + '...' : url;
-                html += `
-                    <div class="recent-item">
-                        <span title="${url}">${displayUrl}</span>
-                        <span><a href="/${code}" style="color:#1a5fb4; text-decoration:none;">${code}</a></span>
-                    </div>
-                `;
-            });
+            // Check if code already exists
+            const snapshot = await database.ref('shortcodes/' + shortCode).once('value');
+            if (snapshot.exists()) {
+                alert(`Code ${shortCode} already exists!`);
+                window.location.href = `/${shortCode}`;
+                return;
+            }
             
-            recentList.innerHTML = html;
+            // Save to Firebase
+            const shortcodeData = {
+                url: longUrl,
+                createdAt: new Date().toISOString(),
+                clicks: 0
+            };
+            
+            await database.ref('shortcodes/' + shortCode).set(shortcodeData);
+            
+            // Redirect to the new short link
+            window.location.href = `/${shortCode}`;
+        }
+        
+        // UPDATE RECENT LINKS
+        async function updateRecentLinks() {
+            const recentList = document.getElementById('recentList');
+            const recentSection = document.getElementById('recentSection');
+            
+            try {
+                const snapshot = await database.ref('shortcodes').orderByChild('createdAt').limitToLast(5).once('value');
+                if (!snapshot.exists()) {
+                    recentSection.style.display = 'none';
+                    return;
+                }
+                
+                recentSection.style.display = 'block';
+                
+                let html = '';
+                const data = snapshot.val();
+                const entries = Object.entries(data).reverse(); // Newest first
+                
+                entries.forEach(([code, item]) => {
+                    const displayUrl = item.url.length > 40 ? item.url.substring(0, 40) + '...' : item.url;
+                    const clicks = item.clicks || 0;
+                    html += `
+                        <div class="recent-item">
+                            <span title="${item.url}">${displayUrl}</span>
+                            <span>
+                                <a href="/${code}" style="color:#1a5fb4; text-decoration:none;">${code}</a>
+                                <small style="color:#666; margin-left:8px;">${clicks} clicks</small>
+                            </span>
+                        </div>
+                    `;
+                });
+                
+                recentList.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading recent links:', error);
+                recentSection.style.display = 'none';
+            }
         }
         
         // COPY LINK
@@ -219,7 +369,7 @@
             if (e.key === 'Enter') shortenUrl();
         });
         
-        // INIT
+        // INITIALIZE
         window.onload = function() {
             document.getElementById('urlInput').focus();
             updateRecentLinks();
