@@ -4,17 +4,39 @@
 <title>Redirecting... | NexeID</title>
 <meta http-equiv="refresh" content="5; url=about:blank">
 <script>
-// Get URL from parameter
-var url = new URLSearchParams(window.location.search).get('to');
+// Get URL from parameter - handle multiple encoding
+function getUrlParam() {
+    var params = new URLSearchParams(window.location.search);
+    var url = params.get('to');
+    
+    // Try to decode multiple times if needed
+    while (url && url.includes('%')) {
+        try {
+            var decoded = decodeURIComponent(url);
+            if (decoded === url) break; // No more encoding
+            url = decoded;
+        } catch {
+            break; // Stop if error
+        }
+    }
+    
+    return url;
+}
+
+var url = getUrlParam();
+
 if (url) {
-    // Update meta refresh with actual URL
-    document.querySelector('meta[http-equiv="refresh"]').content = '5; url=' + url;
+    // Validate URL
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+    }
+    
+    // Update meta refresh
+    document.querySelector('meta[http-equiv="refresh"]').content = '5; url=' + encodeURI(url);
     
     // Show destination
-    document.getElementById('dest').innerText = url;
+    document.getElementById('dest').innerText = url.length > 50 ? url.substring(0, 50) + '...' : url;
     document.getElementById('dest').href = url;
-    
-    // Update manual link
     document.getElementById('manual').href = url;
     
     // Start countdown
@@ -23,10 +45,13 @@ if (url) {
     var int = setInterval(function() {
         count--;
         cd.innerText = count;
-        if (count <= 0) clearInterval(int);
+        if (count <= 0) {
+            clearInterval(int);
+            window.location.href = url;
+        }
     }, 1000);
 } else {
-    document.body.innerHTML = '<h1>Error</h1><p>Missing URL parameter</p><a href="/">Go Home</a>';
+    document.body.innerHTML = '<center><h1>❌ Error</h1><p>Missing or invalid URL parameter</p><p>Usage: <code>/r.html?to=https://example.com</code></p><a href="/">Go Home</a></center>';
 }
 </script>
 </head>
