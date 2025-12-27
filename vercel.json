@@ -6,7 +6,7 @@
     }
   ],
   "redirects": [
-    /* PREDEFINED ALIASES - Redirect di SERVER SIDE */
+
     {
       "source": "/github",
       "destination": "https://github.com"
