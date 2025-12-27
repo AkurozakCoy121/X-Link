@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RegexMagic - Regex Tester & Cheatsheet</title>
+    <title>TextCounter - Character & Word Counter Tool</title>
     
-    <!-- ====== ALL ADS ====== -->
-    <!-- PropellerAds Vignette -->
+    <!-- ====== PROPELLERADS ====== -->
+    <!-- Vignette -->
     <script>(function(s){s.dataset.zone='10381513',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     
-    <!-- PropellerAds Push 1 -->
+    <!-- Push 1 -->
     <script src="https://3nbf4.com/act/files/tag.min.js?z=10381259" data-cfasync="false" async></script>
     
-    <!-- PropellerAds Push 2 -->
+    <!-- Push 2 -->
     <script src="https://3nbf4.com/act/files/tag.min.js?z=10381292" data-cfasync="false" async></script>
     
     <style>
+        /* RESET */
         * {
             margin: 0;
             padding: 0;
@@ -24,17 +25,18 @@
         }
         
         body {
-            background: #0f172a;
-            color: #f8fafc;
+            background: #f8fafc;
+            color: #1e293b;
             min-height: 100vh;
             line-height: 1.6;
         }
         
-        /* CLEAN HEADER - NO ADS */
+        /* HEADER CLEAN */
         .header {
-            background: #1e293b;
+            background: white;
             padding: 1rem;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .header-container {
@@ -49,69 +51,92 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: #60a5fa;
+            color: #3b82f6;
         }
         
         /* MAIN LAYOUT */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 1.5rem;
+        .main-wrapper {
+            display: flex;
             max-width: 1200px;
             margin: 1.5rem auto;
             padding: 0 1rem;
+            gap: 1.5rem;
         }
         
-        @media (max-width: 768px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
+        /* LEFT SIDEBAR - ADS 160x600 */
+        .sidebar-left {
+            width: 180px;
+            flex-shrink: 0;
+        }
+        
+        /* RIGHT SIDEBAR - ADS 160x600 */
+        .sidebar-right {
+            width: 180px;
+            flex-shrink: 0;
         }
         
         /* MAIN CONTENT */
         .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            flex: 1;
+            min-width: 0;
         }
         
-        /* TOOL CONTAINER */
-        .tool-container {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-        }
-        
-        /* INPUT GROUPS */
-        .input-group {
+        /* TOOL CARD */
+        .tool-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             margin-bottom: 1.5rem;
         }
         
-        .input-group label {
-            display: block;
-            color: #cbd5e1;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        
-        .input-group textarea,
-        .input-group input {
+        /* TEXTAREA */
+        .text-input {
             width: 100%;
-            padding: 0.75rem;
-            background: #0f172a;
-            border: 1px solid #475569;
-            border-radius: 0.5rem;
-            color: #f8fafc;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.9rem;
+            min-height: 200px;
+            padding: 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s;
         }
         
-        .input-group textarea {
-            min-height: 120px;
-            resize: vertical;
+        .text-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .stat-box {
+            background: #f1f5f9;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
         
         /* BUTTONS */
@@ -138,91 +163,34 @@
         
         .btn-primary:hover {
             background: #2563eb;
+            transform: translateY(-2px);
         }
         
         .btn-secondary {
-            background: #475569;
-            color: white;
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
         }
         
         .btn-secondary:hover {
-            background: #64748b;
+            background: #e2e8f0;
         }
         
-        /* RESULTS */
-        .results {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-top: 1rem;
-            max-height: 300px;
-            overflow-y: auto;
+        .btn-premium {
+            background: linear-gradient(90deg, #f59e0b, #f97316);
+            color: white;
+            font-weight: bold;
         }
         
-        .match {
-            background: rgba(34, 197, 94, 0.1);
-            border-left: 3px solid #22c55e;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            border-radius: 0.25rem;
-        }
-        
-        .no-match {
-            color: #ef4444;
-            padding: 1rem;
-            text-align: center;
-        }
-        
-        /* CHEATSHEET */
-        .cheatsheet {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        
-        .cheat-item {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid #475569;
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            margin-bottom: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .cheat-item:hover {
-            border-color: #60a5fa;
-            background: rgba(96, 165, 250, 0.1);
-        }
-        
-        .cheat-regex {
-            color: #60a5fa;
-            font-family: monospace;
-            font-size: 0.9rem;
-        }
-        
-        .cheat-desc {
-            color: #cbd5e1;
-            font-size: 0.85rem;
-            margin-top: 0.25rem;
-        }
-        
-        /* RIGHT SIDEBAR - ADS NATURAL */
-        .right-sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        
+        /* AD CONTAINERS */
         .ad-container {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 0.75rem;
             padding: 1rem;
+            margin-bottom: 1rem;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         
         .ad-label {
@@ -233,59 +201,86 @@
             letter-spacing: 1px;
         }
         
+        /* TOP BANNER AD */
+        .top-banner-ad {
+            max-width: 728px;
+            margin: 1.5rem auto;
+        }
+        
+        /* INLINE AD */
+        .inline-ad {
+            margin: 1.5rem 0;
+        }
+        
+        /* BOTTOM BANNER AD */
+        .bottom-banner-ad {
+            max-width: 728px;
+            margin: 2rem auto;
+        }
+        
+        /* PREMIUM BANNER */
+        .premium-banner {
+            background: linear-gradient(90deg, #1e293b, #334155);
+            color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
         /* FOOTER */
         .footer {
             text-align: center;
-            padding: 1.5rem;
-            color: #94a3b8;
-            border-top: 1px solid #334155;
+            padding: 2rem;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
             margin-top: 2rem;
-            font-size: 0.9rem;
         }
         
-        /* PREMIUM BANNER - NATURAL */
-        .premium-banner {
-            background: linear-gradient(90deg, #1e293b, #334155);
-            border: 1px solid #475569;
-            border-radius: 0.75rem;
-            padding: 1rem;
-            margin-top: 1.5rem;
-            text-align: center;
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .main-wrapper {
+                flex-direction: column;
+            }
+            
+            .sidebar-left,
+            .sidebar-right {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                justify-content: center;
+            }
+            
+            .ad-container {
+                flex: 1;
+                min-width: 300px;
+                max-width: 300px;
+            }
         }
         
-        .premium-banner h3 {
-            color: #fbbf24;
-            margin-bottom: 0.5rem;
+        @media (max-width: 768px) {
+            .tool-card {
+                padding: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .btn-group {
+                justify-content: center;
+            }
         }
         
-        .premium-banner p {
-            color: #cbd5e1;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-        
-        /* STATS */
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #60a5fa;
-        }
-        
-        .stat-label {
-            font-size: 0.8rem;
-            color: #94a3b8;
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
         }
         
         /* NOTIFICATION */
@@ -301,7 +296,6 @@
             animation: slideIn 0.3s ease;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             font-weight: 500;
-            max-width: 300px;
         }
         
         @keyframes slideIn {
@@ -313,418 +307,404 @@
             from { transform: translateX(0); opacity: 1; }
             to { transform: translateX(100%); opacity: 0; }
         }
-        
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-            
-            .right-sidebar {
-                order: 3;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- VIGNETTE & PUSH AKTIF OTOMATIS DARI HEADER -->
+    <!-- PROPELLERADS VIGNETTE & PUSH AKTIF OTOMATIS -->
     
-    <!-- HEADER CLEAN -->
+    <!-- HEADER -->
     <header class="header">
         <div class="header-container">
             <div class="logo">
-                <span>🔍</span>
-                <span>RegexMagic</span>
+                <span>📊</span>
+                <span>TextCounter</span>
             </div>
-            <div style="color: #94a3b8; font-size: 0.9rem;">
-                Real-time Regex Tester • Free Tool
+            <div style="color: #64748b; font-size: 0.9rem;">
+                Free Character & Word Counter
             </div>
         </div>
     </header>
     
-    <!-- MAIN LAYOUT -->
-    <div class="main-layout">
+    <!-- TOP BANNER AD (728x90) -->
+    <div class="top-banner-ad">
+        <div class="ad-container">
+            <div class="ad-label">Advertisement</div>
+            <div id="topBannerAd"></div>
+        </div>
+    </div>
+    
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+        <!-- LEFT SIDEBAR - ADS 160x600 -->
+        <div class="sidebar-left">
+            <div class="ad-container">
+                <div class="ad-label">Sponsored</div>
+                <div id="leftAd1"></div>
+            </div>
+            <div class="ad-container">
+                <div class="ad-label">Recommended</div>
+                <div id="leftAd2"></div>
+            </div>
+        </div>
+        
         <!-- MAIN CONTENT -->
         <div class="main-content">
-            <!-- STATS -->
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number" id="totalTests">0</div>
-                    <div class="stat-label">Tests Run</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="totalUsers">0</div>
-                    <div class="stat-label">Active Users</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="patternsSaved">0</div>
-                    <div class="stat-label">Patterns Saved</div>
-                </div>
-            </div>
-            
-            <!-- TOOL CONTAINER -->
-            <div class="tool-container">
-                <h2 style="color: #f8fafc; margin-bottom: 1.5rem;">🔍 Regex Tester</h2>
+            <!-- TOOL CARD -->
+            <div class="tool-card">
+                <h1 style="margin-bottom: 1.5rem; color: #1e293b;">📝 Character & Word Counter</h1>
+                <p style="color: #64748b; margin-bottom: 1.5rem;">
+                    Paste or type your text below. Get instant character, word, sentence, and paragraph counts.
+                </p>
                 
-                <!-- TEST STRING -->
-                <div class="input-group">
-                    <label for="testString">Test String</label>
-                    <textarea id="testString" placeholder="Enter text to test against regex...">Hello World! Email: test@example.com, Phone: +62 812-3456-7890, Date: 2024-12-25</textarea>
-                </div>
+                <textarea 
+                    class="text-input" 
+                    id="textInput" 
+                    placeholder="Start typing or paste your text here..."
+                    oninput="updateCount()"
+                >Welcome to TextCounter! This free tool helps you count characters, words, sentences, and paragraphs in real-time. Perfect for writers, students, and professionals who need to meet specific length requirements. Try it now - it's completely free and works 100% in your browser!</textarea>
                 
-                <!-- REGEX PATTERN -->
-                <div class="input-group">
-                    <label for="regexPattern">Regular Expression</label>
-                    <input type="text" id="regexPattern" placeholder="Enter regex pattern (e.g., \w+@\w+\.\w+)" value="\w+@\w+\.\w+">
-                </div>
-                
-                <!-- FLAGS -->
-                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                    <label style="display: flex; align-items: center; gap: 0.5rem; color: #cbd5e1;">
-                        <input type="checkbox" id="flagGlobal" checked> Global (g)
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 0.5rem; color: #cbd5e1;">
-                        <input type="checkbox" id="flagIgnoreCase"> Ignore Case (i)
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 0.5rem; color: #cbd5e1;">
-                        <input type="checkbox" id="flagMultiline"> Multiline (m)
-                    </label>
+                <!-- STATS GRID -->
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number" id="charCount">0</div>
+                        <div class="stat-label">Characters</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="charNoSpace">0</div>
+                        <div class="stat-label">Chars (no spaces)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="wordCount">0</div>
+                        <div class="stat-label">Words</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="sentenceCount">0</div>
+                        <div class="stat-label">Sentences</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="paragraphCount">0</div>
+                        <div class="stat-label">Paragraphs</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="readingTime">0</div>
+                        <div class="stat-label">Reading Time</div>
+                    </div>
                 </div>
                 
                 <!-- BUTTONS -->
                 <div class="btn-group">
-                    <button class="btn btn-primary" onclick="testRegex()">
-                        🚀 Test Regex
+                    <button class="btn btn-primary" onclick="clearText()">
+                        🗑️ Clear Text
                     </button>
-                    <button class="btn btn-secondary" onclick="clearAll()">
-                        🗑️ Clear All
+                    <button class="btn btn-secondary" onclick="copyText()">
+                        📋 Copy Text
                     </button>
-                    <button class="btn btn-secondary" onclick="savePattern()">
-                        💾 Save Pattern
+                    <button class="btn btn-secondary" onclick="pasteText()">
+                        📥 Paste Text
                     </button>
-                    <button class="btn" onclick="showPremiumOffer()" style="background: #f59e0b; color: white;">
+                    <button class="btn-premium btn" onclick="showPremiumOffer()">
                         ⭐ Premium Tools
                     </button>
                 </div>
                 
-                <!-- RESULTS -->
-                <div class="results" id="results">
-                    <div class="no-match">Results will appear here...</div>
+                <!-- INLINE AD (300x250) -->
+                <div class="inline-ad">
+                    <div class="ad-container">
+                        <div class="ad-label">Advertisement</div>
+                        <div id="inlineAd1"></div>
+                    </div>
+                </div>
+                
+                <!-- EXTRA FEATURES -->
+                <div style="margin-top: 2rem;">
+                    <h3 style="color: #1e293b; margin-bottom: 1rem;">✨ Advanced Features</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <button class="btn-secondary btn" onclick="convertToUppercase()">
+                            🔠 UPPERCASE
+                        </button>
+                        <button class="btn-secondary btn" onclick="convertToLowercase()">
+                            🔡 lowercase
+                        </button>
+                        <button class="btn-secondary btn" onclick="removeExtraSpaces()">
+                            ✂️ Trim Spaces
+                        </button>
+                        <button class="btn-secondary btn" onclick="reverseText()">
+                            🔄 Reverse Text
+                        </button>
+                    </div>
                 </div>
             </div>
             
-            <!-- CHEATSHEET -->
-            <div class="cheatsheet">
-                <h3 style="color: #f8fafc; margin-bottom: 1rem;">📚 Regex Cheatsheet</h3>
-                <div id="cheatsheetContent">
-                    <!-- Cheatsheet items will be loaded here -->
-                </div>
-            </div>
-            
-            <!-- PREMIUM BANNER - NATURAL PLACEMENT -->
+            <!-- PREMIUM BANNER -->
             <div class="premium-banner">
-                <h3>🚀 Upgrade to RegexMagic Pro</h3>
-                <p>Get advanced features: Save unlimited patterns, export results, team collaboration, and priority support.</p>
-                <button class="btn" onclick="showPremiumOffer()" style="background: linear-gradient(90deg, #f59e0b, #f97316); color: white; font-weight: bold;">
-                    🔥 Get Pro Now - Special Offer!
+                <h3 style="margin-bottom: 0.5rem;">🚀 Upgrade to TextCounter Pro</h3>
+                <p style="margin-bottom: 1rem; opacity: 0.9;">
+                    Get advanced features: Export reports, plagiarism check, grammar suggestions, and unlimited history!
+                </p>
+                <button class="btn-premium btn" onclick="showPremiumOffer()" style="padding: 0.75rem 2rem; font-size: 1rem;">
+                    🔥 Get Pro Now - Limited Offer!
                 </button>
+            </div>
+            
+            <!-- INLINE AD 2 (300x250) -->
+            <div class="inline-ad">
+                <div class="ad-container">
+                    <div class="ad-label">Sponsored</div>
+                    <div id="inlineAd2"></div>
+                </div>
             </div>
         </div>
         
-        <!-- RIGHT SIDEBAR - ADS NATURAL -->
-        <div class="right-sidebar">
-            <!-- ADSTERRA BANNER 1 (300x250) -->
+        <!-- RIGHT SIDEBAR - ADS 160x600 -->
+        <div class="sidebar-right">
             <div class="ad-container">
                 <div class="ad-label">Advertisement</div>
-                <div id="adsterra1"></div>
+                <div id="rightAd1"></div>
             </div>
-            
-            <!-- POPULAR PATTERNS -->
-            <div class="ad-container" style="background: #1e293b;">
-                <div class="ad-label">🔥 Popular Regex</div>
-                <div style="margin-top: 0.5rem;">
-                    <div class="cheat-item" onclick="loadPattern('^\\w+@\\w+\\.\\w+$', 'Email validation')">
-                        <div class="cheat-regex">^\w+@\w+\.\w+$</div>
-                        <div class="cheat-desc">Email Address</div>
-                    </div>
-                    <div class="cheat-item" onclick="loadPattern('\\+?[\\d\\s\\-\\(\\)]{7,}', 'Phone number')">
-                        <div class="cheat-regex">\+?[\d\s\-\(\)]{7,}</div>
-                        <div class="cheat-desc">Phone Number</div>
-                    </div>
-                    <div class="cheat-item" onclick="loadPattern('https?:\\/\\/[^\\s]+', 'URL matching')">
-                        <div class="cheat-regex">https?:\/\/[^\s]+</div>
-                        <div class="cheat-desc">URL Pattern</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- ADSTERRA BANNER 2 (300x250) -->
-            <div class="ad-container">
-                <div class="ad-label">Sponsored</div>
-                <div id="adsterra2"></div>
-            </div>
-            
-            <!-- RECENT PATTERNS -->
-            <div class="ad-container" style="background: #1e293b;">
-                <div class="ad-label">💾 Recent Patterns</div>
-                <div id="recentPatterns" style="margin-top: 0.5rem;">
-                    <!-- Recent patterns will load here -->
-                </div>
-            </div>
-            
-            <!-- ADSTERRA BANNER 3 (300x250) -->
             <div class="ad-container">
                 <div class="ad-label">Recommended</div>
-                <div id="adsterra3"></div>
+                <div id="rightAd2"></div>
             </div>
+            <div class="ad-container">
+                <div class="ad-label">Advertisement</div>
+                <div id="rightAd3"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- BOTTOM BANNER AD (728x90) -->
+    <div class="bottom-banner-ad">
+        <div class="ad-container">
+            <div class="ad-label">Advertisement</div>
+            <div id="bottomBannerAd"></div>
         </div>
     </div>
     
     <!-- FOOTER -->
     <footer class="footer">
-        <p>© 2025 RegexMagic • Regex tester running 100% in your browser</p>
-        <p style="margin-top: 0.5rem; color: #64748b;">
-            No data collection • Free forever • Made for developers
+        <p>© 2025 TextCounter • Free character and word counting tool</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+            Works 100% in your browser • No data collection • No registration required
         </p>
     </footer>
     
     <script>
         // ==================== INITIALIZE ====================
         window.onload = function() {
-            console.log("RegexMagic loaded");
+            console.log("TextCounter loaded");
             
-            // Update stats
-            updateStats();
+            // Initial count
+            updateCount();
             
-            // Load cheatsheet
-            loadCheatsheet();
-            
-            // Load recent patterns
-            loadRecentPatterns();
-            
-            // Load Adsterra ads
-            setTimeout(loadAdsterraAds, 1000);
-            
-            // Run initial test
-            setTimeout(() => {
-                testRegex();
-            }, 500);
+            // Load all ads with delay (IMPORTANT!)
+            setTimeout(loadAllAds, 1500);
             
             // Load PropellerAds In-Page Push after 5 seconds
             setTimeout(loadInPagePush, 5000);
+            
+            // Update stats display
+            updateStatsDisplay();
         };
         
-        // ==================== REGEX FUNCTIONS ====================
-        function testRegex() {
-            const testString = document.getElementById('testString').value;
-            const regexPattern = document.getElementById('regexPattern').value;
+        // ==================== TEXT COUNTING FUNCTIONS ====================
+        function updateCount() {
+            const text = document.getElementById('textInput').value;
             
-            if (!testString || !regexPattern) {
-                showNotification("Please enter both test string and regex pattern", "error");
+            // Character count
+            const charCount = text.length;
+            document.getElementById('charCount').textContent = charCount.toLocaleString();
+            
+            // Character count without spaces
+            const charNoSpace = text.replace(/\s/g, '').length;
+            document.getElementById('charNoSpace').textContent = charNoSpace.toLocaleString();
+            
+            // Word count
+            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+            const wordCount = text.trim() === '' ? 0 : words.length;
+            document.getElementById('wordCount').textContent = wordCount.toLocaleString();
+            
+            // Sentence count
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            document.getElementById('sentenceCount').textContent = sentences.length.toLocaleString();
+            
+            // Paragraph count
+            const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0);
+            document.getElementById('paragraphCount').textContent = paragraphs.length.toLocaleString();
+            
+            // Reading time (average 200 words per minute)
+            const readingTime = Math.ceil(wordCount / 200);
+            document.getElementById('readingTime').textContent = readingTime + " min";
+            
+            // Update localStorage stats
+            updateStats(wordCount);
+            
+            // Trigger monetization occasionally
+            if (wordCount > 10 && wordCount % 20 === 0) {
+                triggerMonetization();
+            }
+        }
+        
+        // ==================== TEXT MANIPULATION FUNCTIONS ====================
+        function clearText() {
+            document.getElementById('textInput').value = '';
+            updateCount();
+            showNotification('Text cleared!', 'success');
+        }
+        
+        function copyText() {
+            const text = document.getElementById('textInput').value;
+            if (!text.trim()) {
+                showNotification('No text to copy!', 'error');
                 return;
             }
             
-            // Build flags
-            let flags = '';
-            if (document.getElementById('flagGlobal').checked) flags += 'g';
-            if (document.getElementById('flagIgnoreCase').checked) flags += 'i';
-            if (document.getElementById('flagMultiline').checked) flags += 'm';
-            
-            const resultsDiv = document.getElementById('results');
-            
-            try {
-                const regex = new RegExp(regexPattern, flags);
-                const matches = testString.match(regex);
-                
-                if (!matches) {
-                    resultsDiv.innerHTML = `
-                        <div class="no-match">
-                            ❌ No matches found
-                        </div>
-                    `;
-                    return;
-                }
-                
-                let highlightedText = testString;
-                let matchCount = 0;
-                
-                // Highlight matches in the text
-                matches.forEach(match => {
-                    highlightedText = highlightedText.replace(match, `<mark style="background: #22c55e; color: white; padding: 2px 4px; border-radius: 3px;">${match}</mark>`);
-                    matchCount++;
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    showNotification('Text copied to clipboard!', 'success');
+                })
+                .catch(() => {
+                    // Fallback
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showNotification('Text copied to clipboard!', 'success');
                 });
-                
-                resultsDiv.innerHTML = `
-                    <div style="color: #22c55e; margin-bottom: 1rem; font-weight: bold;">
-                        ✅ Found ${matchCount} match${matchCount > 1 ? 'es' : ''}
-                    </div>
-                    <div style="background: #0f172a; padding: 1rem; border-radius: 0.5rem; border: 1px solid #334155; font-family: monospace; line-height: 1.5;">
-                        ${highlightedText}
-                    </div>
-                    <div style="margin-top: 1rem; color: #cbd5e1;">
-                        <strong>Matches:</strong>
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
-                            ${matches.map(match => 
-                                `<span style="background: #1e293b; padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid #475569;">${match}</span>`
-                            ).join('')}
-                        </div>
-                    </div>
-                `;
-                
-                // Update stats
-                incrementCounter('tests');
-                
-                // Trigger monetization occasionally
-                if (matchCount > 0) {
-                    triggerMonetization();
-                }
-                
-                showNotification(`✅ Found ${matchCount} match${matchCount > 1 ? 'es' : ''}`, "success");
-                
-            } catch (error) {
-                resultsDiv.innerHTML = `
-                    <div class="no-match">
-                        ❌ Invalid regex pattern: ${error.message}
-                    </div>
-                `;
-                showNotification("❌ Invalid regex pattern", "error");
-            }
         }
         
-        function clearAll() {
-            document.getElementById('testString').value = '';
-            document.getElementById('regexPattern').value = '';
-            document.getElementById('results').innerHTML = '<div class="no-match">Results will appear here...</div>';
-            showNotification("Cleared all fields", "info");
-        }
-        
-        function savePattern() {
-            const regexPattern = document.getElementById('regexPattern').value;
-            if (!regexPattern) {
-                showNotification("Please enter a regex pattern to save", "error");
-                return;
-            }
-            
-            let patterns = JSON.parse(localStorage.getItem('regex_patterns') || '[]');
-            patterns.unshift({
-                pattern: regexPattern,
-                timestamp: Date.now()
-            });
-            
-            // Keep only last 10
-            patterns = patterns.slice(0, 10);
-            localStorage.setItem('regex_patterns', JSON.stringify(patterns));
-            
-            incrementCounter('patterns');
-            loadRecentPatterns();
-            showNotification("✅ Pattern saved!", "success");
-        }
-        
-        function loadPattern(pattern, description) {
-            document.getElementById('regexPattern').value = pattern;
-            showNotification(`Loaded: ${description}`, "info");
-            
-            // Auto-test if there's text
-            setTimeout(testRegex, 300);
-        }
-        
-        // ==================== CHEATSHEET ====================
-        function loadCheatsheet() {
-            const cheatsheet = [
-                { regex: '\\d', desc: 'Any digit (0-9)' },
-                { regex: '\\w', desc: 'Word character (a-z, A-Z, 0-9, _)' },
-                { regex: '\\s', desc: 'Whitespace (space, tab, newline)' },
-                { regex: '.', desc: 'Any character except newline' },
-                { regex: '^', desc: 'Start of string' },
-                { regex: '$', desc: 'End of string' },
-                { regex: '[abc]', desc: 'Any of a, b, or c' },
-                { regex: '[^abc]', desc: 'Not a, b, or c' },
-                { regex: 'a|b', desc: 'a or b' },
-                { regex: 'a?', desc: 'Zero or one of a' },
-                { regex: 'a*', desc: 'Zero or more of a' },
-                { regex: 'a+', desc: 'One or more of a' },
-                { regex: 'a{3}', desc: 'Exactly 3 of a' },
-                { regex: 'a{3,}', desc: '3 or more of a' },
-                { regex: 'a{3,5}', desc: 'Between 3 and 5 of a' },
-                { regex: '(a|b)', desc: 'Group: a or b' },
-                { regex: '\\bword\\b', desc: 'Whole word "word"' }
-            ];
-            
-            const container = document.getElementById('cheatsheetContent');
-            container.innerHTML = cheatsheet.map(item => `
-                <div class="cheat-item" onclick="loadPattern('${item.regex}', '${item.desc}')">
-                    <div class="cheat-regex">${item.regex}</div>
-                    <div class="cheat-desc">${item.desc}</div>
-                </div>
-            `).join('');
-        }
-        
-        function loadRecentPatterns() {
-            const patterns = JSON.parse(localStorage.getItem('regex_patterns') || '[]');
-            const container = document.getElementById('recentPatterns');
-            
-            if (patterns.length === 0) {
-                container.innerHTML = '<div style="color: #94a3b8; text-align: center; padding: 0.5rem;">No saved patterns yet</div>';
-                return;
-            }
-            
-            container.innerHTML = patterns.map(p => `
-                <div class="cheat-item" onclick="loadPattern('${p.pattern}', 'Saved pattern')" style="padding: 0.5rem; margin-bottom: 0.5rem;">
-                    <div class="cheat-regex" style="font-size: 0.8rem;">${p.pattern.substring(0, 30)}${p.pattern.length > 30 ? '...' : ''}</div>
-                    <div class="cheat-desc" style="font-size: 0.75rem;">Saved ${timeAgo(p.timestamp)}</div>
-                </div>
-            `).join('');
-        }
-        
-        function timeAgo(timestamp) {
-            const seconds = Math.floor((Date.now() - timestamp) / 1000);
-            if (seconds < 60) return 'just now';
-            const minutes = Math.floor(seconds / 60);
-            if (minutes < 60) return `${minutes}m ago`;
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `${hours}h ago`;
-            const days = Math.floor(hours / 24);
-            return `${days}d ago`;
-        }
-        
-        // ==================== ADSTERRA ADS ====================
-        function loadAdsterraAds() {
-            console.log("Loading Adsterra ads...");
-            
-            // Load three Adsterra banners (300x250)
-            const ads = [
-                { id: 'adsterra1', key: 'df392223eb071195b98c897f97cb395d' },
-                { id: 'adsterra2', key: '7d3f7dcf6c27eb36646280d85dba51ed' },
-                { id: 'adsterra3', key: 'df392223eb071195b98c897f97cb395d' }
-            ];
-            
-            ads.forEach(ad => {
-                loadAdsterraAd(ad.id, ad.key);
-            });
-        }
-        
-        function loadAdsterraAd(elementId, key) {
+        async function pasteText() {
             try {
-                const element = document.getElementById(elementId);
-                if (!element) return;
-                
-                element.innerHTML = `
-                    <script>
-                        atOptions = {
-                            'key' : '${key}',
-                            'format' : 'iframe',
-                            'height' : 250,
-                            'width' : 300,
-                            'params' : {}
-                        };
-                    <\/script>
-                    <script src="https://www.highperformanceformat.com/${key}/invoke.js"><\/script>
-                `;
-                
-                console.log(`Adsterra loaded: ${elementId}`);
+                const text = await navigator.clipboard.readText();
+                document.getElementById('textInput').value = text;
+                updateCount();
+                showNotification('Text pasted!', 'success');
             } catch (error) {
-                console.log(`Failed to load Adsterra ${elementId}:`, error);
+                showNotification('Unable to paste. Please paste manually.', 'error');
             }
+        }
+        
+        function convertToUppercase() {
+            const textarea = document.getElementById('textInput');
+            textarea.value = textarea.value.toUpperCase();
+            updateCount();
+            showNotification('Converted to UPPERCASE!', 'success');
+        }
+        
+        function convertToLowercase() {
+            const textarea = document.getElementById('textInput');
+            textarea.value = textarea.value.toLowerCase();
+            updateCount();
+            showNotification('Converted to lowercase!', 'success');
+        }
+        
+        function removeExtraSpaces() {
+            const textarea = document.getElementById('textInput');
+            textarea.value = textarea.value.replace(/\s+/g, ' ').trim();
+            updateCount();
+            showNotification('Extra spaces removed!', 'success');
+        }
+        
+        function reverseText() {
+            const textarea = document.getElementById('textInput');
+            textarea.value = textarea.value.split('').reverse().join('');
+            updateCount();
+            showNotification('Text reversed!', 'success');
+        }
+        
+        // ==================== ADS LOADING (FIXED) ====================
+        function loadAllAds() {
+            console.log("Loading all ads...");
+            
+            // Adsterra Ads (300x250)
+            loadAdsterraAd('topBannerAd', 90, 728, '7d3f7dcf6c27eb36646280d85dba51ed');
+            loadAdsterraAd('bottomBannerAd', 90, 728, '7d3f7dcf6c27eb36646280d85dba51ed');
+            
+            // Left sidebar ads (160x600)
+            loadAdsterraAd('leftAd1', 600, 160, '5e0812e16f5b229c05c8d853fc6f9253');
+            loadAdsterraAd('leftAd2', 600, 160, 'df392223eb071195b98c897f97cb395d');
+            
+            // Inline ads (300x250)
+            loadAdsterraAd('inlineAd1', 250, 300, 'df392223eb071195b98c897f97cb395d');
+            loadAdsterraAd('inlineAd2', 250, 300, '7d3f7dcf6c27eb36646280d85dba51ed');
+            
+            // Right sidebar ads (160x600)
+            loadAdsterraAd('rightAd1', 600, 160, '5e0812e16f5b229c05c8d853fc6f9253');
+            loadAdsterraAd('rightAd2', 600, 160, 'df392223eb071195b98c897f97cb395d');
+            loadAdsterraAd('rightAd3', 600, 160, '7d3f7dcf6c27eb36646280d85dba51ed');
+        }
+        
+        function loadAdsterraAd(elementId, height, width, key) {
+            // Delay each ad slightly to prevent blocking
+            setTimeout(() => {
+                try {
+                    const element = document.getElementById(elementId);
+                    if (!element) return;
+                    
+                    // Clear and create fresh iframe
+                    element.innerHTML = '';
+                    
+                    const iframe = document.createElement('iframe');
+                    iframe.id = `ad_${elementId}`;
+                    iframe.width = width;
+                    iframe.height = height;
+                    iframe.frameBorder = 0;
+                    iframe.scrolling = 'no';
+                    iframe.style.border = 'none';
+                    iframe.style.overflow = 'hidden';
+                    iframe.style.display = 'block';
+                    iframe.style.margin = '0 auto';
+                    
+                    // Create the script content
+                    const scriptContent = `
+                        <script>
+                            atOptions = {
+                                'key' : '${key}',
+                                'format' : 'iframe',
+                                'height' : ${height},
+                                'width' : ${width},
+                                'params' : {}
+                            };
+                        <\/script>
+                        <script src="https://www.highperformanceformat.com/${key}/invoke.js"><\/script>
+                    `;
+                    
+                    // Create a blob and load in iframe
+                    const blob = new Blob([`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>Ad</title>
+                            <style>body {margin:0;padding:0;}</style>
+                        </head>
+                        <body>
+                            ${scriptContent}
+                        </body>
+                        </html>
+                    `], { type: 'text/html' });
+                    
+                    iframe.src = URL.createObjectURL(blob);
+                    element.appendChild(iframe);
+                    
+                    console.log(`Ad loaded: ${elementId}`);
+                    
+                } catch (error) {
+                    console.log(`Failed to load ad ${elementId}:`, error);
+                    // Fallback: Show CPA link
+                    const element = document.getElementById(elementId);
+                    if (element) {
+                        element.innerHTML = `
+                            <div style="padding: 10px; background: #f1f5f9; border-radius: 5px;">
+                                <a href="https://otieu.com/4/10381160" target="_blank" 
+                                   style="color: #3b82f6; text-decoration: none; font-weight: bold;">
+                                   🚀 Upgrade to Premium Text Tools - Click Here!
+                                </a>
+                            </div>
+                        `;
+                    }
+                }
+            }, Math.random() * 1000); // Random delay 0-1 second
         }
         
         // ==================== PROPELLERADS ====================
@@ -758,21 +738,16 @@
         
         // ==================== MONETIZATION ====================
         function triggerMonetization() {
-            const tests = parseInt(localStorage.getItem('regex_tests') || '0');
+            const totalWords = parseInt(localStorage.getItem('total_words_counted') || '0');
             
-            // Trigger In-Page Push every 5th test
-            if (tests > 0 && tests % 5 === 0) {
-                setTimeout(loadInPagePush, 2000);
+            // Trigger Popunder every 1000 words
+            if (totalWords > 0 && totalWords % 1000 === 0) {
+                setTimeout(loadPopunder, 2000);
             }
             
-            // Trigger Popunder every 10th test
-            if (tests > 0 && tests % 10 === 0) {
-                setTimeout(loadPopunder, 3000);
-            }
-            
-            // Show premium offer occasionally (20% chance)
-            if (tests > 0 && tests % 7 === 0 && Math.random() < 0.2) {
-                setTimeout(showPremiumOffer, 4000);
+            // Show premium offer occasionally
+            if (totalWords > 500 && totalWords % 750 === 0) {
+                setTimeout(showPremiumOffer, 3000);
             }
         }
         
@@ -781,24 +756,24 @@
             window.open('https://otieu.com/4/10381160', '_blank', 'noopener,noreferrer');
             
             // Also trigger In-Page Push
-            setTimeout(loadInPagePush, 500);
+            setTimeout(loadInPagePush, 300);
         }
         
         // ==================== STATS ====================
-        function updateStats() {
-            const tests = parseInt(localStorage.getItem('regex_tests') || '0');
-            const patterns = parseInt(localStorage.getItem('regex_patterns_saved') || '0');
-            
-            document.getElementById('totalTests').textContent = tests || 1;
-            document.getElementById('totalUsers').textContent = Math.floor(tests / 3) + 1 || 3;
-            document.getElementById('patternsSaved').textContent = patterns || 0;
+        function updateStats(wordCount) {
+            if (wordCount > 0) {
+                const totalWords = parseInt(localStorage.getItem('total_words_counted') || '0');
+                localStorage.setItem('total_words_counted', totalWords + wordCount);
+            }
         }
         
-        function incrementCounter(type) {
-            const key = `regex_${type}`;
-            const current = parseInt(localStorage.getItem(key) || '0');
-            localStorage.setItem(key, (current + 1).toString());
-            updateStats();
+        function updateStatsDisplay() {
+            const totalWords = parseInt(localStorage.getItem('total_words_counted') || '0');
+            const totalChars = parseInt(localStorage.getItem('total_chars_counted') || '0');
+            
+            // You could display these somewhere
+            console.log(`Total words counted: ${totalWords}`);
+            console.log(`Total chars counted: ${totalChars}`);
         }
         
         // ==================== UI FUNCTIONS ====================
@@ -825,6 +800,25 @@
                     }
                 }, 300);
             }, 3000);
+        }
+        
+        // ==================== AUTO-SAVE TEXT ====================
+        let saveTimeout;
+        document.getElementById('textInput').addEventListener('input', function() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                const text = this.value;
+                if (text.trim().length > 0) {
+                    localStorage.setItem('last_text', text);
+                }
+            }, 1000);
+        });
+        
+        // Load last saved text
+        const lastText = localStorage.getItem('last_text');
+        if (lastText) {
+            document.getElementById('textInput').value = lastText;
+            updateCount();
         }
     </script>
 </body>
