@@ -1,54 +1,393 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>NexeID Redirect</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- ADS SCRIPT -->
-<script>
-    self.options = {
-        domain: '3nbf4.com',
-        zoneId: 10380831
-    };
-</script>
-<script src="https://3nbf4.com/act/files/service-worker.min.js?r=sw"></script>
-<!-- END ADS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexeID - Free URL Redirect</title>
+    
+    <!-- ADS SCRIPT -->
+    <script>
+        self.options = {
+            domain: '3nbf4.com',
+            zoneId: 10380831
+        };
+    </script>
+    <script src="https://3nbf4.com/act/files/service-worker.min.js?r=sw"></script>
+    <script>(function(s){s.dataset.zone='10380855',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <!-- END ADS -->
 
 <script>(function(s){s.dataset.zone='10380855',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <script>(function(s){s.dataset.zone='10380895',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-
+    
+    <style>
+        /* RESET & BASE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background: #f8f9fa;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        
+        /* CONTAINER */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            text-align: center;
+        }
+        
+        /* HEADER */
+        .header {
+            margin-bottom: 32px;
+        }
+        
+        .logo {
+            font-size: 40px;
+            margin-bottom: 12px;
+            color: #1a5fb4;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1f2e;
+            margin-bottom: 8px;
+        }
+        
+        .tagline {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        /* FORM */
+        .form-section {
+            margin: 32px 0;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        input[type="url"] {
+            flex: 1;
+            padding: 14px 18px;
+            font-size: 16px;
+            border: 2px solid #e1e4e8;
+            border-radius: 8px;
+            outline: none;
+            transition: border 0.2s;
+        }
+        
+        input[type="url"]:focus {
+            border-color: #1a5fb4;
+        }
+        
+        button {
+            padding: 14px 28px;
+            background: #1a5fb4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        
+        button:hover {
+            background: #0d4a9c;
+        }
+        
+        /* RESULT */
+        .result {
+            margin-top: 24px;
+            padding: 20px;
+            background: #f1f8ff;
+            border-radius: 8px;
+            border-left: 4px solid #1a5fb4;
+            display: none;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1a1f2e;
+        }
+        
+        .short-url {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 15px;
+            word-break: break-all;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e1e4e8;
+            margin: 12px 0;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        /* QUICK LINKS */
+        .quick-links {
+            margin: 32px 0;
+            padding-top: 24px;
+            border-top: 1px solid #e1e4e8;
+        }
+        
+        .quick-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .quick-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .quick-link {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #1a5fb4;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #e1e4e8;
+            transition: all 0.2s;
+        }
+        
+        .quick-link:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+        
+        /* INFO */
+        .info {
+            margin-top: 32px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .info strong {
+            color: #1a1f2e;
+        }
+        
+        /* FOOTER */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-<center>
-
-<h1>🔗 NexeID Redirect</h1>
-<p><i>Free URL redirect service</i></p>
-
-<hr width="300">
-
-<h3>Create Redirect Link</h3>
-<form action="/r.html" method="get">
-<input type="url" name="to" placeholder="https://example.com" size="40" required><br><br>
-<input type="submit" value="Generate Link">
-</form>
-
-<hr width="300">
-
-<h3>Your Link Will Look Like:</h3>
-<code>https://nexeid.my.id/r.html?to=https://your-url.com</code>
-
-<h3>Quick Examples:</h3>
-<p>
-<a href="/r.html?to=https://github.com">GitHub</a> | 
-<a href="/r.html?to=https://youtube.com">YouTube</a> | 
-<a href="/r.html?to=https://twitter.com">Twitter</a>
-</p>
-
-<hr width="300">
-
-<p><small>Powered by <b>nexeid.my.id</b></small></p>
-<p><small>Redirects after 5 seconds with NexeID branding</small></p>
-
-</center>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🔗</div>
+            <h1>NexeID</h1>
+            <p class="tagline">Free URL redirect service</p>
+            <p class="tagline" style="font-size:14px; color:#888;">No signup • No tracking • Fast</p>
+        </div>
+        
+        <div class="form-section">
+            <div class="input-group">
+                <input type="url" id="urlInput" placeholder="https://example.com" required>
+                <button onclick="generateLink()">Create Link</button>
+            </div>
+            <p style="font-size:14px; color:#666; margin-top:8px;">
+                Creates a 5-second redirect with NexeID branding
+            </p>
+        </div>
+        
+        <div class="result" id="result">
+            <div class="result-title">✅ Your NexeID Link is Ready</div>
+            <div class="short-url" id="generatedUrl"></div>
+            <div class="btn-group">
+                <button onclick="copyLink()">Copy Link</button>
+                <button class="btn-secondary" onclick="resetForm()">Create Another</button>
+            </div>
+            <p style="margin-top:16px; font-size:14px; color:#666;">
+                Opens with a 5-second countdown and NexeID branding
+            </p>
+        </div>
+        
+        <div class="quick-links">
+            <div class="quick-title">Quick Redirects</div>
+            <div class="quick-grid">
+                <a href="/r.html?to=https://github.com" class="quick-link">GitHub</a>
+                <a href="/r.html?to=https://youtube.com" class="quick-link">YouTube</a>
+                <a href="/r.html?to=https://twitter.com" class="quick-link">Twitter</a>
+                <a href="/r.html?to=https://instagram.com" class="quick-link">Instagram</a>
+                <a href="/r.html?to=https://saweria.co/omedonation" class="quick-link">Donate</a>
+                <a href="/r.html?to=https://open.spotify.com" class="quick-link">Spotify</a>
+            </div>
+        </div>
+        
+        <div class="info">
+            <p><strong>How it works:</strong> Enter any URL to get a redirect link.</p>
+            <p><strong>Example:</strong> <code>https://nexeid.my.id/r.html?to=https://github.com</code></p>
+            <p style="margin-top:12px;"><strong>Note:</strong> This service is free and supported by non-intrusive ads.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 NexeID • <a href="https://nexeid.my.id" style="color:#1a5fb4;">nexeid.my.id</a></p>
+        <p style="margin-top:4px; font-size:12px;">Redirects powered by NexeID technology</p>
+    </footer>
+    
+    <script>
+        // Generate redirect link
+        function generateLink() {
+            let urlInput = document.getElementById('urlInput');
+            let url = urlInput.value.trim();
+            
+            // Validate
+            if (!url) {
+                alert('Please enter a URL');
+                urlInput.focus();
+                return;
+            }
+            
+            // Add https if missing
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+            
+            // Validate URL format
+            try {
+                new URL(url);
+            } catch {
+                alert('Please enter a valid URL (e.g., https://example.com)');
+                return;
+            }
+            
+            // Create redirect link
+            let encodedUrl = encodeURIComponent(url);
+            let redirectLink = window.location.origin + '/r.html?to=' + encodedUrl;
+            
+            // Display result
+            document.getElementById('generatedUrl').textContent = redirectLink;
+            document.getElementById('result').style.display = 'block';
+            
+            // Scroll to result
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+            
+            // Save to history
+            saveToHistory(url, redirectLink);
+        }
+        
+        // Copy link to clipboard
+        function copyLink() {
+            let link = document.getElementById('generatedUrl').textContent;
+            navigator.clipboard.writeText(link)
+                .then(() => {
+                    let btn = event.target;
+                    let originalText = btn.textContent;
+                    btn.textContent = '✅ Copied!';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                })
+                .catch(err => {
+                    alert('Failed to copy. Please copy manually.');
+                });
+        }
+        
+        // Reset form
+        function resetForm() {
+            document.getElementById('urlInput').value = '';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('urlInput').focus();
+        }
+        
+        // Save to browsing history (localStorage)
+        function saveToHistory(originalUrl, redirectUrl) {
+            let history = JSON.parse(localStorage.getItem('nexeid_history')) || [];
+            history.unshift({
+                original: originalUrl,
+                redirect: redirectUrl,
+                timestamp: new Date().toLocaleString()
+            });
+            
+            // Keep only last 10 items
+            history = history.slice(0, 10);
+            localStorage.setItem('nexeid_history', JSON.stringify(history));
+        }
+        
+        // Allow Enter key to submit
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateLink();
+            }
+        });
+        
+        // Auto-focus input on load
+        window.onload = function() {
+            document.getElementById('urlInput').focus();
+        };
+    </script>
 </body>
 </html>
