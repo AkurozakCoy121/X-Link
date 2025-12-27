@@ -1,0 +1,40 @@
+{
+  "rewrites": [
+    {
+      "source": "/r",
+      "destination": "/r.html"
+    },
+    {
+      "source": "/r.html",
+      "destination": "/r.html"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/github",
+      "destination": "https://github.com"
+    },
+    {
+      "source": "/twitter",
+      "destination": "https://twitter.com"
+    },
+    {
+      "source": "/donate",
+      "destination": "https://saweria.co/omedonation"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}
