@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.5/dist/quill.js"></script>
     
     <!-- FAVICON -->
-    <link rel="icon" type="image/x-icon" href="logo.png">
+    <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/841/841364.png">
     
     <!-- ADS SCRIPTS -->
     <!-- In-Page Push -->
@@ -32,10 +32,12 @@
             --white:#fff; --dark:#1E293B; --gray:#94A3B8; --light:#F8FAFC;
             --success:#10B981; --danger:#EF4444; --warning:#F59E0B; --info:#3B82F6;
             --radius:12px; --shadow:0 4px 20px rgba(0,0,0,0.1); --shadow-lg:0 10px 40px rgba(0,0,0,0.15);
-            --sidebar-width:280px; --header-height:70px;
+            --sidebar-width:160px; --header-height:70px;
         }
         body { font-family:'Poppins',sans-serif; color:var(--dark); background:var(--light); line-height:1.6; }
         .container { max-width:1400px; margin:0 auto; padding:0 20px; }
+        
+        /* BUTTONS */
         .btn { border:none; border-radius:var(--radius); padding:12px 24px; font-weight:600; cursor:pointer; transition:0.3s; display:inline-flex; align-items:center; gap:8px; }
         .btn-primary { background:var(--primary); color:var(--white); }
         .btn-primary:hover { background:#1D4ED8; transform:translateY(-2px); box-shadow:var(--shadow); }
@@ -47,9 +49,30 @@
         .btn-sm { padding:8px 16px; font-size:0.9rem; }
         .btn-lg { padding:16px 32px; font-size:1.1rem; }
         
+        /* MODAL */
+        .modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:2000; }
+        .modal.active { display:flex; }
+        .modal-content { background:white; border-radius:var(--radius); max-width:90%; max-height:90vh; overflow-y:auto; animation:modalFade 0.3s ease; }
+        @keyframes modalFade { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+        .modal-header { padding:20px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; }
+        .modal-close { background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--gray); }
+        .modal-body { padding:20px; }
+        
+        /* NOTIFICATION */
+        .notification { position:fixed; top:20px; right:20px; padding:15px 25px; border-radius:var(--radius); color:white; z-index:3000; display:none; animation:slideInRight 0.3s ease; }
+        .notification.active { display:block; }
+        @keyframes slideInRight { from { transform:translateX(100px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+        
+        /* SEARCH RESULTS */
+        .search-result-item { padding:15px; border-bottom:1px solid #e2e8f0; display:flex; gap:15px; align-items:center; cursor:pointer; transition:0.2s; }
+        .search-result-item:hover { background:#f8fafc; }
+        .search-result-image { width:80px; height:60px; border-radius:8px; object-fit:cover; }
+        .search-result-content h4 { margin-bottom:5px; font-size:1rem; }
+        .search-result-content p { font-size:0.85rem; color:var(--gray); }
+        
         /* HEADER */
         .header { background:var(--white); box-shadow:0 2px 20px rgba(0,0,0,0.08); position:sticky; top:0; z-index:1000; height:var(--header-height); }
-        .header-container { display:flex; align-items:center; padding:0 20px; height:100%; }
+        .header-container { display:flex; align-items:center; padding:0 20px; height:100%; max-width:1400px; margin:0 auto; }
         .logo { display:flex; align-items:center; gap:12px; font-size:1.8rem; font-weight:800; color:var(--dark); text-decoration:none; }
         .logo img { height:40px; width:auto; }
         .logo-text { background:linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
@@ -65,12 +88,9 @@
         .user-avatar { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; cursor:pointer; border:3px solid #e2e8f0; transition:0.3s; }
         .user-avatar:hover { border-color:var(--primary); transform:scale(1.05); }
         
-        /* POPUP PROFILE (DIBAGUSIN) */
+        /* POPUP PROFILE */
         .profile-popup { position:fixed; top:80px; right:20px; width:320px; background:white; border-radius:var(--radius); box-shadow:var(--shadow-lg); z-index:1000; display:none; animation:slideDown 0.3s ease; }
-        @keyframes slideDown {
-            from { transform:translateY(-20px); opacity:0; }
-            to { transform:translateY(0); opacity:1; }
-        }
+        @keyframes slideDown { from { transform:translateY(-20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
         .profile-popup.active { display:block; }
         .profile-popup-header { padding:25px; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; border-radius:var(--radius) var(--radius) 0 0; }
         .profile-popup-avatar { width:80px; height:80px; border-radius:50%; border:4px solid white; background:white; display:flex; align-items:center; justify-content:center; font-size:2.5rem; color:var(--primary); margin:0 auto 15px; }
@@ -102,7 +122,7 @@
         .article-content p { margin-bottom:20px; }
         .article-content img { max-width:100%; height:auto; border-radius:var(--radius); margin:20px auto; display:block; }
         
-        /* INLINE ADS DI ARTIKEL */
+        /* INLINE ADS */
         .inline-ad { margin:30px 0; text-align:center; }
         
         /* ACTION BUTTONS */
@@ -124,15 +144,9 @@
         .comment-actions { margin-top:15px; display:flex; gap:15px; }
         .comment-reply { margin-left:40px; margin-top:15px; padding-left:20px; border-left:3px solid #e2e8f0; }
         
-        /* ALGORITHM BADGE */
+        /* BADGES */
         .trending-badge { background:linear-gradient(135deg, #FF6B35, #E55A2B); color:white; padding:5px 15px; border-radius:20px; font-size:0.8rem; font-weight:600; display:inline-block; margin-left:10px; }
         .new-badge { background:var(--success); color:white; padding:5px 15px; border-radius:20px; font-size:0.8rem; font-weight:600; display:inline-block; margin-left:10px; }
-        
-        /* MODAL MONETIZATION */
-        .monetize-modal { background:linear-gradient(135deg, #FF6B35, #E55A2B); color:white; }
-        .monetize-modal .modal-content { background:white; color:var(--dark); }
-        .monetize-content { text-align:center; padding:30px; }
-        .monetize-icon { font-size:4rem; margin-bottom:20px; color:var(--warning); }
         
         /* ARTICLE CARD */
         .article-card { background:white; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transition:0.3s; cursor:pointer; }
@@ -161,8 +175,7 @@
     <header class="header">
         <div class="header-container">
             <a href="#" class="logo" onclick="showHomePage(); return false;">
-                <img src="logo.png" alt="NexeNews Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-                <i class="fas fa-newspaper" style="display:none; font-size:2rem; color:var(--primary);"></i>
+                <img src="https://cdn-icons-png.flaticon.com/512/841/841364.png" alt="NexeNews Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/841/841364.png'">
                 <span class="logo-text">NexeNews</span>
             </a>
             
@@ -218,18 +231,18 @@
         </div>
     </div>
     
-    <!-- ==================== MONETIZATION MODAL ==================== -->
+    <!-- ==================== MODALS ==================== -->
     <div class="modal" id="monetizeModal">
         <div class="modal-content" style="max-width:500px;">
             <div class="modal-header" style="background:linear-gradient(135deg, #FF6B35, #E55A2B); color:white;">
                 <h2><i class="fas fa-coins"></i> Dukung Kami!</h2>
                 <button class="modal-close" id="closeMonetizeModal">&times;</button>
             </div>
-            <div class="monetize-content">
-                <div class="monetize-icon">
+            <div class="modal-body" style="text-align:center;">
+                <div style="font-size:4rem; color:var(--warning); margin-bottom:20px;">
                     <i class="fas fa-hand-holding-usd"></i>
                 </div>
-                <h3>Butuh Dukunganmu!</h3>
+                <h3 style="margin-bottom:15px;">Butuh Dukunganmu!</h3>
                 <p style="margin:20px 0;">Klik tombol di bawah untuk mendukung platform ini tetap gratis untuk semua orang!</p>
                 <a href="https://otieu.com/4/10381160" target="_blank" class="btn btn-warning btn-lg" style="margin-bottom:20px;">
                     <i class="fas fa-external-link-alt"></i> Klik untuk Support
@@ -242,7 +255,6 @@
         </div>
     </div>
     
-    <!-- ==================== CREATE ARTICLE MODAL ==================== -->
     <div class="modal" id="createArticleModal">
         <div class="modal-content" style="max-width:800px;">
             <div class="modal-header">
@@ -384,7 +396,7 @@
                         <!-- Content loaded here -->
                     </div>
                     
-                    <!-- INLINE ADS DI TENGAH ARTIKEL -->
+                    <!-- INLINE ADS -->
                     <div class="inline-ad">
                         <div class="ad-banner medium" style="margin:0 auto;">
                             <span class="ad-label">IKLAN</span>
@@ -409,7 +421,7 @@
                         <button class="action-btn" id="shareArticleBtn">
                             <i class="fas fa-share-alt"></i> Share
                         </button>
-                        <button class="btn btn-primary" id="readMoreBtn" style="margin-left:auto;">
+                        <button class="btn btn-primary" id="readMoreBtn" style="margin-left:auto;" onclick="showHomePage()">
                             <i class="fas fa-book"></i> Baca Juga
                         </button>
                     </div>
@@ -602,7 +614,6 @@
         let isAdmin = false;
         let hasMonetized = false;
         let userLikes = {};
-        let commentEditId = null;
 
         // ========== INITIALIZE ==========
         async function initializeApp() {
@@ -632,25 +643,77 @@
                 // Auth state listener
                 firebase.auth().onAuthStateChanged(async (user) => {
                     currentUser = user;
-                    updateUI();
+                    
+                    // Update UI berdasarkan user state
+                    updateUserUI();
                     
                     if (user) {
                         await loadUserProfile();
                         await checkAdminStatus();
-                        loadUserLikes();
+                        await loadUserLikes();
+                    } else {
+                        // Show login button
+                        document.getElementById('userAvatar').textContent = '?';
+                        document.getElementById('userAvatar').style.backgroundImage = 'none';
+                        document.getElementById('writeArticleBtn').style.display = 'none';
                     }
                     
                     await loadArticles();
                     setupEventListeners();
                 });
                 
-                // Initial load
-                loadArticles();
+                // Setup anonymous login
+                await setupAnonymousLogin();
                 
             } catch (error) {
                 console.error('Initialization error:', error);
                 showNotification('Error loading application', 'error');
             }
+        }
+
+        // ========== ANONYMOUS LOGIN ==========
+        async function setupAnonymousLogin() {
+            try {
+                // Check if user is already logged in
+                const user = firebase.auth().currentUser;
+                
+                if (!user) {
+                    // Sign in anonymously
+                    await firebase.auth().signInAnonymously();
+                }
+                
+            } catch (error) {
+                console.error('Anonymous login error:', error);
+                // Continue without login
+            }
+        }
+
+        // ========== UPDATE UI FUNCTION ==========
+        function updateUserUI() {
+            if (!currentUser) return;
+            
+            // Update header avatar
+            const avatar = document.getElementById('userAvatar');
+            if (userProfile?.avatar) {
+                avatar.style.backgroundImage = `url('${userProfile.avatar}')`;
+                avatar.style.backgroundSize = 'cover';
+                avatar.textContent = '';
+            } else {
+                avatar.style.backgroundImage = 'none';
+                avatar.textContent = userProfile?.username?.charAt(0).toUpperCase() || 'U';
+            }
+            
+            // Update profile popup if user exists
+            if (userProfile) {
+                document.getElementById('popupUsername').textContent = userProfile.username;
+                document.getElementById('popupEmail').textContent = userProfile.email || 'Anonymous';
+                document.getElementById('popupAvatar').textContent = userProfile.username.charAt(0).toUpperCase();
+                document.getElementById('popupArticles').textContent = userProfile.stats?.articles || 0;
+                document.getElementById('popupLikes').textContent = userProfile.stats?.likes || 0;
+            }
+            
+            // Show/hide write button
+            document.getElementById('writeArticleBtn').style.display = currentUser ? 'block' : 'none';
         }
 
         // ========== LOAD ARTICLES WITH ALGORITHM ==========
@@ -692,6 +755,11 @@
                 
             } catch (error) {
                 console.error('Error loading articles:', error);
+                // Use local data if Firebase fails
+                articles = getLocalSampleArticles();
+                displayTrendingArticles(articles);
+                displayNewestArticles(articles);
+                displayRecommendedArticles();
             }
         }
 
@@ -725,11 +793,11 @@
             }
             
             // Minimum threshold untuk muncul di trending
-            const minScore = 100; // Minimal 100 score untuk trending
+            const minScore = 100;
             
             // Jika artikel baru, beri bonus
             if (ageInHours < 2 && (article.likes || 0) > 10) {
-                score += 50; // Bonus untuk artikel baru yang populer cepat
+                score += 50;
             }
             
             return Math.max(score, 0);
@@ -814,6 +882,11 @@
                 .sort(() => Math.random() - 0.5)
                 .slice(0, 3);
             
+            if (recommended.length === 0) {
+                container.innerHTML = '<p style="color:var(--gray); text-align:center;">Belum ada rekomendasi</p>';
+                return;
+            }
+            
             container.innerHTML = recommended.map(article => `
                 <div style="margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="openArticle('${article.id}')">
                     <div style="display:flex; gap:10px;">
@@ -840,14 +913,11 @@
             
             currentArticle = article;
             
-            // Update view count (REAL)
-            await updateViewCount(articleId);
+            // Update view count (LOCAL - karena Firebase permission error)
+            updateLocalViewCount(articleId);
             
             // Show article page
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('articlePage').style.display = 'block';
-            document.getElementById('profilePage').style.display = 'none';
-            document.getElementById('adminPage').style.display = 'none';
+            showArticlePage();
             
             // Set article data
             document.getElementById('articleTitle').textContent = article.title;
@@ -875,21 +945,67 @@
             // Set comment count
             document.getElementById('commentCount').textContent = formatNumber(article.comments || 0);
             
+            // Show/hide comment form
+            const commentForm = document.getElementById('commentForm');
+            const loginToComment = document.getElementById('loginToComment');
+            if (currentUser && !currentUser.isAnonymous) {
+                commentForm.style.display = 'block';
+                loginToComment.style.display = 'none';
+            } else {
+                commentForm.style.display = 'none';
+                loginToComment.style.display = 'block';
+            }
+            
             // Load comments
             await loadComments(articleId);
             
-            // Auto-add inline ads to content
-            injectInlineAds();
-            
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ========== PAGE NAVIGATION ==========
+        function showHomePage() {
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('articlePage').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('profilePopup').classList.remove('active');
+        }
+
+        function showArticlePage() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('articlePage').style.display = 'block';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('profilePopup').classList.remove('active');
+        }
+
+        function showProfilePage() {
+            if (!currentUser) {
+                showNotification('Login dulu untuk melihat profil', 'warning');
+                return;
+            }
             
-            // Start view timer (count view after 5 seconds)
-            setTimeout(() => {
-                if (document.getElementById('articlePage').style.display === 'block') {
-                    updateViewCount(articleId);
-                }
-            }, 5000);
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('articlePage').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'block';
+            document.getElementById('adminPage').style.display = 'none';
+            
+            // Load profile data
+            if (userProfile) {
+                document.getElementById('profileBigUsername').textContent = userProfile.username;
+                document.getElementById('profileBigEmail').textContent = userProfile.email || 'Anonymous';
+                document.getElementById('profileBigAvatar').textContent = userProfile.username.charAt(0).toUpperCase();
+                document.getElementById('profileBigArticles').textContent = userProfile.stats?.articles || 0;
+                document.getElementById('profileBigLikes').textContent = userProfile.stats?.likes || 0;
+                document.getElementById('profileBigViews').textContent = userProfile.stats?.views || 0;
+                document.getElementById('editUsername').value = userProfile.username;
+                document.getElementById('editAvatarUrl').value = userProfile.avatar || '';
+                document.getElementById('profileUserId').textContent = currentUser.uid;
+                document.getElementById('profileJoinDate').textContent = new Date(userProfile.joinDate || Date.now()).toLocaleDateString('id-ID');
+            }
+            
+            loadMyArticles();
         }
 
         // ========== MONETIZATION SYSTEM ==========
@@ -942,13 +1058,6 @@
                 return;
             }
             
-            // Check slug uniqueness
-            const existingSlug = articles.find(a => a.slug === slug);
-            if (existingSlug) {
-                showNotification('Slug sudah digunakan, coba judul lain', 'error');
-                return;
-            }
-            
             try {
                 const db = firebase.database();
                 
@@ -959,7 +1068,7 @@
                     content,
                     excerpt: content.replace(/<[^>]*>/g, '').substring(0, 150) + '...',
                     slug,
-                    author: currentUser.displayName || currentUser.email.split('@')[0],
+                    author: userProfile?.username || 'Anonymous',
                     authorId: currentUser.uid,
                     authorAvatar: userProfile?.avatar || '',
                     timestamp: Date.now(),
@@ -979,9 +1088,10 @@
                 
                 if (isAdmin) {
                     showNotification('Artikel berhasil dipublish!', 'success');
-                    openArticle(newArticleRef.key);
+                    openArticle(newArticleRef.key, true);
                 } else {
                     showNotification('Artikel berhasil dikirim, menunggu approval admin', 'success');
+                    showHomePage();
                 }
                 
                 // Reload articles
@@ -993,7 +1103,7 @@
             }
         }
 
-        // ========== LIKE SYSTEM ==========
+        // ========== LIKE SYSTEM (LOCAL) ==========
         async function toggleLike(articleId) {
             if (!currentUser) {
                 showNotification('Login dulu untuk like artikel', 'error');
@@ -1005,74 +1115,57 @@
             
             const alreadyLiked = userLikes[articleId];
             
-            try {
-                const db = firebase.database();
+            if (alreadyLiked) {
+                // Unlike
+                userLikes[articleId] = false;
+                article.likes = (article.likes || 0) - 1;
                 
-                if (alreadyLiked) {
-                    // Unlike
-                    await db.ref(`articleLikes/${articleId}/${currentUser.uid}`).remove();
-                    await db.ref(`articles/${articleId}/likes`).transaction(current => (current || 0) - 1);
-                    userLikes[articleId] = false;
-                    
-                    // Update UI
-                    document.getElementById('likeText').textContent = 'Suka';
-                    document.getElementById('likeArticleBtn').classList.remove('liked');
-                    document.getElementById('likeArticleBtn').innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
-                    
-                    // Update user stats
-                    await updateUserStats('likes', -1);
-                    
-                } else {
-                    // Like
-                    await db.ref(`articleLikes/${articleId}/${currentUser.uid}`).set(true);
-                    await db.ref(`articles/${articleId}/likes`).transaction(current => (current || 0) + 1);
-                    userLikes[articleId] = true;
-                    
-                    // Update UI
-                    document.getElementById('likeText').textContent = 'Disukai';
-                    document.getElementById('likeArticleBtn').classList.add('liked');
-                    document.getElementById('likeArticleBtn').innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
-                    
-                    // Update user stats
-                    await updateUserStats('likes', 1);
-                }
+                // Update UI
+                document.getElementById('likeText').textContent = 'Suka';
+                document.getElementById('likeArticleBtn').classList.remove('liked');
+                document.getElementById('likeArticleBtn').innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
+                document.getElementById('articleLikes').textContent = formatNumber(article.likes);
                 
-                // Reload article data
-                await loadArticles();
+                // Update user stats
+                await updateUserStats('likes', -1);
                 
-            } catch (error) {
-                console.error('Error toggling like:', error);
-                showNotification('Gagal update like', 'error');
+            } else {
+                // Like
+                userLikes[articleId] = true;
+                article.likes = (article.likes || 0) + 1;
+                
+                // Update UI
+                document.getElementById('likeText').textContent = 'Disukai';
+                document.getElementById('likeArticleBtn').classList.add('liked');
+                document.getElementById('likeArticleBtn').innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
+                document.getElementById('articleLikes').textContent = formatNumber(article.likes);
+                
+                // Update user stats
+                await updateUserStats('likes', 1);
             }
+            
+            // Save to localStorage
+            localStorage.setItem('userLikes', JSON.stringify(userLikes));
+            
+            // Update display
+            displayTrendingArticles(articles.filter(a => a.status === 'published'));
+            displayRecommendedArticles();
+            
+            showNotification(alreadyLiked ? 'Like dihapus' : 'Artikel disukai!', 'success');
         }
 
-        // ========== COMMENT SYSTEM ==========
+        // ========== COMMENT SYSTEM (LOCAL) ==========
         async function loadComments(articleId) {
-            try {
-                const db = firebase.database();
-                const snapshot = await db.ref(`comments/${articleId}`).once('value');
-                
-                if (snapshot.exists()) {
-                    const commentsData = snapshot.val();
-                    comments = Object.entries(commentsData).map(([id, data]) => ({
-                        id,
-                        ...data
-                    }));
-                    
-                    // Sort by timestamp
-                    comments.sort((a, b) => b.timestamp - a.timestamp);
-                    
-                    displayComments();
-                } else {
-                    comments = [];
-                    displayComments();
-                }
-                
-            } catch (error) {
-                console.error('Error loading comments:', error);
+            // Load from localStorage
+            const storedComments = localStorage.getItem(`comments_${articleId}`);
+            
+            if (storedComments) {
+                comments = JSON.parse(storedComments);
+            } else {
                 comments = [];
-                displayComments();
             }
+            
+            displayComments();
         }
 
         function displayComments() {
@@ -1089,8 +1182,8 @@
                 return;
             }
             
-            container.innerHTML = comments.map(comment => `
-                <div class="comment-item" id="comment-${comment.id}">
+            container.innerHTML = comments.map((comment, index) => `
+                <div class="comment-item" id="comment-${index}">
                     <div class="comment-header">
                         <div class="comment-author">
                             <div class="comment-author-avatar">${comment.authorName?.charAt(0) || 'A'}</div>
@@ -1101,10 +1194,10 @@
                     <div class="comment-content">${comment.text}</div>
                     <div class="comment-actions">
                         ${comment.authorId === currentUser?.uid ? `
-                            <button class="btn btn-sm btn-secondary" onclick="editComment('${comment.id}')">
+                            <button class="btn btn-sm btn-secondary" onclick="editComment(${index})">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteComment('${comment.id}')">
+                            <button class="btn btn-sm btn-danger" onclick="deleteComment(${index})">
                                 <i class="fas fa-trash"></i> Hapus
                             </button>
                         ` : ''}
@@ -1130,73 +1223,67 @@
                 return;
             }
             
-            try {
-                const db = firebase.database();
-                
-                const newComment = {
-                    text,
-                    authorId: currentUser.uid,
-                    authorName: currentUser.displayName || currentUser.email.split('@')[0],
-                    authorAvatar: userProfile?.avatar || '',
-                    timestamp: Date.now()
-                };
-                
-                await db.ref(`comments/${currentArticle.id}`).push(newComment);
-                
-                // Update comment count
-                await db.ref(`articles/${currentArticle.id}/comments`).transaction(current => (current || 0) + 1);
-                
-                // Clear input
-                document.getElementById('commentInput').value = '';
-                
-                // Show notification
-                showNotification('Komentar berhasil ditambahkan', 'success');
-                
-                // Reload comments
-                await loadComments(currentArticle.id);
-                await loadArticles();
-                
-            } catch (error) {
-                console.error('Error submitting comment:', error);
-                showNotification('Gagal menambahkan komentar', 'error');
-            }
+            const newComment = {
+                text,
+                authorId: currentUser.uid,
+                authorName: userProfile?.username || 'Anonymous',
+                authorAvatar: userProfile?.avatar || '',
+                timestamp: Date.now()
+            };
+            
+            comments.unshift(newComment);
+            
+            // Save to localStorage
+            localStorage.setItem(`comments_${currentArticle.id}`, JSON.stringify(comments));
+            
+            // Update comment count
+            currentArticle.comments = (currentArticle.comments || 0) + 1;
+            document.getElementById('articleComments').textContent = formatNumber(currentArticle.comments);
+            document.getElementById('commentCount').textContent = formatNumber(currentArticle.comments);
+            
+            // Clear input
+            document.getElementById('commentInput').value = '';
+            
+            // Show notification
+            showNotification('Komentar berhasil ditambahkan', 'success');
+            
+            // Reload comments
+            displayComments();
+            
         }
 
-        async function editComment(commentId) {
-            const comment = comments.find(c => c.id === commentId);
+        function editComment(index) {
+            const comment = comments[index];
             if (!comment) return;
             
             const newText = prompt('Edit komentar:', comment.text);
             if (!newText || newText.trim() === '') return;
             
-            try {
-                const db = firebase.database();
-                await db.ref(`comments/${currentArticle.id}/${commentId}/text`).set(newText.trim());
-                showNotification('Komentar berhasil diedit', 'success');
-                await loadComments(currentArticle.id);
-            } catch (error) {
-                console.error('Error editing comment:', error);
-                showNotification('Gagal mengedit komentar', 'error');
-            }
+            comment.text = newText.trim();
+            comment.timestamp = Date.now();
+            
+            // Save to localStorage
+            localStorage.setItem(`comments_${currentArticle.id}`, JSON.stringify(comments));
+            
+            showNotification('Komentar berhasil diedit', 'success');
+            displayComments();
         }
 
-        async function deleteComment(commentId) {
+        function deleteComment(index) {
             if (!confirm('Hapus komentar ini?')) return;
             
-            try {
-                const db = firebase.database();
-                await db.ref(`comments/${currentArticle.id}/${commentId}`).remove();
-                
-                // Update comment count
-                await db.ref(`articles/${currentArticle.id}/comments`).transaction(current => (current || 0) - 1);
-                
-                showNotification('Komentar berhasil dihapus', 'success');
-                await loadComments(currentArticle.id);
-                await loadArticles();
-            } catch (error) {
-                console.error('Error deleting comment:', error);
-                showNotification('Gagal menghapus komentar', 'error');
-            }
+            comments.splice(index, 1);
+            
+            // Update comment count
+            currentArticle.comments = Math.max(0, (currentArticle.comments || 0) - 1);
+            document.getElementById('articleComments').textContent = formatNumber(currentArticle.comments);
+            document.getElementById('commentCount').textContent = formatNumber(currentArticle.comments);
+            
+            // Save to localStorage
+            localStorage.setItem(`comments_${currentArticle.id}`, JSON.stringify(comments));
+            
+            showNotification('Komentar berhasil dihapus', 'success');
+            displayComments();
         }
 
         // ========== PROFILE FUNCTIONS ==========
@@ -1204,16 +1291,16 @@
             if (!currentUser) return;
             
             try {
-                const db = firebase.database();
-                const snapshot = await db.ref(`users/${currentUser.uid}`).once('value');
+                // Load from localStorage
+                const storedProfile = localStorage.getItem(`userProfile_${currentUser.uid}`);
                 
-                if (snapshot.exists()) {
-                    userProfile = snapshot.val();
+                if (storedProfile) {
+                    userProfile = JSON.parse(storedProfile);
                 } else {
                     // Create new user profile
                     userProfile = {
-                        username: currentUser.displayName || currentUser.email.split('@')[0],
-                        email: currentUser.email,
+                        username: currentUser.displayName || 'User' + Math.floor(Math.random() * 1000),
+                        email: currentUser.email || 'anonymous@nexenews.com',
                         avatar: currentUser.photoURL || '',
                         joinDate: Date.now(),
                         stats: {
@@ -1222,10 +1309,12 @@
                             views: 0
                         }
                     };
-                    await db.ref(`users/${currentUser.uid}`).set(userProfile);
+                    
+                    // Save to localStorage
+                    localStorage.setItem(`userProfile_${currentUser.uid}`, JSON.stringify(userProfile));
                 }
                 
-                updateProfileUI();
+                updateUserUI();
                 
             } catch (error) {
                 console.error('Error loading user profile:', error);
@@ -1235,62 +1324,28 @@
         async function updateUserStats(type, delta) {
             if (!currentUser || !userProfile) return;
             
-            try {
-                const db = firebase.database();
-                const statPath = `users/${currentUser.uid}/stats/${type}`;
-                await db.ref(statPath).transaction(current => (current || 0) + delta);
+            if (userProfile.stats) {
+                userProfile.stats[type] = (userProfile.stats[type] || 0) + delta;
                 
-                // Update local profile
-                if (userProfile.stats) {
-                    userProfile.stats[type] = (userProfile.stats[type] || 0) + delta;
-                }
+                // Save to localStorage
+                localStorage.setItem(`userProfile_${currentUser.uid}`, JSON.stringify(userProfile));
                 
-                updateProfileUI();
-                
-            } catch (error) {
-                console.error('Error updating user stats:', error);
+                updateUserUI();
             }
         }
 
-        function updateProfileUI() {
+        // ========== LOAD USER LIKES ==========
+        async function loadUserLikes() {
             if (!currentUser) return;
             
-            // Update header avatar
-            const avatar = document.getElementById('userAvatar');
-            if (userProfile?.avatar) {
-                avatar.style.backgroundImage = `url('${userProfile.avatar}')`;
-                avatar.style.backgroundSize = 'cover';
-                avatar.textContent = '';
+            // Load from localStorage
+            const storedLikes = localStorage.getItem('userLikes');
+            
+            if (storedLikes) {
+                userLikes = JSON.parse(storedLikes);
             } else {
-                avatar.style.backgroundImage = 'none';
-                avatar.textContent = userProfile?.username?.charAt(0).toUpperCase() || 'U';
+                userLikes = {};
             }
-            
-            // Update profile popup
-            if (userProfile) {
-                document.getElementById('popupUsername').textContent = userProfile.username;
-                document.getElementById('popupEmail').textContent = userProfile.email;
-                document.getElementById('popupAvatar').textContent = userProfile.username.charAt(0).toUpperCase();
-                document.getElementById('popupArticles').textContent = userProfile.stats?.articles || 0;
-                document.getElementById('popupLikes').textContent = userProfile.stats?.likes || 0;
-                
-                // Update profile page if visible
-                if (document.getElementById('profilePage').style.display !== 'none') {
-                    document.getElementById('profileBigUsername').textContent = userProfile.username;
-                    document.getElementById('profileBigEmail').textContent = userProfile.email;
-                    document.getElementById('profileBigAvatar').textContent = userProfile.username.charAt(0).toUpperCase();
-                    document.getElementById('profileBigArticles').textContent = userProfile.stats?.articles || 0;
-                    document.getElementById('profileBigLikes').textContent = userProfile.stats?.likes || 0;
-                    document.getElementById('profileBigViews').textContent = userProfile.stats?.views || 0;
-                    document.getElementById('editUsername').value = userProfile.username;
-                    document.getElementById('editAvatarUrl').value = userProfile.avatar || '';
-                    document.getElementById('profileUserId').textContent = currentUser.uid;
-                    document.getElementById('profileJoinDate').textContent = new Date(userProfile.joinDate).toLocaleDateString('id-ID');
-                }
-            }
-            
-            // Show/hide write button
-            document.getElementById('writeArticleBtn').style.display = currentUser ? 'block' : 'none';
         }
 
         // ========== UTILITY FUNCTIONS ==========
@@ -1348,13 +1403,115 @@
             setTimeout(() => notification.classList.remove('active'), 3000);
         }
 
+        function updateLocalViewCount(articleId) {
+            const article = articles.find(a => a.id === articleId);
+            if (article) {
+                article.views = (article.views || 0) + 1;
+                document.getElementById('articleViews').textContent = formatNumber(article.views);
+                
+                // Update author stats if applicable
+                if (article.authorId === currentUser?.uid) {
+                    updateUserStats('views', 1);
+                }
+            }
+        }
+
+        // ========== SAMPLE DATA ==========
+        function getLocalSampleArticles() {
+            return [
+                {
+                    id: '1',
+                    title: 'Selamat datang di NexeNews!',
+                    category: 'fakta',
+                    image: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1',
+                    content: '<h2>Platform Berita Viral Indonesia</h2><p>NexeNews adalah platform untuk berbagi cerita, fakta unik, dan konten viral dari Indonesia. Mulai buat artikel pertamamu sekarang!</p>',
+                    excerpt: 'Platform berita viral Indonesia',
+                    author: 'Admin NexeNews',
+                    authorId: 'admin',
+                    timestamp: Date.now() - 3600000,
+                    views: 150,
+                    likes: 25,
+                    comments: 5,
+                    status: 'published',
+                    score: 350
+                },
+                {
+                    id: '2',
+                    title: 'Fakta Unik tentang Indonesia',
+                    category: 'fakta',
+                    image: 'https://images.unsplash.com/photo-1551632811-561732d1e306',
+                    content: '<h2>Indonesia Negara yang Unik</h2><p>Memiliki lebih dari 17.000 pulau dan 700 bahasa daerah yang berbeda.</p>',
+                    excerpt: 'Fakta menarik tentang Indonesia',
+                    author: 'Penjelajah',
+                    authorId: 'user2',
+                    timestamp: Date.now() - 7200000,
+                    views: 89,
+                    likes: 12,
+                    comments: 3,
+                    status: 'published',
+                    score: 120
+                }
+            ];
+        }
+
+        async function createSampleArticle() {
+            const sampleArticles = getLocalSampleArticles();
+            articles = sampleArticles;
+            
+            // Save to localStorage
+            localStorage.setItem('articles', JSON.stringify(sampleArticles));
+            
+            displayTrendingArticles(sampleArticles);
+            displayNewestArticles(sampleArticles);
+            displayRecommendedArticles();
+        }
+
+        // ========== LOAD MY ARTICLES ==========
+        async function loadMyArticles() {
+            if (!currentUser) return;
+            
+            const myArticles = articles.filter(article => article.authorId === currentUser.uid);
+            const container = document.getElementById('myArticlesList');
+            
+            if (myArticles.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px; color:var(--gray);">
+                        <i class="fas fa-newspaper" style="font-size:2rem; margin-bottom:15px;"></i>
+                        <p>Belum ada artikel</p>
+                        <button class="btn btn-primary" onclick="showCreateArticleModal()" style="margin-top:15px;">
+                            <i class="fas fa-plus"></i> Buat Artikel Pertama
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = myArticles.map(article => `
+                <div style="background:#f8fafc; padding:15px; border-radius:var(--radius); margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h4 style="margin-bottom:5px;">${article.title}</h4>
+                        <div style="font-size:0.85rem; color:var(--gray); display:flex; gap:15px;">
+                            <span><i class="far fa-eye"></i> ${article.views || 0}</span>
+                            <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
+                            <span><i class="far fa-comment"></i> ${article.comments || 0}</span>
+                            <span>${article.status === 'published' ? '<span style="color:var(--success);">Published</span>' : '<span style="color:var(--warning);">Pending</span>'}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)">
+                            <i class="fas fa-external-link-alt"></i> Buka
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         // ========== EVENT LISTENERS ==========
         function setupEventListeners() {
             // User avatar click
             document.getElementById('userAvatar').addEventListener('click', () => {
                 if (!currentUser) {
-                    // Show login modal
-                    showNotification('Login dulu untuk mengakses profil', 'warning');
+                    showNotification('Silahkan login terlebih dahulu', 'warning');
                     return;
                 }
                 document.getElementById('profilePopup').classList.toggle('active');
@@ -1415,6 +1572,7 @@
                 window.open('https://otieu.com/4/10381160', '_blank');
                 hasMonetized = true;
                 document.getElementById('publishArticleBtn').disabled = false;
+                showNotification('Terima kasih sudah support!', 'success');
             });
             
             // Create article modal
@@ -1434,7 +1592,9 @@
             // Share button
             document.getElementById('shareArticleBtn').addEventListener('click', () => {
                 if (currentArticle) {
-                    shareArticle(currentArticle);
+                    const url = window.location.href.split('?')[0] + '?article=' + currentArticle.id;
+                    navigator.clipboard.writeText(url);
+                    showNotification('Link artikel disalin!', 'success');
                 }
             });
             
@@ -1445,7 +1605,7 @@
             
             if (document.getElementById('loginForCommentBtn')) {
                 document.getElementById('loginForCommentBtn').addEventListener('click', () => {
-                    showNotification('Fitur login akan segera tersedia', 'info');
+                    showNotification('Anda sudah login sebagai anonymous', 'info');
                 });
             }
             
@@ -1457,29 +1617,19 @@
                     return;
                 }
                 
-                try {
-                    const db = firebase.database();
-                    await db.ref(`users/${currentUser.uid}/username`).set(newUsername);
-                    userProfile.username = newUsername;
-                    showNotification('Username berhasil diperbarui', 'success');
-                    updateProfileUI();
-                } catch (error) {
-                    showNotification('Gagal memperbarui username', 'error');
-                }
+                userProfile.username = newUsername;
+                localStorage.setItem(`userProfile_${currentUser.uid}`, JSON.stringify(userProfile));
+                showNotification('Username berhasil diperbarui', 'success');
+                updateUserUI();
             });
             
             document.getElementById('saveAvatarBtn').addEventListener('click', async () => {
                 const newAvatar = document.getElementById('editAvatarUrl').value.trim();
                 
-                try {
-                    const db = firebase.database();
-                    await db.ref(`users/${currentUser.uid}/avatar`).set(newAvatar);
-                    userProfile.avatar = newAvatar;
-                    showNotification('Avatar berhasil diperbarui', 'success');
-                    updateProfileUI();
-                } catch (error) {
-                    showNotification('Gagal memperbarui avatar', 'error');
-                }
+                userProfile.avatar = newAvatar;
+                localStorage.setItem(`userProfile_${currentUser.uid}`, JSON.stringify(userProfile));
+                showNotification('Avatar berhasil diperbarui', 'success');
+                updateUserUI();
             });
             
             // Search
@@ -1529,214 +1679,28 @@
             });
         }
 
-        // ========== PAGE NAVIGATION ==========
-        function showHomePage() {
-            document.getElementById('homePage').style.display = 'block';
-            document.getElementById('articlePage').style.display = 'none';
-            document.getElementById('profilePage').style.display = 'none';
-            document.getElementById('adminPage').style.display = 'none';
-            document.getElementById('profilePopup').classList.remove('active');
-        }
-
-        function showProfilePage() {
-            if (!currentUser) {
-                showNotification('Login dulu untuk melihat profil', 'warning');
-                return;
-            }
-            
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('articlePage').style.display = 'none';
-            document.getElementById('profilePage').style.display = 'block';
-            document.getElementById('adminPage').style.display = 'none';
-            
-            loadMyArticles();
-        }
-
-        // ========== HELPER FUNCTIONS ==========
-        async function updateViewCount(articleId) {
-            try {
-                const db = firebase.database();
-                await db.ref(`articles/${articleId}/views`).transaction(current => (current || 0) + 1);
-                
-                // Update user stats if author
-                const article = articles.find(a => a.id === articleId);
-                if (article && article.authorId === currentUser?.uid) {
-                    await updateUserStats('views', 1);
-                }
-                
-                // Reload articles
-                await loadArticles();
-                
-            } catch (error) {
-                console.error('Error updating view count:', error);
-            }
-        }
-
-        async function loadUserLikes() {
-            if (!currentUser) return;
-            
-            try {
-                const db = firebase.database();
-                const snapshot = await db.ref('articleLikes').once('value');
-                
-                if (snapshot.exists()) {
-                    const likesData = snapshot.val();
-                    userLikes = {};
-                    
-                    Object.keys(likesData).forEach(articleId => {
-                        if (likesData[articleId][currentUser.uid]) {
-                            userLikes[articleId] = true;
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading user likes:', error);
-            }
-        }
-
-        function shareArticle(article) {
-            const url = window.location.origin + window.location.pathname + '?article=' + article.slug;
-            const text = `Baca artikel: ${article.title} di NexeNews`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: article.title,
-                    text: text,
-                    url: url
-                });
-            } else {
-                navigator.clipboard.writeText(url);
-                showNotification('Link artikel disalin!', 'success');
-            }
-        }
-
-        async function loadMyArticles() {
-            if (!currentUser) return;
-            
-            const myArticles = articles.filter(article => article.authorId === currentUser.uid);
-            const container = document.getElementById('myArticlesList');
-            
-            if (myArticles.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding:30px; color:var(--gray);">
-                        <i class="fas fa-newspaper" style="font-size:2rem; margin-bottom:15px;"></i>
-                        <p>Belum ada artikel</p>
-                        <button class="btn btn-primary" onclick="showCreateArticleModal()" style="margin-top:15px;">
-                            <i class="fas fa-plus"></i> Buat Artikel Pertama
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = myArticles.map(article => `
-                <div style="background:#f8fafc; padding:15px; border-radius:var(--radius); margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <h4 style="margin-bottom:5px;">${article.title}</h4>
-                        <div style="font-size:0.85rem; color:var(--gray); display:flex; gap:15px;">
-                            <span><i class="far fa-eye"></i> ${article.views || 0}</span>
-                            <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
-                            <span><i class="far fa-comment"></i> ${article.comments || 0}</span>
-                            <span>${article.status === 'published' ? '<span style="color:var(--success);">Published</span>' : '<span style="color:var(--warning);">Pending</span>'}</span>
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:10px;">
-                        <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)">
-                            <i class="fas fa-external-link-alt"></i> Buka
-                        </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteArticle('${article.id}')">
-                            <i class="fas fa-trash"></i> Hapus
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function deleteArticle(articleId) {
-            if (!confirm('Hapus artikel ini? Tindakan ini tidak dapat dibatalkan.')) return;
-            
-            try {
-                const db = firebase.database();
-                await db.ref(`articles/${articleId}`).remove();
-                showNotification('Artikel berhasil dihapus', 'success');
-                await loadArticles();
-                if (document.getElementById('profilePage').style.display === 'block') {
-                    loadMyArticles();
-                }
-            } catch (error) {
-                console.error('Error deleting article:', error);
-                showNotification('Gagal menghapus artikel', 'error');
-            }
-        }
-
-        function injectInlineAds() {
-            const contentDiv = document.getElementById('articleContent');
-            const paragraphs = contentDiv.querySelectorAll('p');
-            
-            // Insert ad after every 3rd paragraph
-            paragraphs.forEach((p, index) => {
-                if ((index + 1) % 3 === 0) {
-                    const adDiv = document.createElement('div');
-                    adDiv.className = 'inline-ad';
-                    adDiv.innerHTML = `
-                        <div class="ad-banner small-h">
-                            <span class="ad-label">IKLAN</span>
-                            <script>
-                                atOptions = {
-                                    'key' : '90a2a0e622b40caa605de8a06516879d',
-                                    'format' : 'iframe',
-                                    'height' : 60,
-                                    'width' : 468,
-                                    'params' : {}
-                                };
-                            <\/script>
-                            <script src="https://www.highperformanceformat.com/90a2a0e622b40caa605de8a06516879d/invoke.js"><\/script>
-                        </div>
-                    `;
-                    p.after(adDiv);
-                }
-            });
-        }
-
+        // ========== ADMIN CHECK ==========
         async function checkAdminStatus() {
             if (!currentUser) {
                 isAdmin = false;
                 return;
             }
             
-            // Simple admin check (in production, use Firebase Admin SDK)
-            // For demo, check if email contains 'admin'
-            isAdmin = currentUser.email.includes('admin') || currentUser.uid === 'admin';
+            // Simple admin check
+            isAdmin = currentUser.email && currentUser.email.includes('admin');
             
             if (isAdmin) {
                 document.getElementById('popupAdminBtn').style.display = 'block';
             }
         }
 
-        async function createSampleArticle() {
-            const db = firebase.database();
-            
-            const sampleArticle = {
-                title: "Selamat datang di NexeNews!",
-                category: "fakta",
-                image: "https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1",
-                content: "<h2>Platform Berita Viral Indonesia</h2><p>NexeNews adalah platform untuk berbagi cerita, fakta unik, dan konten viral dari Indonesia. Mulai buat artikel pertamamu sekarang!</p>",
-                excerpt: "Platform berita viral Indonesia",
-                author: "Admin NexeNews",
-                authorId: "admin",
-                timestamp: Date.now(),
-                views: 150,
-                likes: 25,
-                comments: 5,
-                status: "published"
-            };
-            
-            await db.ref('articles').push(sampleArticle);
-            await loadArticles();
-        }
-
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', initializeApp);
+        
+        // Export functions to global scope
+        window.showHomePage = showHomePage;
+        window.openArticle = openArticle;
+        window.showCreateArticleModal = showCreateArticleModal;
     </script>
 </body>
 </html>
