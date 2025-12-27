@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TextCounter - Character & Word Counter Tool</title>
+    <title>ViralHub - Trending Stories & Viral Content</title>
     
     <!-- ====== PROPELLERADS ====== -->
     <!-- Vignette -->
@@ -21,22 +21,23 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background: #f8fafc;
-            color: #1e293b;
-            min-height: 100vh;
+            background: #f5f5f5;
+            color: #333;
             line-height: 1.6;
         }
         
-        /* HEADER CLEAN */
+        /* HEADER - CLEAN */
         .header {
             background: white;
             padding: 1rem;
-            border-bottom: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         .header-container {
@@ -48,239 +49,138 @@
         }
         
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #3b82f6;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff4757;
         }
         
-        /* MAIN LAYOUT */
-        .main-wrapper {
-            display: flex;
+        /* MAIN LAYOUT - 3 COLUMN */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr 250px;
+            gap: 1.5rem;
             max-width: 1200px;
             margin: 1.5rem auto;
             padding: 0 1rem;
-            gap: 1.5rem;
         }
         
-        /* LEFT SIDEBAR - ADS 160x600 */
-        .sidebar-left {
-            width: 180px;
-            flex-shrink: 0;
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
         }
         
-        /* RIGHT SIDEBAR - ADS 160x600 */
-        .sidebar-right {
-            width: 180px;
-            flex-shrink: 0;
-        }
-        
-        /* MAIN CONTENT */
-        .main-content {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        /* TOOL CARD */
-        .tool-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            margin-bottom: 1.5rem;
-        }
-        
-        /* TEXTAREA */
-        .text-input {
-            width: 100%;
-            min-height: 200px;
-            padding: 1.5rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 0.75rem;
-            font-size: 1rem;
-            line-height: 1.6;
-            resize: vertical;
-            transition: all 0.3s;
-        }
-        
-        .text-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        /* STATS GRID */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-        
-        .stat-box {
-            background: #f1f5f9;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-label {
-            color: #64748b;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        
-        /* BUTTONS */
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin: 1.5rem 0;
-        }
-        
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .btn-primary {
-            background: #3b82f6;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #2563eb;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: #f1f5f9;
-            color: #475569;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .btn-secondary:hover {
-            background: #e2e8f0;
-        }
-        
-        .btn-premium {
-            background: linear-gradient(90deg, #f59e0b, #f97316);
-            color: white;
-            font-weight: bold;
-        }
-        
-        /* AD CONTAINERS */
+        /* ADS CONTAINER */
         .ad-container {
             background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.75rem;
+            border-radius: 8px;
             padding: 1rem;
             margin-bottom: 1rem;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
         }
         
         .ad-label {
             font-size: 0.7rem;
-            color: #94a3b8;
+            color: #666;
             margin-bottom: 0.5rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
         
-        /* TOP BANNER AD */
-        .top-banner-ad {
-            max-width: 728px;
-            margin: 1.5rem auto;
+        /* LEFT/RIGHT SIDEBARS - FULL OF ADS */
+        .sidebar-left,
+        .sidebar-right {
+            position: sticky;
+            top: 80px;
+            align-self: start;
         }
         
-        /* INLINE AD */
-        .inline-ad {
-            margin: 1.5rem 0;
+        /* MAIN CONTENT - VIRAL ARTICLES */
+        .main-content {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
-        /* BOTTOM BANNER AD */
-        .bottom-banner-ad {
-            max-width: 728px;
-            margin: 2rem auto;
+        /* ARTICLE */
+        .article {
+            padding: 2rem;
+            border-bottom: 1px solid #eee;
         }
         
-        /* PREMIUM BANNER */
-        .premium-banner {
-            background: linear-gradient(90deg, #1e293b, #334155);
+        .article:last-child {
+            border-bottom: none;
+        }
+        
+        .article h2 {
+            color: #222;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .article-meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .article-content {
+            color: #444;
+            line-height: 1.8;
+        }
+        
+        .read-more {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: #ff4757;
             color: white;
-            border-radius: 1rem;
-            padding: 1.5rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        /* TOP ADS */
+        .top-ads {
+            max-width: 1200px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        /* BOTTOM ADS */
+        .bottom-ads {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        /* BETWEEN ARTICLES ADS */
+        .between-ads {
             margin: 2rem 0;
-            text-align: center;
         }
         
         /* FOOTER */
         .footer {
             text-align: center;
             padding: 2rem;
-            color: #64748b;
-            border-top: 1px solid #e2e8f0;
+            color: #666;
+            border-top: 1px solid #ddd;
             margin-top: 2rem;
         }
         
-        /* RESPONSIVE */
-        @media (max-width: 1024px) {
-            .main-wrapper {
-                flex-direction: column;
-            }
-            
-            .sidebar-left,
-            .sidebar-right {
-                width: 100%;
-                display: flex;
-                flex-wrap: wrap;
-                gap: 1rem;
-                justify-content: center;
-            }
-            
-            .ad-container {
-                flex: 1;
-                min-width: 300px;
-                max-width: 300px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .tool-card {
-                padding: 1.5rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .btn-group {
-                justify-content: center;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stat-number {
-                font-size: 2rem;
-            }
+        /* PREMIUM BANNER */
+        .premium-banner {
+            background: linear-gradient(45deg, #ff6b6b, #ff4757);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            margin: 2rem 0;
+            border-radius: 10px;
         }
         
         /* NOTIFICATION */
@@ -291,362 +191,290 @@
             padding: 1rem 1.5rem;
             background: #10b981;
             color: white;
-            border-radius: 0.5rem;
+            border-radius: 5px;
             z-index: 1000;
-            animation: slideIn 0.3s ease;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             font-weight: 500;
         }
         
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .top-ads {
+                grid-template-columns: 1fr;
+            }
+            
+            .article {
+                padding: 1rem;
+            }
         }
         
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
+        /* LOAD MORE BUTTON */
+        .load-more {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .load-more-btn {
+            padding: 1rem 2rem;
+            background: #3742fa;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <!-- PROPELLERADS VIGNETTE & PUSH AKTIF OTOMATIS -->
+    <!-- PROPELLERADS AKTIF OTOMATIS -->
     
     <!-- HEADER -->
     <header class="header">
         <div class="header-container">
-            <div class="logo">
-                <span>📊</span>
-                <span>TextCounter</span>
-            </div>
-            <div style="color: #64748b; font-size: 0.9rem;">
-                Free Character & Word Counter
-            </div>
+            <div class="logo">🔥 ViralHub</div>
+            <div style="color: #666;">Trending Stories • Updated Daily</div>
         </div>
     </header>
     
-    <!-- TOP BANNER AD (728x90) -->
-    <div class="top-banner-ad">
+    <!-- TOP ADS - 2x 728x90 -->
+    <div class="top-ads">
+        <div class="ad-container">
+            <div class="ad-label">Sponsored</div>
+            <div id="topAd1"></div>
+        </div>
         <div class="ad-container">
             <div class="ad-label">Advertisement</div>
-            <div id="topBannerAd"></div>
+            <div id="topAd2"></div>
         </div>
     </div>
     
-    <!-- MAIN WRAPPER -->
-    <div class="main-wrapper">
-        <!-- LEFT SIDEBAR - ADS 160x600 -->
+    <!-- MAIN LAYOUT -->
+    <div class="main-layout">
+        <!-- LEFT SIDEBAR - ADS ONLY -->
         <div class="sidebar-left">
+            <!-- 160x600 -->
             <div class="ad-container">
-                <div class="ad-label">Sponsored</div>
+                <div class="ad-label">Trending Now</div>
                 <div id="leftAd1"></div>
             </div>
+            
+            <!-- 300x250 -->
             <div class="ad-container">
                 <div class="ad-label">Recommended</div>
                 <div id="leftAd2"></div>
             </div>
+            
+            <!-- 160x600 -->
+            <div class="ad-container">
+                <div class="ad-label">Advertisement</div>
+                <div id="leftAd3"></div>
+            </div>
+            
+            <!-- 300x250 -->
+            <div class="ad-container">
+                <div class="ad-label">Sponsored</div>
+                <div id="leftAd4"></div>
+            </div>
         </div>
         
-        <!-- MAIN CONTENT -->
+        <!-- MAIN CONTENT - ARTICLES -->
         <div class="main-content">
-            <!-- TOOL CARD -->
-            <div class="tool-card">
-                <h1 style="margin-bottom: 1.5rem; color: #1e293b;">📝 Character & Word Counter</h1>
-                <p style="color: #64748b; margin-bottom: 1.5rem;">
-                    Paste or type your text below. Get instant character, word, sentence, and paragraph counts.
-                </p>
-                
-                <textarea 
-                    class="text-input" 
-                    id="textInput" 
-                    placeholder="Start typing or paste your text here..."
-                    oninput="updateCount()"
-                >Welcome to TextCounter! This free tool helps you count characters, words, sentences, and paragraphs in real-time. Perfect for writers, students, and professionals who need to meet specific length requirements. Try it now - it's completely free and works 100% in your browser!</textarea>
-                
-                <!-- STATS GRID -->
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-number" id="charCount">0</div>
-                        <div class="stat-label">Characters</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="charNoSpace">0</div>
-                        <div class="stat-label">Chars (no spaces)</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="wordCount">0</div>
-                        <div class="stat-label">Words</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="sentenceCount">0</div>
-                        <div class="stat-label">Sentences</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="paragraphCount">0</div>
-                        <div class="stat-label">Paragraphs</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="readingTime">0</div>
-                        <div class="stat-label">Reading Time</div>
-                    </div>
+            <!-- ARTICLE 1 -->
+            <div class="article">
+                <h2>⚠️ Warning: New Phone Scam Targeting WhatsApp Users</h2>
+                <div class="article-meta">📅 Today • ⏱️ 5 min read • 🔥 2.5k views</div>
+                <div class="article-content">
+                    <p>A new type of phone scam has been reported targeting WhatsApp users. The scam involves receiving a verification code from an unknown number, followed by a call from someone claiming to be from WhatsApp support...</p>
+                    <p>Security experts warn users to never share verification codes with anyone. Here are 5 signs to identify this scam...</p>
                 </div>
-                
-                <!-- BUTTONS -->
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="clearText()">
-                        🗑️ Clear Text
-                    </button>
-                    <button class="btn btn-secondary" onclick="copyText()">
-                        📋 Copy Text
-                    </button>
-                    <button class="btn btn-secondary" onclick="pasteText()">
-                        📥 Paste Text
-                    </button>
-                    <button class="btn-premium btn" onclick="showPremiumOffer()">
-                        ⭐ Premium Tools
-                    </button>
+                <a href="javascript:void(0)" class="read-more" onclick="readArticle(1)">Read Full Story →</a>
+            </div>
+            
+            <!-- BETWEEN ARTICLES AD - 468x60 -->
+            <div class="between-ads">
+                <div class="ad-container">
+                    <div class="ad-label">Advertisement</div>
+                    <div id="betweenAd1"></div>
                 </div>
-                
-                <!-- INLINE AD (300x250) -->
-                <div class="inline-ad">
-                    <div class="ad-container">
-                        <div class="ad-label">Advertisement</div>
-                        <div id="inlineAd1"></div>
-                    </div>
+            </div>
+            
+            <!-- ARTICLE 2 -->
+            <div class="article">
+                <h2>🎮 Free Game Giveaway: Claim Your Steam Keys Now!</h2>
+                <div class="article-meta">📅 2 hours ago • ⏱️ 3 min read • 🔥 5.7k views</div>
+                <div class="article-content">
+                    <p>Steam is currently giving away free game keys for a limited time! The promotion includes popular titles like "Cyberpunk 2077" and "Elden Ring" but there's a catch...</p>
+                    <p>Only the first 10,000 users can claim the free games. Here's the step-by-step guide to get your free Steam keys before they run out...</p>
                 </div>
-                
-                <!-- EXTRA FEATURES -->
-                <div style="margin-top: 2rem;">
-                    <h3 style="color: #1e293b; margin-bottom: 1rem;">✨ Advanced Features</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                        <button class="btn-secondary btn" onclick="convertToUppercase()">
-                            🔠 UPPERCASE
-                        </button>
-                        <button class="btn-secondary btn" onclick="convertToLowercase()">
-                            🔡 lowercase
-                        </button>
-                        <button class="btn-secondary btn" onclick="removeExtraSpaces()">
-                            ✂️ Trim Spaces
-                        </button>
-                        <button class="btn-secondary btn" onclick="reverseText()">
-                            🔄 Reverse Text
-                        </button>
-                    </div>
-                </div>
+                <a href="javascript:void(0)" class="read-more" onclick="readArticle(2)">Claim Free Game →</a>
             </div>
             
             <!-- PREMIUM BANNER -->
             <div class="premium-banner">
-                <h3 style="margin-bottom: 0.5rem;">🚀 Upgrade to TextCounter Pro</h3>
-                <p style="margin-bottom: 1rem; opacity: 0.9;">
-                    Get advanced features: Export reports, plagiarism check, grammar suggestions, and unlimited history!
-                </p>
-                <button class="btn-premium btn" onclick="showPremiumOffer()" style="padding: 0.75rem 2rem; font-size: 1rem;">
-                    🔥 Get Pro Now - Limited Offer!
+                <h3>🚀 EXCLUSIVE CONTENT UNLOCKED!</h3>
+                <p>Get access to premium stories, ad-free experience, and exclusive giveaways!</p>
+                <button onclick="showPremiumOffer()" style="padding: 0.75rem 2rem; background: white; color: #ff4757; border: none; border-radius: 5px; font-weight: bold; margin-top: 1rem; cursor: pointer;">
+                    🔓 UNLOCK PREMIUM NOW
                 </button>
             </div>
             
-            <!-- INLINE AD 2 (300x250) -->
-            <div class="inline-ad">
+            <!-- BETWEEN ARTICLES AD - 468x60 -->
+            <div class="between-ads">
                 <div class="ad-container">
                     <div class="ad-label">Sponsored</div>
-                    <div id="inlineAd2"></div>
+                    <div id="betweenAd2"></div>
                 </div>
+            </div>
+            
+            <!-- ARTICLE 3 -->
+            <div class="article">
+                <h2>💰 Secret Method: Earn $100 Daily From Your Phone</h2>
+                <div class="article-meta">📅 Yesterday • ⏱️ 7 min read • 🔥 12.4k views</div>
+                <div class="article-content">
+                    <p>A TikTok user recently revealed a secret method to earn $100 daily using only your smartphone. The method doesn't require any investment or special skills...</p>
+                    <p>We tested the method for 7 days and here are the shocking results. Warning: This method may not work for everyone and requires consistent effort...</p>
+                </div>
+                <a href="javascript:void(0)" class="read-more" onclick="readArticle(3)">Reveal Secret Method →</a>
+            </div>
+            
+            <!-- BETWEEN ARTICLES AD - 300x250 -->
+            <div class="between-ads">
+                <div class="ad-container">
+                    <div class="ad-label">Advertisement</div>
+                    <div id="betweenAd3"></div>
+                </div>
+            </div>
+            
+            <!-- ARTICLE 4 -->
+            <div class="article">
+                <h2>📱 iPhone 16 Leaks: New Features You Won't Believe!</h2>
+                <div class="article-meta">📅 3 days ago • ⏱️ 4 min read • 🔥 8.9k views</div>
+                <div class="article-content">
+                    <p>New leaks from Apple's supply chain reveal stunning features of the upcoming iPhone 16. The most surprising leak? A completely portless design with magnetic charging...</p>
+                    <p>Other rumored features include holographic display, built-in projector, and AI-powered camera that can edit photos before you take them...</p>
+                </div>
+                <a href="javascript:void(0)" class="read-more" onclick="readArticle(4)">See All Leaks →</a>
+            </div>
+            
+            <!-- LOAD MORE -->
+            <div class="load-more">
+                <button class="load-more-btn" onclick="loadMoreArticles()">
+                    📚 LOAD MORE STORIES
+                </button>
             </div>
         </div>
         
-        <!-- RIGHT SIDEBAR - ADS 160x600 -->
+        <!-- RIGHT SIDEBAR - ADS ONLY -->
         <div class="sidebar-right">
+            <!-- 300x250 -->
             <div class="ad-container">
                 <div class="ad-label">Advertisement</div>
                 <div id="rightAd1"></div>
             </div>
+            
+            <!-- 160x600 -->
             <div class="ad-container">
-                <div class="ad-label">Recommended</div>
+                <div class="ad-label">Trending</div>
                 <div id="rightAd2"></div>
             </div>
+            
+            <!-- 300x250 -->
+            <div class="ad-container">
+                <div class="ad-label">Sponsored</div>
+                <div id="rightAd3"></div>
+            </div>
+            
+            <!-- 160x600 -->
+            <div class="ad-container">
+                <div class="ad-label">Recommended</div>
+                <div id="rightAd4"></div>
+            </div>
+            
+            <!-- 300x250 -->
             <div class="ad-container">
                 <div class="ad-label">Advertisement</div>
-                <div id="rightAd3"></div>
+                <div id="rightAd5"></div>
             </div>
         </div>
     </div>
     
-    <!-- BOTTOM BANNER AD (728x90) -->
-    <div class="bottom-banner-ad">
+    <!-- BOTTOM ADS - 728x90 -->
+    <div class="bottom-ads">
         <div class="ad-container">
             <div class="ad-label">Advertisement</div>
-            <div id="bottomBannerAd"></div>
+            <div id="bottomAd1"></div>
         </div>
     </div>
     
     <!-- FOOTER -->
     <footer class="footer">
-        <p>© 2025 TextCounter • Free character and word counting tool</p>
+        <p>© 2025 ViralHub - All stories are for entertainment purposes only</p>
         <p style="margin-top: 0.5rem; font-size: 0.9rem;">
-            Works 100% in your browser • No data collection • No registration required
+            Read our <a href="#" style="color: #ff4757;">Disclaimer</a> | 
+            <a href="#" style="color: #ff4757;">Privacy Policy</a> | 
+            <a href="#" style="color: #ff4757;">Contact</a>
         </p>
     </footer>
     
     <script>
         // ==================== INITIALIZE ====================
         window.onload = function() {
-            console.log("TextCounter loaded");
+            console.log("ViralHub loaded");
             
-            // Initial count
-            updateCount();
+            // Load all ads with proper timing
+            setTimeout(loadAllAds, 1000);
             
-            // Load all ads with delay (IMPORTANT!)
-            setTimeout(loadAllAds, 1500);
-            
-            // Load PropellerAds In-Page Push after 5 seconds
+            // Load PropellerAds In-Page Push after delay
             setTimeout(loadInPagePush, 5000);
             
-            // Update stats display
-            updateStatsDisplay();
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification("🔥 Welcome to ViralHub! Check out trending stories!", "info");
+            }, 1500);
         };
         
-        // ==================== TEXT COUNTING FUNCTIONS ====================
-        function updateCount() {
-            const text = document.getElementById('textInput').value;
-            
-            // Character count
-            const charCount = text.length;
-            document.getElementById('charCount').textContent = charCount.toLocaleString();
-            
-            // Character count without spaces
-            const charNoSpace = text.replace(/\s/g, '').length;
-            document.getElementById('charNoSpace').textContent = charNoSpace.toLocaleString();
-            
-            // Word count
-            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
-            const wordCount = text.trim() === '' ? 0 : words.length;
-            document.getElementById('wordCount').textContent = wordCount.toLocaleString();
-            
-            // Sentence count
-            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-            document.getElementById('sentenceCount').textContent = sentences.length.toLocaleString();
-            
-            // Paragraph count
-            const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0);
-            document.getElementById('paragraphCount').textContent = paragraphs.length.toLocaleString();
-            
-            // Reading time (average 200 words per minute)
-            const readingTime = Math.ceil(wordCount / 200);
-            document.getElementById('readingTime').textContent = readingTime + " min";
-            
-            // Update localStorage stats
-            updateStats(wordCount);
-            
-            // Trigger monetization occasionally
-            if (wordCount > 10 && wordCount % 20 === 0) {
-                triggerMonetization();
-            }
-        }
-        
-        // ==================== TEXT MANIPULATION FUNCTIONS ====================
-        function clearText() {
-            document.getElementById('textInput').value = '';
-            updateCount();
-            showNotification('Text cleared!', 'success');
-        }
-        
-        function copyText() {
-            const text = document.getElementById('textInput').value;
-            if (!text.trim()) {
-                showNotification('No text to copy!', 'error');
-                return;
-            }
-            
-            navigator.clipboard.writeText(text)
-                .then(() => {
-                    showNotification('Text copied to clipboard!', 'success');
-                })
-                .catch(() => {
-                    // Fallback
-                    const textarea = document.createElement('textarea');
-                    textarea.value = text;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    showNotification('Text copied to clipboard!', 'success');
-                });
-        }
-        
-        async function pasteText() {
-            try {
-                const text = await navigator.clipboard.readText();
-                document.getElementById('textInput').value = text;
-                updateCount();
-                showNotification('Text pasted!', 'success');
-            } catch (error) {
-                showNotification('Unable to paste. Please paste manually.', 'error');
-            }
-        }
-        
-        function convertToUppercase() {
-            const textarea = document.getElementById('textInput');
-            textarea.value = textarea.value.toUpperCase();
-            updateCount();
-            showNotification('Converted to UPPERCASE!', 'success');
-        }
-        
-        function convertToLowercase() {
-            const textarea = document.getElementById('textInput');
-            textarea.value = textarea.value.toLowerCase();
-            updateCount();
-            showNotification('Converted to lowercase!', 'success');
-        }
-        
-        function removeExtraSpaces() {
-            const textarea = document.getElementById('textInput');
-            textarea.value = textarea.value.replace(/\s+/g, ' ').trim();
-            updateCount();
-            showNotification('Extra spaces removed!', 'success');
-        }
-        
-        function reverseText() {
-            const textarea = document.getElementById('textInput');
-            textarea.value = textarea.value.split('').reverse().join('');
-            updateCount();
-            showNotification('Text reversed!', 'success');
-        }
-        
-        // ==================== ADS LOADING (FIXED) ====================
+        // ==================== ADS LOADING ====================
         function loadAllAds() {
-            console.log("Loading all ads...");
+            console.log("Loading ALL ads...");
             
-            // Adsterra Ads (300x250)
-            loadAdsterraAd('topBannerAd', 90, 728, '7d3f7dcf6c27eb36646280d85dba51ed');
-            loadAdsterraAd('bottomBannerAd', 90, 728, '7d3f7dcf6c27eb36646280d85dba51ed');
+            // Top Ads (728x90)
+            loadAdsterraAd('topAd1', 90, 728, '7d3f7dcf6c27eb36646280d85dba51ed');
+            loadAdsterraAd('topAd2', 90, 728, '90a2a0e622b40caa605de8a06516879d');
             
-            // Left sidebar ads (160x600)
+            // Left Sidebar Ads
             loadAdsterraAd('leftAd1', 600, 160, '5e0812e16f5b229c05c8d853fc6f9253');
-            loadAdsterraAd('leftAd2', 600, 160, 'df392223eb071195b98c897f97cb395d');
+            loadAdsterraAd('leftAd2', 250, 300, 'df392223eb071195b98c897f97cb395d');
+            loadAdsterraAd('leftAd3', 600, 160, '5e0812e16f5b229c05c8d853fc6f9253');
+            loadAdsterraAd('leftAd4', 250, 300, '7d3f7dcf6c27eb36646280d85dba51ed');
             
-            // Inline ads (300x250)
-            loadAdsterraAd('inlineAd1', 250, 300, 'df392223eb071195b98c897f97cb395d');
-            loadAdsterraAd('inlineAd2', 250, 300, '7d3f7dcf6c27eb36646280d85dba51ed');
+            // Between Articles Ads
+            loadAdsterraAd('betweenAd1', 60, 468, '90a2a0e622b40caa605de8a06516879d');
+            loadAdsterraAd('betweenAd2', 60, 468, '90a2a0e622b40caa605de8a06516879d');
+            loadAdsterraAd('betweenAd3', 250, 300, 'df392223eb071195b98c897f97cb395d');
             
-            // Right sidebar ads (160x600)
-            loadAdsterraAd('rightAd1', 600, 160, '5e0812e16f5b229c05c8d853fc6f9253');
-            loadAdsterraAd('rightAd2', 600, 160, 'df392223eb071195b98c897f97cb395d');
-            loadAdsterraAd('rightAd3', 600, 160, '7d3f7dcf6c27eb36646280d85dba51ed');
+            // Right Sidebar Ads
+            loadAdsterraAd('rightAd1', 250, 300, '7d3f7dcf6c27eb36646280d85dba51ed');
+            loadAdsterraAd('rightAd2', 600, 160, '5e0812e16f5b229c05c8d853fc6f9253');
+            loadAdsterraAd('rightAd3', 250, 300, 'df392223eb071195b98c897f97cb395d');
+            loadAdsterraAd('rightAd4', 600, 160, '5e0812e16f5b229c05c8d853fc6f9253');
+            loadAdsterraAd('rightAd5', 250, 300, '7d3f7dcf6c27eb36646280d85dba51ed');
+            
+            // Bottom Ad (728x90)
+            loadAdsterraAd('bottomAd1', 90, 728, '90a2a0e622b40caa605de8a06516879d');
         }
         
         function loadAdsterraAd(elementId, height, width, key) {
-            // Delay each ad slightly to prevent blocking
+            // Random delay for each ad
+            const delay = Math.random() * 2000;
+            
             setTimeout(() => {
                 try {
                     const element = document.getElementById(elementId);
                     if (!element) return;
                     
-                    // Clear and create fresh iframe
-                    element.innerHTML = '';
-                    
+                    // Create iframe for the ad
                     const iframe = document.createElement('iframe');
-                    iframe.id = `ad_${elementId}`;
                     iframe.width = width;
                     iframe.height = height;
                     iframe.frameBorder = 0;
@@ -656,38 +484,37 @@
                     iframe.style.display = 'block';
                     iframe.style.margin = '0 auto';
                     
-                    // Create the script content
-                    const scriptContent = `
-                        <script>
-                            atOptions = {
-                                'key' : '${key}',
-                                'format' : 'iframe',
-                                'height' : ${height},
-                                'width' : ${width},
-                                'params' : {}
-                            };
-                        <\/script>
-                        <script src="https://www.highperformanceformat.com/${key}/invoke.js"><\/script>
-                    `;
-                    
-                    // Create a blob and load in iframe
-                    const blob = new Blob([`
+                    // Adsterra script
+                    const adScript = `
                         <!DOCTYPE html>
                         <html>
                         <head>
-                            <title>Ad</title>
                             <style>body {margin:0;padding:0;}</style>
                         </head>
                         <body>
-                            ${scriptContent}
+                            <script>
+                                atOptions = {
+                                    'key' : '${key}',
+                                    'format' : 'iframe',
+                                    'height' : ${height},
+                                    'width' : ${width},
+                                    'params' : {}
+                                };
+                            <\/script>
+                            <script src="https://www.highperformanceformat.com/${key}/invoke.js"><\/script>
                         </body>
                         </html>
-                    `], { type: 'text/html' });
+                    `;
                     
+                    // Load via blob
+                    const blob = new Blob([adScript], { type: 'text/html' });
                     iframe.src = URL.createObjectURL(blob);
+                    
+                    // Clear and append
+                    element.innerHTML = '';
                     element.appendChild(iframe);
                     
-                    console.log(`Ad loaded: ${elementId}`);
+                    console.log(`Ad loaded: ${elementId} (${width}x${height})`);
                     
                 } catch (error) {
                     console.log(`Failed to load ad ${elementId}:`, error);
@@ -695,16 +522,16 @@
                     const element = document.getElementById(elementId);
                     if (element) {
                         element.innerHTML = `
-                            <div style="padding: 10px; background: #f1f5f9; border-radius: 5px;">
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
                                 <a href="https://otieu.com/4/10381160" target="_blank" 
-                                   style="color: #3b82f6; text-decoration: none; font-weight: bold;">
-                                   🚀 Upgrade to Premium Text Tools - Click Here!
+                                   style="color: #ff4757; text-decoration: none; font-weight: bold;">
+                                   🚀 EXCLUSIVE OFFER: Click Here to Unlock Premium Content!
                                 </a>
                             </div>
                         `;
                     }
                 }
-            }, Math.random() * 1000); // Random delay 0-1 second
+            }, delay);
         }
         
         // ==================== PROPELLERADS ====================
@@ -736,18 +563,81 @@
             }
         }
         
+        // ==================== ARTICLE FUNCTIONS ====================
+        function readArticle(articleId) {
+            // Increment view count
+            const views = parseInt(localStorage.getItem(`article_${articleId}_views`) || '0');
+            localStorage.setItem(`article_${articleId}_views`, views + 1);
+            
+            // Show full article (simulated)
+            showNotification(`📖 Loading article ${articleId}...`, "info");
+            
+            // Trigger monetization
+            triggerMonetization();
+            
+            // Load In-Page Push after reading
+            setTimeout(loadInPagePush, 2000);
+            
+            // Open CPA offer for "premium content"
+            setTimeout(() => {
+                showPremiumOffer();
+            }, 3000);
+        }
+        
+        function loadMoreArticles() {
+            showNotification("📚 Loading more stories...", "info");
+            
+            // Simulate loading
+            setTimeout(() => {
+                // Add new articles
+                const mainContent = document.querySelector('.main-content');
+                const loadMoreBtn = document.querySelector('.load-more');
+                
+                const newArticle = document.createElement('div');
+                newArticle.className = 'article';
+                newArticle.innerHTML = `
+                    <h2>🎬 Netflix Secret Codes: Access Hidden Categories</h2>
+                    <div class="article-meta">📅 Just now • ⏱️ 4 min read • 🔥 1.2k views</div>
+                    <div class="article-content">
+                        <p>Did you know Netflix has secret codes to access hidden categories? These codes unlock content not visible in the normal interface...</p>
+                        <p>We've compiled a list of 50+ secret codes for movies, TV shows, and documentaries that Netflix doesn't want you to find easily...</p>
+                    </div>
+                    <a href="javascript:void(0)" class="read-more" onclick="readArticle(5)">Reveal Secret Codes →</a>
+                `;
+                
+                mainContent.insertBefore(newArticle, loadMoreBtn);
+                
+                // Load another ad between new articles
+                const newAd = document.createElement('div');
+                newAd.className = 'between-ads';
+                newAd.innerHTML = `
+                    <div class="ad-container">
+                        <div class="ad-label">Advertisement</div>
+                        <div id="newAd${Date.now()}"></div>
+                    </div>
+                `;
+                
+                mainContent.insertBefore(newAd, loadMoreBtn);
+                
+                // Load ad for the new position
+                setTimeout(() => {
+                    loadAdsterraAd(`newAd${Date.now()}`, 250, 300, 'df392223eb071195b98c897f97cb395d');
+                }, 500);
+                
+                // Trigger Popunder after loading more
+                setTimeout(loadPopunder, 1500);
+                
+            }, 1000);
+        }
+        
         // ==================== MONETIZATION ====================
         function triggerMonetization() {
-            const totalWords = parseInt(localStorage.getItem('total_words_counted') || '0');
+            const articlesRead = parseInt(localStorage.getItem('articles_read') || '0');
+            localStorage.setItem('articles_read', articlesRead + 1);
             
-            // Trigger Popunder every 1000 words
-            if (totalWords > 0 && totalWords % 1000 === 0) {
+            // Trigger Popunder every 3rd article
+            if (articlesRead > 0 && articlesRead % 3 === 0) {
                 setTimeout(loadPopunder, 2000);
-            }
-            
-            // Show premium offer occasionally
-            if (totalWords > 500 && totalWords % 750 === 0) {
-                setTimeout(showPremiumOffer, 3000);
             }
         }
         
@@ -756,24 +646,11 @@
             window.open('https://otieu.com/4/10381160', '_blank', 'noopener,noreferrer');
             
             // Also trigger In-Page Push
-            setTimeout(loadInPagePush, 300);
-        }
-        
-        // ==================== STATS ====================
-        function updateStats(wordCount) {
-            if (wordCount > 0) {
-                const totalWords = parseInt(localStorage.getItem('total_words_counted') || '0');
-                localStorage.setItem('total_words_counted', totalWords + wordCount);
-            }
-        }
-        
-        function updateStatsDisplay() {
-            const totalWords = parseInt(localStorage.getItem('total_words_counted') || '0');
-            const totalChars = parseInt(localStorage.getItem('total_chars_counted') || '0');
+            setTimeout(loadInPagePush, 500);
             
-            // You could display these somewhere
-            console.log(`Total words counted: ${totalWords}`);
-            console.log(`Total chars counted: ${totalChars}`);
+            // Track conversion
+            const conversions = parseInt(localStorage.getItem('premium_conversions') || '0');
+            localStorage.setItem('premium_conversions', conversions + 1);
         }
         
         // ==================== UI FUNCTIONS ====================
@@ -781,7 +658,7 @@
             const notification = document.createElement('div');
             notification.className = 'notification';
             notification.style.background = type === 'success' ? '#10b981' : 
-                                          type === 'error' ? '#ef4444' : '#3b82f6';
+                                          type === 'error' ? '#ff4757' : '#3742fa';
             
             notification.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -793,7 +670,8 @@
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
                 setTimeout(() => {
                     if (notification.parentNode) {
                         notification.parentNode.removeChild(notification);
@@ -802,24 +680,23 @@
             }, 3000);
         }
         
-        // ==================== AUTO-SAVE TEXT ====================
-        let saveTimeout;
-        document.getElementById('textInput').addEventListener('input', function() {
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(() => {
-                const text = this.value;
-                if (text.trim().length > 0) {
-                    localStorage.setItem('last_text', text);
-                }
-            }, 1000);
+        // ==================== SCROLL TRACKING ====================
+        let scrollCount = 0;
+        window.addEventListener('scroll', function() {
+            scrollCount++;
+            
+            // Trigger In-Page Push when user scrolls deep
+            if (scrollCount > 50 && scrollCount % 50 === 0) {
+                setTimeout(loadInPagePush, 1000);
+            }
         });
         
-        // Load last saved text
-        const lastText = localStorage.getItem('last_text');
-        if (lastText) {
-            document.getElementById('textInput').value = lastText;
-            updateCount();
-        }
+        // ==================== PAGE VIEW TRACKING ====================
+        let pageViews = parseInt(localStorage.getItem('page_views') || '0');
+        pageViews++;
+        localStorage.setItem('page_views', pageViews);
+        
+        console.log(`Total page views: ${pageViews}`);
     </script>
 </body>
 </html>
