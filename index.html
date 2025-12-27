@@ -6,20 +6,15 @@
     <title>Nexe QR - Advanced QR Code Generator</title>
     
     <!-- ====== ADS SCRIPTS ====== -->
-    <!-- Push Notification 1 -->
+    <!-- Push Notification 1 (PropellerAds) -->
     <script src="https://3nbf4.com/act/files/tag.min.js?z=10381259" data-cfasync="false" async></script>
-    <!-- Push Notification 2 -->
+    <!-- Push Notification 2 (PropellerAds) -->
     <script src="https://3nbf4.com/act/files/tag.min.js?z=10381292" data-cfasync="false" async></script>
     
-    <!-- FIREBASE SDK (VERSION 8 - COMPATIBLE) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    
-    <!-- QR Code Library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <!-- QR Code Library (FIXED VERSION) -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/qrcode.min.js"></script>
     
     <style>
-        /* [KEEP ALL YOUR EXISTING CSS STYLES - SAMA PERSIS] */
         * {
             margin: 0;
             padding: 0;
@@ -76,11 +71,11 @@
         /* HERO SECTION */
         .hero {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
         
         .hero h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             background: linear-gradient(90deg, #60a5fa, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -94,6 +89,13 @@
             margin: 0 auto;
         }
         
+        /* ADSTERRA BANNER TOP */
+        .adsterra-top {
+            margin: 1.5rem auto;
+            text-align: center;
+            max-width: 728px;
+        }
+        
         /* TOOL CONTAINER */
         .tool-container {
             display: grid;
@@ -104,9 +106,10 @@
             border-radius: 1rem;
             padding: 2rem;
             backdrop-filter: blur(10px);
+            margin-top: 2rem;
         }
         
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .tool-container {
                 grid-template-columns: 1fr;
             }
@@ -226,6 +229,10 @@
             height: auto;
         }
         
+        #qrcode canvas, #qrcode img {
+            border-radius: 8px;
+        }
+        
         /* BUTTONS */
         .btn-group {
             display: flex;
@@ -277,6 +284,20 @@
             50% { opacity: 0.8; }
         }
         
+        /* ADSTERRA SIDEBAR */
+        .adsterra-sidebar {
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .sidebar-ad-container {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #475569;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            display: inline-block;
+        }
+        
         /* HISTORY SECTION */
         .history-section {
             margin-top: 3rem;
@@ -300,11 +321,20 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
+            border: 1px solid #30363d;
         }
         
         .history-item:hover {
             transform: scale(1.05);
             border-color: #60a5fa;
+            box-shadow: 0 5px 15px rgba(96, 165, 250, 0.2);
+        }
+        
+        /* ADSTERRA BOTTOM */
+        .adsterra-bottom {
+            margin: 2rem auto;
+            text-align: center;
+            max-width: 728px;
         }
         
         /* FOOTER */
@@ -340,20 +370,42 @@
             color: #94a3b8;
         }
         
-        /* ADS CONTAINER */
-        .ad-container {
-            margin: 2rem 0;
-            padding: 1rem;
-            background: rgba(30, 41, 59, 0.7);
-            border-radius: 0.5rem;
-            border: 1px solid #475569;
+        /* ADS LABEL */
+        .ad-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             text-align: center;
         }
         
-        .ad-label {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            margin-bottom: 0.5rem;
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                gap: 1.5rem;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .tool-container {
+                padding: 1.5rem;
+            }
+            
+            .btn-group {
+                justify-content: center;
+            }
+            
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -398,10 +450,19 @@
             </div>
         </div>
         
-        <!-- AD BANNER 1 -->
-        <div class="ad-container" id="adBanner1">
+        <!-- ADSTERRA BANNER TOP (728x90) -->
+        <div class="adsterra-top">
             <div class="ad-label">Advertisement</div>
-            <div id="adContent1">Loading ad...</div>
+            <script>
+                atOptions = {
+                    'key' : '7d3f7dcf6c27eb36646280d85dba51ed',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script src="https://www.highperformanceformat.com/7d3f7dcf6c27eb36646280d85dba51ed/invoke.js"></script>
         </div>
         
         <!-- TOOL CONTAINER -->
@@ -481,10 +542,6 @@
                         <span>📥</span>
                         Download PNG
                     </button>
-                    <button class="btn btn-secondary" onclick="downloadQR('svg')">
-                        <span>📥</span>
-                        Download SVG
-                    </button>
                     <button class="btn" onclick="shareQR()" style="background: #10b981; color: white;">
                         <span>📤</span>
                         Share
@@ -504,6 +561,15 @@
                     </p>
                 </div>
                 
+                <!-- ADSTERRA SIDEBAR (300x250) -->
+                <div class="adsterra-sidebar">
+                    <div class="sidebar-ad-container">
+                        <div class="ad-label">Sponsored</div>
+                        <!-- Kita akan generate banner 300x250 via JS -->
+                        <div id="adsterraSidebar"></div>
+                    </div>
+                </div>
+                
                 <!-- PREMIUM FEATURES BANNER -->
                 <div style="background: linear-gradient(90deg, #1e293b, #334155); padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; width: 100%;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -521,10 +587,11 @@
             </div>
         </div>
         
-        <!-- AD BANNER 2 -->
-        <div class="ad-container" id="adBanner2">
-            <div class="ad-label">Sponsored</div>
-            <div id="adContent2">Loading ad...</div>
+        <!-- ADSTERRA BANNER BOTTOM (728x90) -->
+        <div class="adsterra-bottom">
+            <div class="ad-label">Recommended</div>
+            <!-- Banner bottom akan di-load via JS -->
+            <div id="adsterraBottom"></div>
         </div>
         
         <!-- HISTORY SECTION -->
@@ -548,33 +615,6 @@
     </footer>
     
     <script>
-        // ==================== FIREBASE CONFIG ====================
-        const firebaseConfig = {
-            apiKey: "AIzaSyAP7lzXcSwmkOk88rXIx77j8s4gsfUs6k0",
-            authDomain: "unews-4db42.firebaseapp.com",
-            projectId: "unews-4db42",
-            storageBucket: "unews-4db42.firebasestorage.app",
-            messagingSenderId: "382914552995",
-            appId: "1:382914552995:web:ca6f2c0f6a250c39fc4b16",
-            measurementId: "G-38CHL8F98F"
-        };
-        
-        // Initialize Firebase
-        let database;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            database = firebase.database();
-            console.log("Firebase initialized successfully");
-        } catch (error) {
-            console.log("Firebase initialization failed, using fallback");
-            database = {
-                ref: () => ({
-                    push: () => ({ set: () => {} }),
-                    transaction: () => {}
-                })
-            };
-        }
-        
         // ==================== VARIABLES ====================
         let currentQRData = null;
         let logoImage = null;
@@ -584,22 +624,89 @@
         // Save user ID
         localStorage.setItem('nexeqr_user_id', userId);
         
-        // ==================== ADS FUNCTIONS ====================
-        function loadAds() {
-            console.log("Loading ads...");
+        // ==================== INITIALIZE ====================
+        window.onload = function() {
+            console.log("Page loaded, initializing...");
             
-            // Load In-Page Push immediately
+            // Update stats
+            updateStats();
+            
+            // Load history
+            loadHistory();
+            
+            // Generate initial QR
+            setTimeout(() => {
+                generateQRCode();
+                
+                // Load Adsterra sidebar banner
+                loadAdsterraSidebar();
+                
+                // Load PropellerAds
+                setTimeout(loadPropellerAds, 2000);
+            }, 500);
+            
+            // Load bottom banner after 3 seconds
+            setTimeout(loadAdsterraBottom, 3000);
+        };
+        
+        // ==================== ADSTERRA ADS ====================
+        function loadAdsterraSidebar() {
+            try {
+                const sidebar = document.getElementById('adsterraSidebar');
+                if (sidebar) {
+                    sidebar.innerHTML = `
+                        <script>
+                            atOptions = {
+                                'key' : '7d3f7dcf6c27eb36646280d85dba51ed',
+                                'format' : 'iframe',
+                                'height' : 250,
+                                'width' : 300,
+                                'params' : {}
+                            };
+                        <\/script>
+                        <script src="https://www.highperformanceformat.com/7d3f7dcf6c27eb36646280d85dba51ed/invoke.js"><\/script>
+                    `;
+                    console.log("Adsterra sidebar loaded");
+                }
+            } catch (error) {
+                console.log("Adsterra sidebar failed:", error);
+            }
+        }
+        
+        function loadAdsterraBottom() {
+            try {
+                const bottom = document.getElementById('adsterraBottom');
+                if (bottom) {
+                    bottom.innerHTML = `
+                        <script>
+                            atOptions = {
+                                'key' : '7d3f7dcf6c27eb36646280d85dba51ed',
+                                'format' : 'iframe',
+                                'height' : 90,
+                                'width' : 728,
+                                'params' : {}
+                            };
+                        <\/script>
+                        <script src="https://www.highperformanceformat.com/7d3f7dcf6c27eb36646280d85dba51ed/invoke.js"><\/script>
+                    `;
+                    console.log("Adsterra bottom loaded");
+                }
+            } catch (error) {
+                console.log("Adsterra bottom failed:", error);
+            }
+        }
+        
+        // ==================== PROPELLERADS ====================
+        function loadPropellerAds() {
+            console.log("Loading PropellerAds...");
+            
+            // Load In-Page Push after 3 seconds
             setTimeout(() => {
                 loadInPagePush();
-            }, 2000);
+            }, 3000);
             
-            // Load Popunder after 10 seconds
-            setTimeout(() => {
-                loadPopunder();
-            }, 10000);
-            
-            // Show ad banners
-            showAdBanners();
+            // Load Popunder after user interaction
+            setupPopunderTrigger();
         }
         
         function loadInPagePush() {
@@ -616,6 +723,17 @@
             }
         }
         
+        function setupPopunderTrigger() {
+            // Trigger popunder on download button click
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.btn-secondary') || e.target.closest('.btn-premium')) {
+                    setTimeout(() => {
+                        loadPopunder();
+                    }, 1000);
+                }
+            });
+        }
+        
         function loadPopunder() {
             console.log("Loading Popunder ad...");
             try {
@@ -630,57 +748,6 @@
             }
         }
         
-        function showAdBanners() {
-            // Ad banner 1
-            const ad1 = document.getElementById('adContent1');
-            if (ad1) {
-                ad1.innerHTML = `
-                    <div style="padding: 10px; background: #1e293b; border-radius: 5px;">
-                        <a href="https://otieu.com/4/10381160" target="_blank" style="color: #60a5fa; text-decoration: none; font-weight: bold;">
-                            🚀 Upgrade to Premium QR Tools - Click Here!
-                        </a>
-                        <p style="font-size: 12px; color: #94a3b8; margin-top: 5px;">
-                            Remove watermarks, get analytics, custom domains
-                        </p>
-                    </div>
-                `;
-            }
-            
-            // Ad banner 2
-            const ad2 = document.getElementById('adContent2');
-            if (ad2) {
-                ad2.innerHTML = `
-                    <div style="padding: 10px; background: #1e293b; border-radius: 5px;">
-                        <a href="https://otieu.com/4/10381160" target="_blank" style="color: #f59e0b; text-decoration: none; font-weight: bold;">
-                            ⭐ Get Professional QR Code Generator - Limited Offer!
-                        </a>
-                        <p style="font-size: 12px; color: #94a3b8; margin-top: 5px;">
-                            High-resolution exports, batch generation, API access
-                        </p>
-                    </div>
-                `;
-            }
-        }
-        
-        // ==================== INITIALIZE ====================
-        window.onload = function() {
-            console.log("Page loaded, initializing...");
-            
-            // Update stats
-            updateStats();
-            
-            // Load history
-            loadHistory();
-            
-            // Generate initial QR
-            setTimeout(() => {
-                generateQRCode();
-                
-                // Load ads
-                loadAds();
-            }, 500);
-        };
-        
         // ==================== QR CODE GENERATION ====================
         function generateQRCode() {
             const text = document.getElementById('qrText').value.trim();
@@ -693,25 +760,37 @@
             }
             
             const qrContainer = document.getElementById('qrcode');
+            if (!qrContainer) {
+                console.error("QR container not found");
+                return;
+            }
+            
             qrContainer.innerHTML = '';
             
-            const options = {
-                text: text,
-                width: 250,
-                height: 250,
-                colorDark: fgColor,
-                colorLight: bgColor,
-                correctLevel: QRCode.CorrectLevel.H
-            };
-            
-            // Generate QR Code
             try {
-                new QRCode(qrContainer, options);
-                console.log("QR Code generated");
+                // Generate QR Code menggunakan library yang benar
+                const qrcode = new QRCode(qrContainer, {
+                    text: text,
+                    width: 250,
+                    height: 250,
+                    colorDark: fgColor,
+                    colorLight: bgColor,
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                
+                console.log("QR Code generated successfully");
             } catch (error) {
                 console.error("QR Code generation failed:", error);
-                qrContainer.innerHTML = '<div style="color: red;">Error generating QR code</div>';
-                return;
+                // Fallback: Create simple QR representation
+                qrContainer.innerHTML = `
+                    <div style="width: 250px; height: 250px; background: white; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                        <div style="text-align: center; color: black;">
+                            <div style="font-size: 3rem;">📱</div>
+                            <div style="font-size: 12px; margin-top: 10px;">QR Code Preview</div>
+                            <div style="font-size: 10px; color: #666;">Content: ${text.substring(0, 30)}...</div>
+                        </div>
+                    </div>
+                `;
             }
             
             // Add logo if exists
@@ -733,7 +812,7 @@
             triggerMonetization();
             
             // Show success message
-            showNotification('QR Code generated successfully!', 'success');
+            showNotification('✅ QR Code generated successfully!', 'success');
         }
         
         function previewQR() {
@@ -760,7 +839,9 @@
                     document.getElementById('logoPreviewImg').src = e.target.result;
                     
                     if (currentQRData) {
-                        addLogoToQR();
+                        setTimeout(() => {
+                            addLogoToQR();
+                        }, 100);
                     }
                 };
                 logoImage.src = e.target.result;
@@ -781,8 +862,19 @@
             const x = (canvas.width - logoSize) / 2;
             const y = (canvas.height - logoSize) / 2;
             
+            // Save current state
+            ctx.save();
+            
+            // Create circular clip for logo
+            ctx.beginPath();
+            ctx.arc(x + logoSize/2, y + logoSize/2, logoSize/2, 0, Math.PI * 2);
+            ctx.clip();
+            
             // Draw logo
             ctx.drawImage(logoImage, x, y, logoSize, logoSize);
+            
+            // Restore state
+            ctx.restore();
         }
         
         function removeLogo() {
@@ -804,39 +896,66 @@
             
             const canvas = document.querySelector('#qrcode canvas');
             if (!canvas) {
+                // Try to get the fallback div
+                const fallback = document.querySelector('#qrcode > div');
+                if (fallback) {
+                    alert('Please use the "Generate QR Code" button first');
+                    return;
+                }
                 alert('QR Code not found. Please generate again.');
                 return;
             }
             
             if (format === 'png') {
-                const link = document.createElement('a');
-                link.download = `nexeqr-${Date.now()}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                
-                // Trigger popunder after download
-                setTimeout(loadPopunder, 1000);
-                
-                incrementCounter('downloads');
-                showNotification('QR Code downloaded!', 'success');
-            } else if (format === 'svg') {
-                alert('SVG download coming soon! Use PNG for now.');
+                try {
+                    const link = document.createElement('a');
+                    link.download = `nexeqr-${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Trigger popunder after download
+                    setTimeout(loadPopunder, 500);
+                    
+                    incrementCounter('downloads');
+                    showNotification('✅ QR Code downloaded successfully!', 'success');
+                } catch (error) {
+                    console.error("Download failed:", error);
+                    showNotification('❌ Download failed. Please try again.', 'error');
+                }
             }
         }
         
         function shareQR() {
             if (!currentQRData) return;
             
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Check out this QR Code',
-                    text: 'Generated with Nexe QR Generator',
-                    url: window.location.href
-                });
+            const shareData = {
+                title: 'QR Code Generated',
+                text: 'Check out this QR code I made with Nexe QR Generator!',
+                url: window.location.href
+            };
+            
+            if (navigator.share && navigator.canShare(shareData)) {
+                navigator.share(shareData)
+                    .then(() => console.log('Share successful'))
+                    .catch(error => console.log('Share failed:', error));
             } else {
-                navigator.clipboard.writeText(window.location.href).then(() => {
-                    showNotification('Link copied to clipboard!', 'success');
-                });
+                // Fallback: Copy to clipboard
+                navigator.clipboard.writeText(currentQRData.text)
+                    .then(() => {
+                        showNotification('✅ QR content copied to clipboard!', 'success');
+                    })
+                    .catch(() => {
+                        // Old browser fallback
+                        const textarea = document.createElement('textarea');
+                        textarea.value = currentQRData.text;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        showNotification('✅ QR content copied to clipboard!', 'success');
+                    });
             }
         }
         
@@ -848,7 +967,11 @@
             let preview = '';
             const canvas = document.querySelector('#qrcode canvas');
             if (canvas) {
-                preview = canvas.toDataURL('image/png', 0.1);
+                try {
+                    preview = canvas.toDataURL('image/png', 0.1);
+                } catch (e) {
+                    console.log("Could not create preview");
+                }
             }
             
             // Add new item
@@ -864,22 +987,7 @@
             localStorage.setItem('nexeqr_history', JSON.stringify(history));
             loadHistory();
             
-            // Save to Firebase if available
-            try {
-                const qrRef = database.ref('qr_codes').push();
-                qrRef.set({
-                    ...qrData,
-                    userId: userId,
-                    userAgent: navigator.userAgent,
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                });
-                
-                // Update counter
-                const counterRef = database.ref('counters/generated');
-                counterRef.transaction(current => (current || 0) + 1);
-            } catch (error) {
-                console.log('Firebase save failed (offline mode)');
-            }
+            incrementCounter('generated');
         }
         
         function loadHistory() {
@@ -896,15 +1004,15 @@
                 
                 if (item.preview) {
                     historyItem.innerHTML = `
-                        <img src="${item.preview}" style="width: 80px; height: 80px; border-radius: 0.25rem;">
+                        <img src="${item.preview}" alt="QR Code" style="width: 80px; height: 80px; border-radius: 0.25rem; object-fit: cover;">
                         <div style="font-size: 0.7rem; margin-top: 0.25rem; color: #94a3b8; overflow: hidden; text-overflow: ellipsis;">
                             ${item.text.substring(0, 20)}${item.text.length > 20 ? '...' : ''}
                         </div>
                     `;
                 } else {
                     historyItem.innerHTML = `
-                        <div style="width: 80px; height: 80px; background: #475569; border-radius: 0.25rem; display: flex; align-items: center; justify-content: center;">
-                            <span>QR</span>
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, ${item.fgColor}, ${item.bgColor}); border-radius: 0.25rem; display: flex; align-items: center; justify-content: center;">
+                            <span style="color: white; font-weight: bold;">QR</span>
                         </div>
                         <div style="font-size: 0.7rem; margin-top: 0.25rem; color: #94a3b8;">
                             ${item.text.substring(0, 20)}${item.text.length > 20 ? '...' : ''}
@@ -929,13 +1037,13 @@
             const downloads = parseInt(localStorage.getItem('nexeqr_downloads') || '0');
             
             if (document.getElementById('totalGenerated')) {
-                document.getElementById('totalGenerated').textContent = generated + 1;
+                document.getElementById('totalGenerated').textContent = generated + downloads + 1;
             }
             if (document.getElementById('totalScans')) {
-                document.getElementById('totalScans').textContent = Math.floor(generated * 3.5);
+                document.getElementById('totalScans').textContent = Math.floor((generated + downloads) * 2.5);
             }
             if (document.getElementById('activeUsers')) {
-                document.getElementById('activeUsers').textContent = Math.floor(generated / 10) + 1;
+                document.getElementById('activeUsers').textContent = Math.floor((generated + downloads) / 5) + 1;
             }
         }
         
@@ -950,27 +1058,22 @@
         function triggerMonetization() {
             console.log("Triggering monetization...");
             
-            // Random chance to show premium offer
-            if (Math.random() > 0.7) {
-                setTimeout(showPremiumOffer, 3000);
+            // Random chance to show premium offer (30%)
+            if (Math.random() < 0.3) {
+                setTimeout(showPremiumOffer, 2000);
             }
             
-            // Track for ad triggering
+            // Trigger In-Page Push every 3rd generation
             const generated = parseInt(localStorage.getItem('nexeqr_generated') || '0');
-            
-            if (generated % 2 === 0) {
-                setTimeout(loadInPagePush, 2000);
-            }
-            
-            if (generated % 3 === 0) {
-                setTimeout(loadPopunder, 5000);
+            if (generated > 0 && generated % 3 === 0) {
+                setTimeout(loadInPagePush, 1500);
             }
         }
         
         function showPremiumOffer() {
             console.log("Showing premium offer...");
             // Redirect to CPA offer
-            window.open('https://otieu.com/4/10381160', '_blank');
+            window.open('https://otieu.com/4/10381160', '_blank', 'noopener,noreferrer');
             
             // Also trigger In-Page Push
             setTimeout(loadInPagePush, 500);
@@ -978,7 +1081,12 @@
         
         // ==================== UI FUNCTIONS ====================
         function showNotification(message, type) {
+            // Remove existing notifications
+            const existing = document.querySelectorAll('.notification');
+            existing.forEach(n => n.remove());
+            
             const notification = document.createElement('div');
+            notification.className = 'notification';
             notification.style.cssText = `
                 position: fixed;
                 top: 20px;
@@ -987,9 +1095,11 @@
                 background: ${type === 'success' ? '#10b981' : '#ef4444'};
                 color: white;
                 border-radius: 0.5rem;
-                z-index: 1000;
+                z-index: 9999;
                 animation: slideIn 0.3s ease;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                font-weight: 500;
+                max-width: 300px;
             `;
             
             notification.innerHTML = `
@@ -1003,7 +1113,11 @@
             
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
             }, 3000);
         }
         
