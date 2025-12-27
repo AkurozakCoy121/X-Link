@@ -92,11 +92,14 @@
         .profile-popup-btn:hover { background:#e2e8f0; }
         
         /* ADS */
-        .ad-banner { background:#f8fafc; border:2px dashed #cbd5e1; border-radius:var(--radius); margin:20px 0; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; }
+        .ad-banner { background:#f8fafc; border:2px dashed #cbd5e1; border-radius:var(--radius); margin:20px 0; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; min-height:90px; }
         .ad-banner.horizontal { height:90px; }
         .ad-banner.vertical { height:600px; width:160px; }
         .ad-banner.medium { height:250px; width:300px; }
         .ad-label { position:absolute; top:8px; right:8px; background:var(--primary); color:white; padding:3px 10px; border-radius:20px; font-size:0.7rem; z-index:1; }
+        
+        /* ADS IFRAME STYLE */
+        .ad-iframe { border:none; width:100%; height:100%; }
         
         /* MAIN CONTENT */
         .main-content { display:flex; margin-top:20px; gap:20px; }
@@ -352,7 +355,10 @@
             <div class="ad-banner vertical">
                 <span class="ad-label">IKLAN</span>
                 <div id="leftSidebarAd">
-                    <!-- Ad akan diisi JavaScript -->
+                    <iframe src="https://www.highperformanceformat.com/5e0812e16f5b229c05c8d853fc6f9253/invoke.html" 
+                            class="ad-iframe" 
+                            scrolling="no"
+                            title="Advertisement"></iframe>
                 </div>
             </div>
         </aside>
@@ -365,7 +371,10 @@
                 <div class="ad-banner horizontal">
                     <span class="ad-label">IKLAN</span>
                     <div id="topAd">
-                        <!-- Ad akan diisi JavaScript -->
+                        <iframe src="https://www.highperformanceformat.com/7d3f7dcf6c27eb36646280d85dba51ed/invoke.html" 
+                                class="ad-iframe" 
+                                scrolling="no"
+                                title="Advertisement"></iframe>
                     </div>
                 </div>
                 
@@ -422,7 +431,10 @@
                         <div class="ad-banner medium" style="margin:0 auto;">
                             <span class="ad-label">IKLAN</span>
                             <div id="inlineAd">
-                                <!-- Ad akan diisi JavaScript -->
+                                <iframe src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.html" 
+                                        class="ad-iframe" 
+                                        scrolling="no"
+                                        title="Advertisement"></iframe>
                             </div>
                         </div>
                     </div>
@@ -575,7 +587,10 @@
             <div class="ad-banner medium" style="margin-bottom:25px;">
                 <span class="ad-label">IKLAN</span>
                 <div id="rightSidebarAd">
-                    <!-- Ad akan diisi JavaScript -->
+                    <iframe src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.html" 
+                            class="ad-iframe" 
+                            scrolling="no"
+                            title="Advertisement"></iframe>
                 </div>
             </div>
             
@@ -623,8 +638,10 @@
         let articleEditor = null;
         let isAdmin = false;
         let hasMonetized = false;
-        let userLikes = {};
-        const ADMIN_UID = "giv9y5uCw6XkES0QDqKu03SHdO72"; // UID admin utama
+        const ADMIN_UIDS = [
+            "giv9y5uCw6XkES0QDqKu03SHdO72", // Admin utama
+            "user_1766850109401_5fdho9608" // Admin yang kamu kasih
+        ];
 
         // ========== INITIALIZE ==========
         async function initializeApp() {
@@ -651,25 +668,17 @@
                     });
                 }
                 
-                // Load ads setelah delay (untuk hindari error)
-                setTimeout(() => {
-                    loadAds();
-                }, 2000);
+                // Setup anonymous login dengan Firebase Authentication
+                await setupFirebaseAuth();
                 
-                // Load data dari localStorage
-                loadFromLocalStorage();
+                // Load data dari Firebase REALTIME
+                await loadArticlesFromFirebase();
                 
                 // Setup event listeners
                 setupEventListeners();
                 
-                // Load articles
-                await loadArticles();
-                
-                // Setup auto-login untuk tamu
-                setupGuestLogin();
-                
-                // Update UI
-                updateUserUI();
+                // Check URL untuk article
+                checkUrlForArticle();
                 
             } catch (error) {
                 console.error('Initialization error:', error);
@@ -677,122 +686,70 @@
             }
         }
 
-        // ========== LOAD ADS ==========
-        function loadAds() {
+        // ========== FIREBASE AUTHENTICATION ==========
+        async function setupFirebaseAuth() {
             try {
-                // Load ads scripts
-                const adScripts = [
-                    {
-                        divId: 'topAd',
-                        script: `
-                            <script>
-                                atOptions = {
-                                    'key' : '7d3f7dcf6c27eb36646280d85dba51ed',
-                                    'format' : 'iframe',
-                                    'height' : 90,
-                                    'width' : 728,
-                                    'params' : {}
-                                };
-                            <\/script>
-                            <script src="https://www.highperformanceformat.com/7d3f7dcf6c27eb36646280d85dba51ed/invoke.js"><\/script>
-                        `
-                    },
-                    {
-                        divId: 'leftSidebarAd',
-                        script: `
-                            <script>
-                                atOptions = {
-                                    'key' : '5e0812e16f5b229c05c8d853fc6f9253',
-                                    'format' : 'iframe',
-                                    'height' : 600,
-                                    'width' : 160,
-                                    'params' : {}
-                                };
-                            <\/script>
-                            <script src="https://www.highperformanceformat.com/5e0812e16f5b229c05c8d853fc6f9253/invoke.js"><\/script>
-                        `
-                    },
-                    {
-                        divId: 'inlineAd',
-                        script: `
-                            <script>
-                                atOptions = {
-                                    'key' : 'df392223eb071195b98c897f97cb395d',
-                                    'format' : 'iframe',
-                                    'height' : 250,
-                                    'width' : 300,
-                                    'params' : {}
-                                };
-                            <\/script>
-                            <script src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.js"><\/script>
-                        `
-                    },
-                    {
-                        divId: 'rightSidebarAd',
-                        script: `
-                            <script>
-                                atOptions = {
-                                    'key' : 'df392223eb071195b98c897f97cb395d',
-                                    'format' : 'iframe',
-                                    'height' : 250,
-                                    'width' : 300,
-                                    'params' : {}
-                                };
-                            <\/script>
-                            <script src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.js"><\/script>
-                        `
-                    }
-                ];
+                // Coba login dengan anonymous auth
+                const userCredential = await firebase.auth().signInAnonymously();
+                currentUser = userCredential.user;
                 
-                adScripts.forEach(ad => {
-                    const div = document.getElementById(ad.divId);
-                    if (div) {
-                        div.innerHTML = ad.script;
-                    }
-                });
-                
-            } catch (error) {
-                console.log('Error loading ads:', error);
-            }
-        }
-
-        // ========== LOAD FROM LOCALSTORAGE ==========
-        function loadFromLocalStorage() {
-            try {
-                // Load user profile
-                const storedProfile = localStorage.getItem('nexenews_userProfile');
-                if (storedProfile) {
-                    userProfile = JSON.parse(storedProfile);
-                    currentUser = { uid: userProfile.uid, isAnonymous: false };
-                }
-                
-                // Load articles
-                const storedArticles = localStorage.getItem('nexenews_articles');
-                if (storedArticles) {
-                    articles = JSON.parse(storedArticles);
-                }
-                
-                // Load likes
-                const storedLikes = localStorage.getItem('nexenews_userLikes');
-                if (storedLikes) {
-                    userLikes = JSON.parse(storedLikes);
-                }
+                // Load user profile dari Firebase
+                await loadUserProfileFromFirebase();
                 
                 // Check admin status
-                if (userProfile && userProfile.uid === ADMIN_UID) {
-                    isAdmin = true;
-                    userProfile.isAdmin = true;
-                }
+                checkAdminStatus();
+                
+                // Update UI
+                updateUserUI();
                 
             } catch (error) {
-                console.error('Error loading from localStorage:', error);
+                console.error('Firebase auth error:', error);
+                // Fallback ke localStorage
+                setupLocalStorageAuth();
             }
         }
 
-        // ========== SETUP GUEST LOGIN ==========
-        function setupGuestLogin() {
-            // Jika belum login, setup user guest
-            if (!userProfile) {
+        async function loadUserProfileFromFirebase() {
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref(`users/${currentUser.uid}`).once('value');
+                
+                if (snapshot.exists()) {
+                    userProfile = snapshot.val();
+                } else {
+                    // Create new user profile di Firebase
+                    userProfile = {
+                        uid: currentUser.uid,
+                        username: 'Guest_' + Math.random().toString(36).substr(2, 5),
+                        email: '',
+                        avatar: '',
+                        isGuest: true,
+                        joinDate: Date.now(),
+                        stats: {
+                            articles: 0,
+                            likes: 0,
+                            views: 0
+                        }
+                    };
+                    
+                    await db.ref(`users/${currentUser.uid}`).set(userProfile);
+                }
+                
+                updateUserUI();
+                
+            } catch (error) {
+                console.error('Error loading user profile from Firebase:', error);
+                setupLocalStorageAuth();
+            }
+        }
+
+        function setupLocalStorageAuth() {
+            // Fallback ke localStorage
+            const storedProfile = localStorage.getItem('nexenews_userProfile');
+            if (storedProfile) {
+                userProfile = JSON.parse(storedProfile);
+                currentUser = { uid: userProfile.uid };
+            } else {
                 const guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
                 userProfile = {
                     uid: guestId,
@@ -800,7 +757,6 @@
                     email: '',
                     avatar: '',
                     isGuest: true,
-                    isAnonymous: true,
                     joinDate: Date.now(),
                     stats: {
                         articles: 0,
@@ -808,76 +764,399 @@
                         views: 0
                     }
                 };
-                
-                currentUser = { uid: guestId, isAnonymous: true };
-                saveUserProfile();
-                
-                // Update UI untuk guest
-                document.getElementById('userAvatar').style.display = 'none';
-                document.getElementById('loginBtn').style.display = 'block';
-                document.getElementById('writeArticleBtn').style.display = 'none';
-            }
-        }
-
-        // ========== SAVE USER PROFILE ==========
-        function saveUserProfile() {
-            if (userProfile) {
+                currentUser = { uid: guestId };
                 localStorage.setItem('nexenews_userProfile', JSON.stringify(userProfile));
             }
+            
+            updateUserUI();
         }
 
-        // ========== UPDATE UI FUNCTION ==========
-        function updateUserUI() {
-            if (!userProfile) return;
-            
-            const avatar = document.getElementById('userAvatar');
-            const loginBtn = document.getElementById('loginBtn');
-            
-            if (userProfile.isGuest) {
-                // User guest
-                avatar.style.display = 'none';
-                loginBtn.style.display = 'block';
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
-                document.getElementById('writeArticleBtn').style.display = 'none';
+        // ========== FIREBASE ARTICLES ==========
+        async function loadArticlesFromFirebase() {
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref('articles').once('value');
+                
+                if (snapshot.exists()) {
+                    const articlesData = snapshot.val();
+                    articles = Object.entries(articlesData).map(([id, data]) => ({
+                        id,
+                        ...data
+                    }));
+                    
+                    // Calculate scores
+                    articles.forEach(article => {
+                        article.score = calculateArticleScore(article);
+                    });
+                    
+                    // Display articles
+                    displayTrendingArticles();
+                    displayNewestArticles();
+                    displayRecommendedArticles();
+                    
+                } else {
+                    // Buat sample articles jika kosong
+                    await createSampleArticles();
+                }
+                
+            } catch (error) {
+                console.error('Error loading articles from Firebase:', error);
+                // Load dari localStorage
+                loadArticlesFromLocalStorage();
+            }
+        }
+
+        async function loadArticlesFromLocalStorage() {
+            const storedArticles = localStorage.getItem('nexenews_articles');
+            if (storedArticles) {
+                articles = JSON.parse(storedArticles);
+                displayTrendingArticles();
+                displayNewestArticles();
+                displayRecommendedArticles();
             } else {
-                // User logged in
-                avatar.style.display = 'flex';
-                loginBtn.style.display = 'none';
+                await createSampleArticles();
+            }
+        }
+
+        async function createSampleArticles() {
+            const sampleArticles = [
+                {
+                    id: 'sample1_' + Date.now(),
+                    title: 'Selamat datang di NexeNews!',
+                    category: 'fakta',
+                    image: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1',
+                    content: '<h2>Platform Berita Viral Indonesia</h2><p>NexeNews adalah platform untuk berbagi cerita, fakta unik, dan konten viral dari Indonesia. Mulai buat artikel pertamamu sekarang!</p><p>Fitur lengkap: buat artikel, like, komentar, dan trending algorithm.</p>',
+                    excerpt: 'Platform berita viral Indonesia terbaru',
+                    author: 'Admin NexeNews',
+                    authorId: ADMIN_UIDS[0],
+                    authorAvatar: '',
+                    timestamp: Date.now() - 3600000,
+                    views: 150,
+                    likes: 25,
+                    comments: 0,
+                    status: 'published',
+                    score: 350
+                }
+            ];
+            
+            articles = sampleArticles;
+            
+            // Save ke Firebase
+            try {
+                const db = firebase.database();
+                await db.ref('articles').set(
+                    sampleArticles.reduce((acc, article) => {
+                        acc[article.id] = article;
+                        return acc;
+                    }, {})
+                );
+            } catch (error) {
+                console.error('Error saving sample articles to Firebase:', error);
+                // Save ke localStorage
+                localStorage.setItem('nexenews_articles', JSON.stringify(articles));
+            }
+            
+            displayTrendingArticles();
+            displayNewestArticles();
+            displayRecommendedArticles();
+        }
+
+        // ========== REAL-TIME LIKE SYSTEM ==========
+        async function toggleLike(articleId) {
+            if (!userProfile || userProfile.isGuest) {
+                showNotification('Login dulu untuk like artikel', 'error');
+                showLoginModal();
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                const likeRef = db.ref(`likes/${articleId}/${userProfile.uid}`);
+                const articleRef = db.ref(`articles/${articleId}`);
                 
-                // Set avatar warna berdasarkan huruf pertama
-                const firstLetter = userProfile.username.charAt(0).toUpperCase();
-                avatar.textContent = firstLetter;
+                // Check if already liked
+                const likeSnapshot = await likeRef.once('value');
+                const alreadyLiked = likeSnapshot.exists();
                 
-                // Warna background berdasarkan huruf (R = merah, dll)
+                if (alreadyLiked) {
+                    // Unlike - REALTIME di Firebase
+                    await likeRef.remove();
+                    await articleRef.child('likes').transaction(current => (current || 0) - 1);
+                    
+                    // Update UI
+                    document.getElementById('likeText').textContent = 'Suka';
+                    document.getElementById('likeArticleBtn').classList.remove('liked');
+                    document.getElementById('likeArticleBtn').innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
+                    
+                    // Update user stats
+                    await updateUserStats('likes', -1);
+                    
+                } else {
+                    // Like - REALTIME di Firebase
+                    await likeRef.set({
+                        userId: userProfile.uid,
+                        timestamp: Date.now()
+                    });
+                    await articleRef.child('likes').transaction(current => (current || 0) + 1);
+                    
+                    // Update UI
+                    document.getElementById('likeText').textContent = 'Disukai';
+                    document.getElementById('likeArticleBtn').classList.add('liked');
+                    document.getElementById('likeArticleBtn').innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
+                    
+                    // Update user stats
+                    await updateUserStats('likes', 1);
+                }
+                
+                // Reload article data
+                await reloadArticleData(articleId);
+                
+                showNotification(alreadyLiked ? 'Like dihapus' : 'Artikel disukai!', 'success');
+                
+            } catch (error) {
+                console.error('Error toggling like:', error);
+                showNotification('Gagal update like', 'error');
+            }
+        }
+
+        async function checkIfLiked(articleId) {
+            if (!userProfile) return false;
+            
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref(`likes/${articleId}/${userProfile.uid}`).once('value');
+                return snapshot.exists();
+            } catch (error) {
+                return false;
+            }
+        }
+
+        async function reloadArticleData(articleId) {
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref(`articles/${articleId}`).once('value');
+                
+                if (snapshot.exists()) {
+                    const articleData = snapshot.val();
+                    
+                    // Update local article data
+                    const index = articles.findIndex(a => a.id === articleId);
+                    if (index !== -1) {
+                        articles[index] = { id: articleId, ...articleData };
+                        articles[index].score = calculateArticleScore(articles[index]);
+                    }
+                    
+                    // Update UI jika article sedang dibuka
+                    if (currentArticle && currentArticle.id === articleId) {
+                        document.getElementById('articleLikes').textContent = formatNumber(articleData.likes || 0);
+                        currentArticle.likes = articleData.likes || 0;
+                    }
+                    
+                    // Update displays
+                    displayTrendingArticles();
+                    displayRecommendedArticles();
+                }
+            } catch (error) {
+                console.error('Error reloading article data:', error);
+            }
+        }
+
+        // ========== REAL-TIME COMMENT SYSTEM ==========
+        async function loadComments(articleId) {
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref(`comments/${articleId}`).once('value');
+                
+                if (snapshot.exists()) {
+                    const commentsData = snapshot.val();
+                    comments = Object.entries(commentsData)
+                        .map(([id, data]) => ({
+                            id,
+                            ...data
+                        }))
+                        .sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    displayComments();
+                } else {
+                    comments = [];
+                    displayComments();
+                }
+            } catch (error) {
+                console.error('Error loading comments:', error);
+                comments = [];
+                displayComments();
+            }
+        }
+
+        async function submitComment() {
+            if (!userProfile || userProfile.isGuest) {
+                showNotification('Login dulu untuk komentar', 'error');
+                showLoginModal();
+                return;
+            }
+            
+            const text = document.getElementById('commentInput').value.trim();
+            if (!text) {
+                showNotification('Komentar tidak boleh kosong', 'error');
+                return;
+            }
+            
+            if (text.length > 500) {
+                showNotification('Komentar maksimal 500 karakter', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                const commentId = 'comment_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                const newComment = {
+                    text,
+                    authorId: userProfile.uid,
+                    authorName: userProfile.username,
+                    authorAvatar: userProfile.avatar,
+                    timestamp: Date.now()
+                };
+                
+                // Save comment ke Firebase REALTIME
+                await db.ref(`comments/${currentArticle.id}/${commentId}`).set(newComment);
+                
+                // Update comment count di article
+                await db.ref(`articles/${currentArticle.id}/comments`).transaction(current => (current || 0) + 1);
+                
+                // Clear input
+                document.getElementById('commentInput').value = '';
+                
+                // Show notification
+                showNotification('Komentar berhasil ditambahkan', 'success');
+                
+                // Reload comments
+                await loadComments(currentArticle.id);
+                
+                // Update article data
+                await reloadArticleData(currentArticle.id);
+                
+            } catch (error) {
+                console.error('Error submitting comment:', error);
+                showNotification('Gagal menambahkan komentar', 'error');
+            }
+        }
+
+        async function deleteComment(commentId) {
+            if (!confirm('Hapus komentar ini?')) return;
+            
+            try {
+                const db = firebase.database();
+                
+                // Delete comment dari Firebase
+                await db.ref(`comments/${currentArticle.id}/${commentId}`).remove();
+                
+                // Update comment count
+                await db.ref(`articles/${currentArticle.id}/comments`).transaction(current => Math.max(0, (current || 0) - 1));
+                
+                // Reload comments
+                await loadComments(currentArticle.id);
+                
+                // Update article data
+                await reloadArticleData(currentArticle.id);
+                
+                showNotification('Komentar berhasil dihapus', 'success');
+                
+            } catch (error) {
+                console.error('Error deleting comment:', error);
+                showNotification('Gagal menghapus komentar', 'error');
+            }
+        }
+
+        function displayComments() {
+            const container = document.getElementById('commentList');
+            if (!container) return;
+            
+            document.getElementById('commentCount').textContent = formatNumber(comments.length);
+            
+            if (comments.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px; color:var(--gray);">
+                        <i class="far fa-comment" style="font-size:2rem; margin-bottom:10px;"></i>
+                        <p>Belum ada komentar. Jadilah yang pertama!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = comments.map(comment => {
+                // Warna avatar berdasarkan huruf pertama
+                const firstLetter = comment.authorName?.charAt(0) || 'A';
                 const colors = {
+                    'R': '#DC2626', // R = merah
                     'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 'D': '#F59E0B',
                     'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4', 'H': '#84CC16',
                     'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1', 'L': '#14B8A6',
                     'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B', 'P': '#10B981',
-                    'Q': '#EF4444', 'R': '#DC2626', // R = merah
-                    'S': '#2563EB', 'T': '#7C3AED', 'U': '#10B981', 'V': '#F59E0B',
-                    'W': '#EF4444', 'X': '#8B5CF6', 'Y': '#06B6D4', 'Z': '#84CC16'
+                    'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED', 'U': '#10B981',
+                    'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6', 'Y': '#06B6D4',
+                    'Z': '#84CC16'
                 };
+                const color = colors[firstLetter.toUpperCase()] || '#2563EB';
                 
-                const color = colors[firstLetter] || '#2563EB';
-                avatar.style.background = color;
-                avatar.style.color = 'white';
+                return `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <div class="comment-author">
+                                <div class="comment-author-avatar" style="background-color:${color};">${firstLetter}</div>
+                                ${comment.authorName || 'Anonymous'}
+                            </div>
+                            <div class="comment-time">${timeAgo(comment.timestamp)}</div>
+                        </div>
+                        <div class="comment-content">${comment.text}</div>
+                        ${comment.authorId === userProfile?.uid ? `
+                            <div class="comment-actions">
+                                <button class="btn btn-sm btn-danger" onclick="deleteComment('${comment.id}')">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ========== REAL-TIME VIEW COUNT ==========
+        async function updateViewCount(articleId) {
+            try {
+                const db = firebase.database();
+                await db.ref(`articles/${articleId}/views`).transaction(current => (current || 0) + 1);
                 
-                // Update profile popup
-                document.getElementById('popupUsername').textContent = userProfile.username;
-                document.getElementById('popupEmail').textContent = userProfile.email || 'Tidak ada email';
-                document.getElementById('popupAvatar').textContent = firstLetter;
-                document.getElementById('popupAvatar').style.backgroundColor = color;
-                document.getElementById('popupArticles').textContent = userProfile.stats?.articles || 0;
-                document.getElementById('popupLikes').textContent = userProfile.stats?.likes || 0;
-                
-                // Show write button jika bukan guest
-                document.getElementById('writeArticleBtn').style.display = userProfile.isGuest ? 'none' : 'block';
-                
-                // Show admin button jika admin
-                if (isAdmin) {
-                    document.getElementById('popupAdminBtn').style.display = 'block';
+                // Update user stats jika author
+                const article = articles.find(a => a.id === articleId);
+                if (article && article.authorId === userProfile?.uid) {
+                    await updateUserStats('views', 1);
                 }
+                
+                // Update local data
+                await reloadArticleData(articleId);
+                
+            } catch (error) {
+                console.error('Error updating view count:', error);
+            }
+        }
+
+        // ========== UPDATE USER STATS ==========
+        async function updateUserStats(type, delta) {
+            if (!userProfile) return;
+            
+            try {
+                const db = firebase.database();
+                await db.ref(`users/${userProfile.uid}/stats/${type}`).transaction(current => (current || 0) + delta);
+                
+                // Update local profile
+                if (!userProfile.stats) userProfile.stats = {};
+                userProfile.stats[type] = (userProfile.stats[type] || 0) + delta;
+                
+                updateUserUI();
+                
+            } catch (error) {
+                console.error('Error updating user stats:', error);
             }
         }
 
@@ -896,49 +1175,34 @@
                 return;
             }
             
-            // Generate user ID
-            const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            
-            // Create user profile
-            userProfile = {
-                uid: userId,
-                username: username,
-                email: email || '',
-                avatar: avatar || '',
-                isGuest: false,
-                isAnonymous: false,
-                joinDate: Date.now(),
-                stats: {
-                    articles: 0,
-                    likes: 0,
-                    views: 0
+            try {
+                const db = firebase.database();
+                
+                // Update user profile di Firebase
+                userProfile.username = username;
+                userProfile.email = email || '';
+                userProfile.avatar = avatar || '';
+                userProfile.isGuest = false;
+                
+                await db.ref(`users/${currentUser.uid}`).set(userProfile);
+                
+                // Close modal
+                document.getElementById('loginModal').classList.remove('active');
+                
+                // Update UI
+                updateUserUI();
+                
+                // Show notification
+                showNotification(`Selamat datang, ${username}!`, 'success');
+                
+                // Update comment form jika ada article terbuka
+                if (currentArticle) {
+                    updateCommentForm();
                 }
-            };
-            
-            // Check jika ini admin utama
-            if (userId === ADMIN_UID) {
-                isAdmin = true;
-                userProfile.isAdmin = true;
-                showNotification('Login sebagai Admin!', 'success');
-            }
-            
-            currentUser = { uid: userId, isAnonymous: false };
-            
-            // Save to localStorage
-            saveUserProfile();
-            
-            // Close modal
-            document.getElementById('loginModal').classList.remove('active');
-            
-            // Update UI
-            updateUserUI();
-            
-            // Show notification
-            showNotification(`Selamat datang, ${username}!`, 'success');
-            
-            // Jika ada article terbuka, update comment form
-            if (currentArticle) {
-                updateCommentForm();
+                
+            } catch (error) {
+                console.error('Error logging in:', error);
+                showNotification('Gagal login', 'error');
             }
         }
 
@@ -947,137 +1211,298 @@
             showNotification('Masuk sebagai tamu. Login untuk fitur lengkap.', 'info');
         }
 
-        function logoutUser() {
-            // Clear current user
-            currentUser = null;
-            userProfile = null;
-            isAdmin = false;
-            
-            // Setup guest login baru
-            setupGuestLogin();
-            
-            // Close popup
-            document.getElementById('profilePopup').classList.remove('active');
-            
-            // Show notification
-            showNotification('Logout berhasil', 'success');
-            
-            // Update UI
-            updateUserUI();
-            
-            // Kembali ke home
-            showHomePage();
-        }
-
-        // ========== LOAD ARTICLES ==========
-        async function loadArticles() {
+        async function logoutUser() {
             try {
-                // Coba load dari Firebase
-                const db = firebase.database();
-                const snapshot = await db.ref('articles').once('value');
+                // Sign out dari Firebase
+                await firebase.auth().signOut();
                 
-                if (snapshot.exists()) {
-                    const articlesData = snapshot.val();
-                    articles = Object.entries(articlesData).map(([id, data]) => ({
-                        id,
-                        ...data
-                    }));
-                    
-                    // Save to localStorage sebagai backup
-                    localStorage.setItem('nexenews_articles', JSON.stringify(articles));
-                    
-                } else if (articles.length === 0) {
-                    // Buat sample articles
-                    await createSampleArticles();
-                }
+                // Reset user
+                currentUser = null;
+                userProfile = null;
+                isAdmin = false;
                 
-                // Hitung score untuk algoritma
-                articles.forEach(article => {
-                    article.score = calculateArticleScore(article);
-                });
+                // Setup anonymous login baru
+                await setupFirebaseAuth();
                 
-                // Tampilkan articles
-                displayTrendingArticles();
-                displayNewestArticles();
-                displayRecommendedArticles();
+                // Close popup
+                document.getElementById('profilePopup').classList.remove('active');
+                
+                // Show notification
+                showNotification('Logout berhasil', 'success');
+                
+                // Kembali ke home
+                showHomePage();
                 
             } catch (error) {
-                console.error('Error loading articles:', error);
-                // Gunakan local articles
+                console.error('Error logging out:', error);
+                showNotification('Logout gagal', 'error');
+            }
+        }
+
+        // ========== CHECK ADMIN STATUS ==========
+        function checkAdminStatus() {
+            if (!userProfile) {
+                isAdmin = false;
+                return;
+            }
+            
+            // Check jika user termasuk admin UID
+            isAdmin = ADMIN_UIDS.includes(userProfile.uid);
+            
+            if (isAdmin) {
+                document.getElementById('popupAdminBtn').style.display = 'block';
+                userProfile.isAdmin = true;
+                
+                // Update di Firebase
+                try {
+                    const db = firebase.database();
+                    db.ref(`users/${userProfile.uid}/isAdmin`).set(true);
+                } catch (error) {
+                    console.error('Error updating admin status:', error);
+                }
+            }
+        }
+
+        // ========== UPDATE UI FUNCTION ==========
+        function updateUserUI() {
+            if (!userProfile) {
+                document.getElementById('userAvatar').style.display = 'none';
+                document.getElementById('loginBtn').style.display = 'block';
+                document.getElementById('writeArticleBtn').style.display = 'none';
+                return;
+            }
+            
+            const avatar = document.getElementById('userAvatar');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (userProfile.isGuest) {
+                avatar.style.display = 'none';
+                loginBtn.style.display = 'block';
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                document.getElementById('writeArticleBtn').style.display = 'none';
+            } else {
+                avatar.style.display = 'flex';
+                loginBtn.style.display = 'none';
+                
+                // Set avatar dengan warna
+                const firstLetter = userProfile.username.charAt(0).toUpperCase();
+                avatar.textContent = firstLetter;
+                
+                // Warna berdasarkan huruf pertama
+                const colors = {
+                    'R': '#DC2626',
+                    'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 'D': '#F59E0B',
+                    'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4', 'H': '#84CC16',
+                    'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1', 'L': '#14B8A6',
+                    'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B', 'P': '#10B981',
+                    'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED', 'U': '#10B981',
+                    'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6', 'Y': '#06B6D4',
+                    'Z': '#84CC16'
+                };
+                
+                const color = colors[firstLetter] || '#2563EB';
+                avatar.style.background = color;
+                avatar.style.color = 'white';
+                
+                // Update profile popup
+                document.getElementById('popupUsername').textContent = userProfile.username;
+                document.getElementById('popupEmail').textContent = userProfile.email || 'Tidak ada email';
+                document.getElementById('popupAvatar').textContent = firstLetter;
+                document.getElementById('popupAvatar').style.backgroundColor = color;
+                document.getElementById('popupArticles').textContent = userProfile.stats?.articles || 0;
+                document.getElementById('popupLikes').textContent = userProfile.stats?.likes || 0;
+                
+                // Show write button
+                document.getElementById('writeArticleBtn').style.display = 'block';
+                
+                // Show admin button jika admin
+                if (isAdmin) {
+                    document.getElementById('popupAdminBtn').style.display = 'block';
+                }
+            }
+        }
+
+        // ========== CREATE ARTICLE ==========
+        function showCreateArticleModal() {
+            if (!userProfile || userProfile.isGuest) {
+                showNotification('Login dulu untuk membuat artikel', 'error');
+                showLoginModal();
+                return;
+            }
+            
+            // Reset form
+            document.getElementById('articleTitleInput').value = '';
+            document.getElementById('articleImageInput').value = '';
+            document.getElementById('articleSlugInput').value = '';
+            if (articleEditor) articleEditor.setText('');
+            
+            // Show modal
+            document.getElementById('createArticleModal').classList.add('active');
+            
+            // Update slug when title changes
+            document.getElementById('articleTitleInput').addEventListener('input', function() {
+                const slug = this.value.toLowerCase()
+                    .replace(/[^\w\s]/g, '')
+                    .replace(/\s+/g, '-')
+                    .substring(0, 50);
+                document.getElementById('articleSlugInput').value = slug;
+            });
+        }
+
+        async function publishArticle() {
+            if (!userProfile || userProfile.isGuest) {
+                showNotification('Login dulu untuk publish artikel', 'error');
+                showLoginModal();
+                return;
+            }
+            
+            const title = document.getElementById('articleTitleInput').value.trim();
+            const category = document.getElementById('articleCategoryInput').value;
+            const image = document.getElementById('articleImageInput').value.trim();
+            const content = articleEditor ? articleEditor.root.innerHTML : '';
+            const slug = document.getElementById('articleSlugInput').value.trim() || 
+                        title.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, '-').substring(0, 50);
+            
+            if (!title || !content) {
+                showNotification('Judul dan konten harus diisi', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                const articleId = 'article_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                const newArticle = {
+                    id: articleId,
+                    title,
+                    category,
+                    image: image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop',
+                    content,
+                    excerpt: content.replace(/<[^>]*>/g, '').substring(0, 150) + '...',
+                    slug,
+                    author: userProfile.username,
+                    authorId: userProfile.uid,
+                    authorAvatar: userProfile.avatar,
+                    timestamp: Date.now(),
+                    views: 0,
+                    likes: 0,
+                    comments: 0,
+                    status: 'published',
+                    score: 0
+                };
+                
+                // Save ke Firebase REALTIME
+                await db.ref(`articles/${articleId}`).set(newArticle);
+                
+                // Update user stats
+                await updateUserStats('articles', 1);
+                
+                // Add to local array
+                articles.unshift(newArticle);
+                
+                // Close modal
+                document.getElementById('createArticleModal').classList.remove('active');
+                
+                // Show notification
+                showNotification('Artikel berhasil diterbitkan!', 'success');
+                
+                // Update displays
                 displayTrendingArticles();
                 displayNewestArticles();
                 displayRecommendedArticles();
+                
+                // Open the new article
+                openArticle(articleId, true);
+                
+            } catch (error) {
+                console.error('Error publishing article:', error);
+                showNotification('Gagal publish artikel', 'error');
             }
         }
 
-        // ========== CREATE SAMPLE ARTICLES ==========
-        async function createSampleArticles() {
-            const sampleArticles = [
-                {
-                    id: 'sample1',
-                    title: 'Selamat datang di NexeNews!',
-                    category: 'fakta',
-                    image: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1',
-                    content: '<h2>Platform Berita Viral Indonesia</h2><p>NexeNews adalah platform untuk berbagi cerita, fakta unik, dan konten viral dari Indonesia. Mulai buat artikel pertamamu sekarang!</p><p>Fitur lengkap: buat artikel, like, komentar, dan trending algorithm.</p>',
-                    excerpt: 'Platform berita viral Indonesia terbaru',
-                    author: 'Admin NexeNews',
-                    authorId: ADMIN_UID,
-                    authorAvatar: '',
-                    timestamp: Date.now() - 3600000,
-                    views: 150,
-                    likes: 25,
-                    comments: 5,
-                    status: 'published',
-                    score: 350
-                },
-                {
-                    id: 'sample2',
-                    title: 'Fakta Unik tentang Indonesia',
-                    category: 'fakta',
-                    image: 'https://images.unsplash.com/photo-1551632811-561732d1e306',
-                    content: '<h2>Indonesia Negara yang Unik</h2><p>Memiliki lebih dari 17.000 pulau dan 700 bahasa daerah yang berbeda. Setiap daerah memiliki budaya dan tradisi yang unik.</p><p>Indonesia juga dikenal sebagai negara dengan keanekaragaman hayati terbesar kedua di dunia.</p>',
-                    excerpt: 'Fakta menarik tentang Indonesia yang mungkin belum kamu tahu',
-                    author: 'Penjelajah',
-                    authorId: 'user2',
-                    authorAvatar: '',
-                    timestamp: Date.now() - 7200000,
-                    views: 89,
-                    likes: 12,
-                    comments: 3,
-                    status: 'published',
-                    score: 120
-                }
-            ];
+        // ========== OPEN ARTICLE ==========
+        async function openArticle(articleId, skipMonetize = false) {
+            // RANDOM MONETIZATION (20% chance)
+            if (!skipMonetize && Math.random() < 0.2) {
+                showMonetizeModal(articleId);
+                return;
+            }
             
-            articles = sampleArticles;
-            localStorage.setItem('nexenews_articles', JSON.stringify(articles));
-        }
-
-        // ========== ARTICLE ALGORITHM ==========
-        function calculateArticleScore(article) {
-            const now = Date.now();
-            const articleAge = now - article.timestamp;
-            const ageInHours = articleAge / (1000 * 60 * 60);
+            const article = articles.find(a => a.id === articleId);
+            if (!article) {
+                showNotification('Artikel tidak ditemukan', 'error');
+                return;
+            }
             
-            let score = 0;
-            score += Math.log10((article.views || 0) + 1) * 10;
-            score += (article.likes || 0) * 15;
-            score += (article.comments || 0) * 20;
+            currentArticle = article;
             
-            if (ageInHours < 24) {
-                score *= 1.5;
-            } else if (ageInHours < 168) {
-                score *= 1.2;
+            // Update view count REALTIME
+            await updateViewCount(articleId);
+            
+            // Show article page
+            showArticlePage();
+            
+            // Set article data
+            document.getElementById('articleTitle').textContent = article.title;
+            document.getElementById('articleDate').textContent = new Date(article.timestamp).toLocaleDateString('id-ID');
+            document.getElementById('articleViews').textContent = formatNumber(article.views || 0);
+            document.getElementById('articleLikes').textContent = formatNumber(article.likes || 0);
+            document.getElementById('articleComments').textContent = formatNumber(article.comments || 0);
+            document.getElementById('authorName').textContent = article.author || 'Anonymous';
+            
+            // Set author avatar
+            const authorFirstLetter = (article.author || 'A').charAt(0).toUpperCase();
+            const colors = {
+                'R': '#DC2626',
+                'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 'D': '#F59E0B',
+                'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4', 'H': '#84CC16',
+                'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1', 'L': '#14B8A6',
+                'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B', 'P': '#10B981',
+                'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED', 'U': '#10B981',
+                'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6', 'Y': '#06B6D4',
+                'Z': '#84CC16'
+            };
+            
+            const authorColor = colors[authorFirstLetter] || '#2563EB';
+            document.getElementById('authorAvatar').textContent = authorFirstLetter;
+            document.getElementById('authorAvatar').style.backgroundColor = authorColor;
+            
+            document.getElementById('articleTimestamp').textContent = timeAgo(article.timestamp);
+            document.getElementById('articleImage').src = article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop';
+            document.getElementById('articleContent').innerHTML = article.content || '<p>Artikel tidak memiliki konten.</p>';
+            
+            // Check if user liked this article
+            const liked = await checkIfLiked(articleId);
+            const likeBtn = document.getElementById('likeArticleBtn');
+            if (liked) {
+                likeBtn.classList.add('liked');
+                likeBtn.innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
             } else {
-                const weeksOld = ageInHours / 168;
-                score *= Math.exp(-weeksOld * 0.5);
+                likeBtn.classList.remove('liked');
+                likeBtn.innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
             }
             
-            if (ageInHours < 2 && (article.likes || 0) > 10) {
-                score += 50;
-            }
+            // Update comment form
+            updateCommentForm();
             
-            return Math.max(score, 0);
+            // Load comments REALTIME
+            await loadComments(articleId);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateCommentForm() {
+            const commentForm = document.getElementById('commentForm');
+            const loginToComment = document.getElementById('loginToComment');
+            
+            if (userProfile && !userProfile.isGuest) {
+                commentForm.style.display = 'block';
+                loginToComment.style.display = 'none';
+            } else {
+                commentForm.style.display = 'none';
+                loginToComment.style.display = 'block';
+            }
         }
 
         // ========== DISPLAY FUNCTIONS ==========
@@ -1107,7 +1532,7 @@
                 <div class="article-card" onclick="openArticle('${article.id}')">
                     <div style="position:relative;">
                         <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop'}" alt="${article.title}" style="width:100%; height:200px; object-fit:cover;">
-                        <span class="trending-badge">TRENDING</span>
+                        ${article.score > 100 ? '<span class="trending-badge">TRENDING</span>' : ''}
                     </div>
                     <div style="padding:20px;">
                         <h3 style="margin-bottom:10px; font-size:1.1rem; line-height:1.4;">${article.title}</h3>
@@ -1181,339 +1606,259 @@
             `).join('');
         }
 
-        // ========== OPEN ARTICLE ==========
-        async function openArticle(articleId, skipMonetize = false) {
-            // RANDOM MONETIZATION (20% chance)
-            if (!skipMonetize && Math.random() < 0.2) {
-                showMonetizeModal(articleId);
-                return;
+        // ========== UTILITY FUNCTIONS ==========
+        function calculateArticleScore(article) {
+            const now = Date.now();
+            const articleAge = now - article.timestamp;
+            const ageInHours = articleAge / (1000 * 60 * 60);
+            
+            let score = 0;
+            score += Math.log10((article.views || 0) + 1) * 10;
+            score += (article.likes || 0) * 15;
+            score += (article.comments || 0) * 20;
+            
+            if (ageInHours < 24) {
+                score *= 1.5;
+            } else if (ageInHours < 168) {
+                score *= 1.2;
+            } else {
+                const weeksOld = ageInHours / 168;
+                score *= Math.exp(-weeksOld * 0.5);
             }
             
-            const article = articles.find(a => a.id === articleId);
-            if (!article) {
-                showNotification('Artikel tidak ditemukan', 'error');
-                return;
+            if (ageInHours < 2 && (article.likes || 0) > 10) {
+                score += 50;
             }
             
-            currentArticle = article;
+            return Math.max(score, 0);
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function timeAgo(timestamp) {
+            const seconds = Math.floor((Date.now() - timestamp) / 1000);
             
-            // Update view count
-            updateViewCount(articleId);
+            let interval = Math.floor(seconds / 31536000);
+            if (interval >= 1) return interval + ' tahun lalu';
             
-            // Show article page
-            showArticlePage();
+            interval = Math.floor(seconds / 2592000);
+            if (interval >= 1) return interval + ' bulan lalu';
             
-            // Set article data
-            document.getElementById('articleTitle').textContent = article.title;
-            document.getElementById('articleDate').textContent = new Date(article.timestamp).toLocaleDateString('id-ID');
-            document.getElementById('articleViews').textContent = formatNumber(article.views || 0);
-            document.getElementById('articleLikes').textContent = formatNumber(article.likes || 0);
-            document.getElementById('articleComments').textContent = formatNumber(article.comments || 0);
-            document.getElementById('authorName').textContent = article.author || 'Anonymous';
+            interval = Math.floor(seconds / 86400);
+            if (interval >= 1) return interval + ' hari lalu';
             
-            // Set author avatar dengan warna berdasarkan huruf pertama
-            const authorFirstLetter = (article.author || 'A').charAt(0).toUpperCase();
-            const colors = {
-                'R': '#DC2626', // R = merah
-                'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 'D': '#F59E0B',
-                'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4', 'H': '#84CC16',
-                'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1', 'L': '#14B8A6',
-                'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B', 'P': '#10B981',
-                'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED', 'U': '#10B981',
-                'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6', 'Y': '#06B6D4',
-                'Z': '#84CC16'
+            interval = Math.floor(seconds / 3600);
+            if (interval >= 1) return interval + ' jam lalu';
+            
+            interval = Math.floor(seconds / 60);
+            if (interval >= 1) return interval + ' menit lalu';
+            
+            return 'Baru saja';
+        }
+
+        function getCategoryName(category) {
+            const categories = {
+                'misteri': '🔮 Misteri',
+                'fakta': '💡 Fakta Unik',
+                'sejarah': '🏛️ Sejarah',
+                'teknologi': '💻 Teknologi',
+                'viral': '🔥 Viral',
+                'hiburan': '🎬 Hiburan',
+                'olahraga': '⚽ Olahraga'
             };
+            return categories[category] || 'Artikel';
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
             
-            const authorColor = colors[authorFirstLetter] || '#2563EB';
-            document.getElementById('authorAvatar').textContent = authorFirstLetter;
-            document.getElementById('authorAvatar').style.backgroundColor = authorColor;
+            text.textContent = message;
+            notification.style.background = type === 'error' ? '#EF4444' : 
+                                          type === 'success' ? '#10B981' : 
+                                          type === 'warning' ? '#F59E0B' : 
+                                          '#2563EB';
             
-            document.getElementById('articleTimestamp').textContent = timeAgo(article.timestamp);
-            document.getElementById('articleImage').src = article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop';
-            document.getElementById('articleContent').innerHTML = article.content || '<p>Artikel tidak memiliki konten.</p>';
+            notification.classList.add('active');
+            setTimeout(() => notification.classList.remove('active'), 3000);
+        }
+
+        // ========== SETUP EVENT LISTENERS ==========
+        function setupEventListeners() {
+            // Login button
+            document.getElementById('loginBtn').addEventListener('click', showLoginModal);
             
-            // Check if user liked this article
-            const liked = userLikes[articleId];
-            const likeBtn = document.getElementById('likeArticleBtn');
-            if (liked) {
-                likeBtn.classList.add('liked');
-                likeBtn.innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
-            } else {
-                likeBtn.classList.remove('liked');
-                likeBtn.innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
-            }
+            // Login modal
+            document.getElementById('closeLoginModal').addEventListener('click', () => {
+                document.getElementById('loginModal').classList.remove('active');
+            });
             
-            // Update comment form
-            updateCommentForm();
+            document.getElementById('submitLoginBtn').addEventListener('click', loginUser);
+            document.getElementById('continueAsGuestBtn').addEventListener('click', loginAsGuest);
             
-            // Load comments
-            await loadComments(articleId);
+            // User avatar click
+            document.getElementById('userAvatar').addEventListener('click', () => {
+                document.getElementById('profilePopup').classList.toggle('active');
+            });
             
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Profile popup buttons
+            document.getElementById('popupProfileBtn').addEventListener('click', () => {
+                document.getElementById('profilePopup').classList.remove('active');
+                showProfilePage();
+            });
             
-            // Auto update view count setelah 5 detik
-            setTimeout(() => {
-                if (document.getElementById('articlePage').style.display === 'block') {
-                    updateViewCount(articleId);
+            document.getElementById('popupMyArticlesBtn').addEventListener('click', () => {
+                document.getElementById('profilePopup').classList.remove('active');
+                showProfilePage();
+            });
+            
+            document.getElementById('popupAdminBtn').addEventListener('click', () => {
+                document.getElementById('profilePopup').classList.remove('active');
+                showAdminPanel();
+            });
+            
+            document.getElementById('popupLogoutBtn').addEventListener('click', logoutUser);
+            
+            // Write article button
+            document.getElementById('writeArticleBtn').addEventListener('click', showCreateArticleModal);
+            
+            // Monetization modal
+            document.getElementById('closeMonetizeModal').addEventListener('click', () => {
+                document.getElementById('monetizeModal').classList.remove('active');
+            });
+            
+            document.getElementById('continueAfterMonetize').addEventListener('click', () => {
+                document.getElementById('monetizeModal').classList.remove('active');
+                hasMonetized = true;
+                document.getElementById('publishArticleBtn').disabled = false;
+            });
+            
+            document.getElementById('monetizeBeforeCreate').addEventListener('click', () => {
+                window.open('https://otieu.com/4/10381160', '_blank');
+                hasMonetized = true;
+                document.getElementById('publishArticleBtn').disabled = false;
+                showNotification('Terima kasih sudah support!', 'success');
+            });
+            
+            // Create article modal
+            document.getElementById('closeCreateModal').addEventListener('click', () => {
+                document.getElementById('createArticleModal').classList.remove('active');
+            });
+            
+            document.getElementById('publishArticleBtn').addEventListener('click', publishArticle);
+            
+            // Like button
+            document.getElementById('likeArticleBtn').addEventListener('click', () => {
+                if (currentArticle) {
+                    toggleLike(currentArticle.id);
                 }
-            }, 5000);
-        }
-
-        // ========== UPDATE COMMENT FORM ==========
-        function updateCommentForm() {
-            const commentForm = document.getElementById('commentForm');
-            const loginToComment = document.getElementById('loginToComment');
+            });
             
-            if (userProfile && !userProfile.isGuest) {
-                commentForm.style.display = 'block';
-                loginToComment.style.display = 'none';
-            } else {
-                commentForm.style.display = 'none';
-                loginToComment.style.display = 'block';
-            }
-        }
-
-        // ========== UPDATE VIEW COUNT ==========
-        function updateViewCount(articleId) {
-            const article = articles.find(a => a.id === articleId);
-            if (article) {
-                article.views = (article.views || 0) + 1;
-                document.getElementById('articleViews').textContent = formatNumber(article.views);
-                
-                // Update author stats
-                if (article.authorId === userProfile?.uid) {
-                    userProfile.stats.views = (userProfile.stats.views || 0) + 1;
-                    saveUserProfile();
+            // Share button
+            document.getElementById('shareArticleBtn').addEventListener('click', () => {
+                if (currentArticle) {
+                    const url = window.location.href.split('?')[0] + '?article=' + currentArticle.id;
+                    navigator.clipboard.writeText(url);
+                    showNotification('Link artikel disalin!', 'success');
+                }
+            });
+            
+            // Comment form
+            document.getElementById('submitCommentBtn').addEventListener('click', submitComment);
+            
+            document.getElementById('loginForCommentBtn').addEventListener('click', showLoginModal);
+            
+            // Profile edit buttons
+            document.getElementById('saveUsernameBtn').addEventListener('click', async () => {
+                const newUsername = document.getElementById('editUsername').value.trim();
+                if (!newUsername) {
+                    showNotification('Username tidak boleh kosong', 'error');
+                    return;
                 }
                 
-                // Save articles
-                saveArticles();
+                try {
+                    const db = firebase.database();
+                    userProfile.username = newUsername;
+                    await db.ref(`users/${userProfile.uid}/username`).set(newUsername);
+                    updateUserUI();
+                    showNotification('Username berhasil diperbarui', 'success');
+                } catch (error) {
+                    showNotification('Gagal memperbarui username', 'error');
+                }
+            });
+            
+            document.getElementById('saveAvatarBtn').addEventListener('click', async () => {
+                const newAvatar = document.getElementById('editAvatarUrl').value.trim();
+                try {
+                    const db = firebase.database();
+                    userProfile.avatar = newAvatar;
+                    await db.ref(`users/${userProfile.uid}/avatar`).set(newAvatar);
+                    updateUserUI();
+                    showNotification('Avatar berhasil diperbarui', 'success');
+                } catch (error) {
+                    showNotification('Gagal memperbarui avatar', 'error');
+                }
+            });
+            
+            // Search
+            document.getElementById('searchBox').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const resultsContainer = document.getElementById('searchResults');
                 
-                // Update score
-                article.score = calculateArticleScore(article);
-            }
-        }
-
-        // ========== LIKE SYSTEM ==========
-        function toggleLike(articleId) {
-            if (!userProfile || userProfile.isGuest) {
-                showNotification('Login dulu untuk like artikel', 'error');
-                showLoginModal();
-                return;
-            }
-            
-            const article = articles.find(a => a.id === articleId);
-            if (!article) return;
-            
-            const alreadyLiked = userLikes[articleId];
-            
-            if (alreadyLiked) {
-                // Unlike
-                userLikes[articleId] = false;
-                article.likes = Math.max(0, (article.likes || 0) - 1);
+                if (searchTerm.length < 2) {
+                    resultsContainer.classList.remove('active');
+                    return;
+                }
                 
-                // Update UI
-                document.getElementById('likeText').textContent = 'Suka';
-                document.getElementById('likeArticleBtn').classList.remove('liked');
-                document.getElementById('likeArticleBtn').innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
-                document.getElementById('articleLikes').textContent = formatNumber(article.likes);
+                const filtered = articles.filter(article => 
+                    article.title.toLowerCase().includes(searchTerm) ||
+                    article.content.toLowerCase().includes(searchTerm) ||
+                    article.author?.toLowerCase().includes(searchTerm)
+                ).slice(0, 5);
                 
-                // Update user stats
-                userProfile.stats.likes = Math.max(0, (userProfile.stats.likes || 0) - 1);
-                
-            } else {
-                // Like
-                userLikes[articleId] = true;
-                article.likes = (article.likes || 0) + 1;
-                
-                // Update UI
-                document.getElementById('likeText').textContent = 'Disukai';
-                document.getElementById('likeArticleBtn').classList.add('liked');
-                document.getElementById('likeArticleBtn').innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
-                document.getElementById('articleLikes').textContent = formatNumber(article.likes);
-                
-                // Update user stats
-                userProfile.stats.likes = (userProfile.stats.likes || 0) + 1;
-            }
-            
-            // Update score
-            article.score = calculateArticleScore(article);
-            
-            // Save data
-            saveUserProfile();
-            saveArticles();
-            localStorage.setItem('nexenews_userLikes', JSON.stringify(userLikes));
-            
-            // Update displays
-            displayTrendingArticles();
-            displayRecommendedArticles();
-            
-            showNotification(alreadyLiked ? 'Like dihapus' : 'Artikel disukai!', 'success');
-        }
-
-        // ========== SAVE ARTICLES ==========
-        function saveArticles() {
-            localStorage.setItem('nexenews_articles', JSON.stringify(articles));
-            
-            // Try to save to Firebase
-            try {
-                const db = firebase.database();
-                articles.forEach(article => {
-                    db.ref(`articles/${article.id}`).set(article).catch(() => {
-                        // Ignore Firebase errors
-                    });
-                });
-            } catch (error) {
-                // Ignore Firebase errors
-            }
-        }
-
-        // ========== COMMENT SYSTEM ==========
-        async function loadComments(articleId) {
-            const articleComments = JSON.parse(localStorage.getItem(`nexenews_comments_${articleId}`)) || [];
-            comments = articleComments;
-            displayComments();
-        }
-
-        function displayComments() {
-            const container = document.getElementById('commentList');
-            if (!container) return;
-            
-            document.getElementById('commentCount').textContent = formatNumber(comments.length);
-            
-            if (comments.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding:30px; color:var(--gray);">
-                        <i class="far fa-comment" style="font-size:2rem; margin-bottom:10px;"></i>
-                        <p>Belum ada komentar. Jadilah yang pertama!</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = comments.map((comment, index) => {
-                // Warna avatar berdasarkan huruf pertama
-                const firstLetter = comment.authorName?.charAt(0) || 'A';
-                const colors = {
-                    'R': '#DC2626', // R = merah
-                    'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 'D': '#F59E0B',
-                    'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4', 'H': '#84CC16',
-                    'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1', 'L': '#14B8A6',
-                    'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B', 'P': '#10B981',
-                    'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED', 'U': '#10B981',
-                    'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6', 'Y': '#06B6D4',
-                    'Z': '#84CC16'
-                };
-                const color = colors[firstLetter.toUpperCase()] || '#2563EB';
-                
-                return `
-                    <div class="comment-item">
-                        <div class="comment-header">
-                            <div class="comment-author">
-                                <div class="comment-author-avatar" style="background-color:${color};">${firstLetter}</div>
-                                ${comment.authorName || 'Anonymous'}
+                if (filtered.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div class="search-result-item" style="cursor:default;">
+                            <div class="search-result-content">
+                                <p>Tidak ditemukan artikel</p>
                             </div>
-                            <div class="comment-time">${timeAgo(comment.timestamp)}</div>
                         </div>
-                        <div class="comment-content">${comment.text}</div>
-                        ${comment.authorId === userProfile?.uid ? `
-                            <div class="comment-actions">
-                                <button class="btn btn-sm btn-danger" onclick="deleteComment(${index})">
-                                    <i class="fas fa-trash"></i> Hapus
-                                </button>
+                    `;
+                } else {
+                    resultsContainer.innerHTML = filtered.map(article => `
+                        <div class="search-result-item" onclick="openArticle('${article.id}')">
+                            <img src="${article.image || 'https://via.placeholder.com/80x60'}" class="search-result-image">
+                            <div class="search-result-content">
+                                <h4>${article.title.substring(0, 50)}...</h4>
+                                <p>${getCategoryName(article.category)} • ${timeAgo(article.timestamp)}</p>
                             </div>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function submitComment() {
-            if (!userProfile || userProfile.isGuest) {
-                showNotification('Login dulu untuk komentar', 'error');
-                showLoginModal();
-                return;
-            }
+                        </div>
+                    `).join('');
+                }
+                
+                resultsContainer.classList.add('active');
+            });
             
-            const text = document.getElementById('commentInput').value.trim();
-            if (!text) {
-                showNotification('Komentar tidak boleh kosong', 'error');
-                return;
-            }
+            // Close popups when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#userAvatar') && !e.target.closest('.profile-popup')) {
+                    document.getElementById('profilePopup').classList.remove('active');
+                }
+                if (e.target.classList.contains('modal')) {
+                    document.getElementById('loginModal').classList.remove('active');
+                    document.getElementById('monetizeModal').classList.remove('active');
+                    document.getElementById('createArticleModal').classList.remove('active');
+                }
+                if (!e.target.closest('.search-container')) {
+                    document.getElementById('searchResults').classList.remove('active');
+                }
+            });
             
-            if (text.length > 500) {
-                showNotification('Komentar maksimal 500 karakter', 'error');
-                return;
-            }
-            
-            const newComment = {
-                text,
-                authorId: userProfile.uid,
-                authorName: userProfile.username,
-                authorAvatar: userProfile.avatar,
-                timestamp: Date.now()
-            };
-            
-            comments.unshift(newComment);
-            
-            // Update article comment count
-            currentArticle.comments = (currentArticle.comments || 0) + 1;
-            document.getElementById('articleComments').textContent = formatNumber(currentArticle.comments);
-            
-            // Save comments
-            localStorage.setItem(`nexenews_comments_${currentArticle.id}`, JSON.stringify(comments));
-            
-            // Save articles
-            saveArticles();
-            
-            // Clear input
-            document.getElementById('commentInput').value = '';
-            
-            // Show notification
-            showNotification('Komentar berhasil ditambahkan', 'success');
-            
-            // Reload comments
-            displayComments();
-        }
-
-        function deleteComment(index) {
-            if (!confirm('Hapus komentar ini?')) return;
-            
-            comments.splice(index, 1);
-            
-            // Update article comment count
-            currentArticle.comments = Math.max(0, (currentArticle.comments || 0) - 1);
-            document.getElementById('articleComments').textContent = formatNumber(currentArticle.comments);
-            
-            // Save comments
-            localStorage.setItem(`nexenews_comments_${currentArticle.id}`, JSON.stringify(comments));
-            
-            // Save articles
-            saveArticles();
-            
-            showNotification('Komentar berhasil dihapus', 'success');
-            displayComments();
-        }
-
-        // ========== CREATE ARTICLE ==========
-        function showCreateArticleModal() {
-            if (!userProfile || userProfile.isGuest) {
-                showNotification('Login dulu untuk membuat artikel', 'error');
-                showLoginModal();
-                return;
-            }
-            
-            // Reset form
-            document.getElementById('articleTitleInput').value = '';
-            document.getElementById('articleImageInput').value = '';
-            document.getElementById('articleSlugInput').value = '';
-            if (articleEditor) articleEditor.setText('');
-            
-            // Show monetization modal
-            document.getElementById('monetizeModal').classList.add('active');
-            
-            // Update slug when title changes
+            // Title input for slug generation
             document.getElementById('articleTitleInput').addEventListener('input', function() {
                 const slug = this.value.toLowerCase()
                     .replace(/[^\w\s]/g, '')
@@ -1521,72 +1866,6 @@
                     .substring(0, 50);
                 document.getElementById('articleSlugInput').value = slug;
             });
-        }
-
-        async function publishArticle() {
-            if (!userProfile || userProfile.isGuest) {
-                showNotification('Login dulu untuk publish artikel', 'error');
-                showLoginModal();
-                return;
-            }
-            
-            const title = document.getElementById('articleTitleInput').value.trim();
-            const category = document.getElementById('articleCategoryInput').value;
-            const image = document.getElementById('articleImageInput').value.trim();
-            const content = articleEditor ? articleEditor.root.innerHTML : '';
-            const slug = document.getElementById('articleSlugInput').value.trim() || 
-                        title.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, '-').substring(0, 50);
-            
-            if (!title || !content) {
-                showNotification('Judul dan konten harus diisi', 'error');
-                return;
-            }
-            
-            // Generate article ID
-            const articleId = 'article_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            
-            const newArticle = {
-                id: articleId,
-                title,
-                category,
-                image: image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop',
-                content,
-                excerpt: content.replace(/<[^>]*>/g, '').substring(0, 150) + '...',
-                slug,
-                author: userProfile.username,
-                authorId: userProfile.uid,
-                authorAvatar: userProfile.avatar,
-                timestamp: Date.now(),
-                views: 0,
-                likes: 0,
-                comments: 0,
-                status: 'published', // Langsung publish, gak perlu approval
-                score: 0
-            };
-            
-            // Add to articles array
-            articles.unshift(newArticle);
-            
-            // Update user stats
-            userProfile.stats.articles = (userProfile.stats.articles || 0) + 1;
-            
-            // Save data
-            saveUserProfile();
-            saveArticles();
-            
-            // Close modal
-            document.getElementById('createArticleModal').classList.remove('active');
-            
-            // Show notification
-            showNotification('Artikel berhasil diterbitkan!', 'success');
-            
-            // Update displays
-            displayTrendingArticles();
-            displayNewestArticles();
-            displayRecommendedArticles();
-            
-            // Open the new article
-            openArticle(articleId, true);
         }
 
         // ========== ADMIN FUNCTIONS ==========
@@ -1605,7 +1884,7 @@
             showAllArticlesAdmin();
             
             // Show add admin button untuk admin utama
-            if (userProfile.uid === ADMIN_UID) {
+            if (userProfile.uid === ADMIN_UIDS[0]) {
                 document.getElementById('addAdminBtn').style.display = 'block';
             }
         }
@@ -1656,7 +1935,7 @@
             `;
         }
 
-        function deleteArticleAdmin(articleId) {
+        async function deleteArticleAdmin(articleId) {
             if (!isAdmin) {
                 showNotification('Hanya admin yang bisa menghapus artikel', 'error');
                 return;
@@ -1664,43 +1943,59 @@
             
             if (!confirm('Hapus artikel ini? Tindakan ini tidak dapat dibatalkan.')) return;
             
-            // Remove from articles array
-            const index = articles.findIndex(a => a.id === articleId);
-            if (index !== -1) {
-                articles.splice(index, 1);
+            try {
+                const db = firebase.database();
+                
+                // Delete dari Firebase
+                await db.ref(`articles/${articleId}`).remove();
+                await db.ref(`comments/${articleId}`).remove();
+                await db.ref(`likes/${articleId}`).remove();
+                
+                // Remove from local array
+                const index = articles.findIndex(a => a.id === articleId);
+                if (index !== -1) {
+                    articles.splice(index, 1);
+                }
+                
+                // Update admin panel
+                showAllArticlesAdmin();
+                
+                // Update displays
+                displayTrendingArticles();
+                displayNewestArticles();
+                displayRecommendedArticles();
+                
+                showNotification('Artikel berhasil dihapus', 'success');
+                
+            } catch (error) {
+                console.error('Error deleting article:', error);
+                showNotification('Gagal menghapus artikel', 'error');
             }
-            
-            // Save data
-            saveArticles();
-            
-            // Update admin panel
-            showAllArticlesAdmin();
-            
-            // Update displays
-            displayTrendingArticles();
-            displayNewestArticles();
-            displayRecommendedArticles();
-            
-            showNotification('Artikel berhasil dihapus', 'success');
         }
 
         function addNewAdmin() {
-            if (userProfile.uid !== ADMIN_UID) {
+            if (userProfile.uid !== ADMIN_UIDS[0]) {
                 showNotification('Hanya admin utama yang bisa menambah admin', 'error');
                 return;
             }
             
-            const adminEmail = prompt('Masukkan email admin baru:');
-            if (!adminEmail) return;
+            const adminId = prompt('Masukkan User ID admin baru:');
+            if (!adminId) return;
             
-            // Untuk sekarang, simpan di localStorage
-            const admins = JSON.parse(localStorage.getItem('nexenews_admins')) || [];
-            if (!admins.includes(adminEmail)) {
-                admins.push(adminEmail);
-                localStorage.setItem('nexenews_admins', JSON.stringify(admins));
-                showNotification(`Admin ${adminEmail} berhasil ditambahkan`, 'success');
-            } else {
-                showNotification('Admin sudah ada', 'error');
+            try {
+                // Add to admin list
+                if (!ADMIN_UIDS.includes(adminId)) {
+                    ADMIN_UIDS.push(adminId);
+                    showNotification(`Admin ${adminId} berhasil ditambahkan`, 'success');
+                    
+                    // Simpan ke Firebase
+                    const db = firebase.database();
+                    db.ref('adminUids').set(ADMIN_UIDS);
+                } else {
+                    showNotification('Admin sudah ada', 'error');
+                }
+            } catch (error) {
+                showNotification('Gagal menambahkan admin', 'error');
             }
         }
 
@@ -1745,7 +2040,7 @@
             // Set avatar dengan warna
             const firstLetter = userProfile.username.charAt(0).toUpperCase();
             const colors = {
-                'R': '#DC2626', // R = merah
+                'R': '#DC2626',
                 'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 'D': '#F59E0B',
                 'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4', 'H': '#84CC16',
                 'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1', 'L': '#14B8A6',
@@ -1812,264 +2107,52 @@
             `).join('');
         }
 
-        function deleteMyArticle(articleId) {
+        async function deleteMyArticle(articleId) {
             if (!confirm('Hapus artikel ini?')) return;
             
-            const index = articles.findIndex(a => a.id === articleId);
-            if (index !== -1 && articles[index].authorId === userProfile.uid) {
-                articles.splice(index, 1);
-                saveArticles();
+            try {
+                const db = firebase.database();
+                
+                // Check if user is the author
+                const article = articles.find(a => a.id === articleId);
+                if (!article || article.authorId !== userProfile.uid) {
+                    showNotification('Hanya penulis yang bisa menghapus artikel ini', 'error');
+                    return;
+                }
+                
+                // Delete dari Firebase
+                await db.ref(`articles/${articleId}`).remove();
+                await db.ref(`comments/${articleId}`).remove();
+                await db.ref(`likes/${articleId}`).remove();
+                
+                // Remove from local array
+                const index = articles.findIndex(a => a.id === articleId);
+                if (index !== -1) {
+                    articles.splice(index, 1);
+                }
+                
+                // Update user stats
+                await updateUserStats('articles', -1);
+                
                 showNotification('Artikel berhasil dihapus', 'success');
-                loadMyArticles();
                 
                 // Update displays
                 displayTrendingArticles();
                 displayNewestArticles();
                 displayRecommendedArticles();
+                
+                // Reload my articles
+                if (document.getElementById('profilePage').style.display === 'block') {
+                    loadMyArticles();
+                }
+                
+            } catch (error) {
+                console.error('Error deleting article:', error);
+                showNotification('Gagal menghapus artikel', 'error');
             }
         }
 
-        // ========== UTILITY FUNCTIONS ==========
-        function formatNumber(num) {
-            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-            return num.toString();
-        }
-
-        function timeAgo(timestamp) {
-            const seconds = Math.floor((Date.now() - timestamp) / 1000);
-            
-            let interval = Math.floor(seconds / 31536000);
-            if (interval >= 1) return interval + ' tahun lalu';
-            
-            interval = Math.floor(seconds / 2592000);
-            if (interval >= 1) return interval + ' bulan lalu';
-            
-            interval = Math.floor(seconds / 86400);
-            if (interval >= 1) return interval + ' hari lalu';
-            
-            interval = Math.floor(seconds / 3600);
-            if (interval >= 1) return interval + ' jam lalu';
-            
-            interval = Math.floor(seconds / 60);
-            if (interval >= 1) return interval + ' menit lalu';
-            
-            return 'Baru saja';
-        }
-
-        function getCategoryName(category) {
-            const categories = {
-                'misteri': '🔮 Misteri',
-                'fakta': '💡 Fakta Unik',
-                'sejarah': '🏛️ Sejarah',
-                'teknologi': '💻 Teknologi',
-                'viral': '🔥 Viral',
-                'hiburan': '🎬 Hiburan',
-                'olahraga': '⚽ Olahraga'
-            };
-            return categories[category] || 'Artikel';
-        }
-
-        function showNotification(message, type = 'info') {
-            const notification = document.getElementById('notification');
-            const text = document.getElementById('notificationText');
-            
-            text.textContent = message;
-            notification.style.background = type === 'error' ? '#EF4444' : 
-                                          type === 'success' ? '#10B981' : 
-                                          type === 'warning' ? '#F59E0B' : 
-                                          '#2563EB';
-            
-            notification.classList.add('active');
-            setTimeout(() => notification.classList.remove('active'), 3000);
-        }
-
-        // ========== MONETIZATION ==========
-        function showMonetizeModal(articleId) {
-            document.getElementById('monetizeModal').classList.add('active');
-            localStorage.setItem('pendingArticle', articleId);
-        }
-
-        // ========== SETUP EVENT LISTENERS ==========
-        function setupEventListeners() {
-            // Login button
-            document.getElementById('loginBtn').addEventListener('click', showLoginModal);
-            
-            // Login modal
-            document.getElementById('closeLoginModal').addEventListener('click', () => {
-                document.getElementById('loginModal').classList.remove('active');
-            });
-            
-            document.getElementById('submitLoginBtn').addEventListener('click', loginUser);
-            document.getElementById('continueAsGuestBtn').addEventListener('click', loginAsGuest);
-            
-            // User avatar click
-            document.getElementById('userAvatar').addEventListener('click', () => {
-                document.getElementById('profilePopup').classList.toggle('active');
-            });
-            
-            // Profile popup buttons
-            document.getElementById('popupProfileBtn').addEventListener('click', () => {
-                document.getElementById('profilePopup').classList.remove('active');
-                showProfilePage();
-            });
-            
-            document.getElementById('popupMyArticlesBtn').addEventListener('click', () => {
-                document.getElementById('profilePopup').classList.remove('active');
-                showProfilePage();
-            });
-            
-            document.getElementById('popupAdminBtn').addEventListener('click', () => {
-                document.getElementById('profilePopup').classList.remove('active');
-                showAdminPanel();
-            });
-            
-            document.getElementById('popupLogoutBtn').addEventListener('click', logoutUser);
-            
-            // Write article button
-            document.getElementById('writeArticleBtn').addEventListener('click', showCreateArticleModal);
-            
-            // Monetization modal
-            document.getElementById('closeMonetizeModal').addEventListener('click', () => {
-                document.getElementById('monetizeModal').classList.remove('active');
-            });
-            
-            document.getElementById('continueAfterMonetize').addEventListener('click', () => {
-                document.getElementById('monetizeModal').classList.remove('active');
-                hasMonetized = true;
-                
-                // Continue to create article
-                document.getElementById('createArticleModal').classList.add('active');
-                document.getElementById('publishArticleBtn').disabled = false;
-            });
-            
-            document.getElementById('monetizeBeforeCreate').addEventListener('click', () => {
-                window.open('https://otieu.com/4/10381160', '_blank');
-                hasMonetized = true;
-                document.getElementById('publishArticleBtn').disabled = false;
-                showNotification('Terima kasih sudah support!', 'success');
-            });
-            
-            // Create article modal
-            document.getElementById('closeCreateModal').addEventListener('click', () => {
-                document.getElementById('createArticleModal').classList.remove('active');
-            });
-            
-            document.getElementById('publishArticleBtn').addEventListener('click', publishArticle);
-            
-            // Like button
-            document.getElementById('likeArticleBtn').addEventListener('click', () => {
-                if (currentArticle) {
-                    toggleLike(currentArticle.id);
-                }
-            });
-            
-            // Share button
-            document.getElementById('shareArticleBtn').addEventListener('click', () => {
-                if (currentArticle) {
-                    const url = window.location.href.split('?')[0] + '?article=' + currentArticle.id;
-                    navigator.clipboard.writeText(url);
-                    showNotification('Link artikel disalin!', 'success');
-                }
-            });
-            
-            // Comment form
-            document.getElementById('submitCommentBtn').addEventListener('click', submitComment);
-            
-            document.getElementById('loginForCommentBtn').addEventListener('click', showLoginModal);
-            
-            // Profile edit buttons
-            document.getElementById('saveUsernameBtn').addEventListener('click', () => {
-                const newUsername = document.getElementById('editUsername').value.trim();
-                if (!newUsername) {
-                    showNotification('Username tidak boleh kosong', 'error');
-                    return;
-                }
-                
-                userProfile.username = newUsername;
-                saveUserProfile();
-                updateUserUI();
-                showNotification('Username berhasil diperbarui', 'success');
-            });
-            
-            document.getElementById('saveAvatarBtn').addEventListener('click', () => {
-                const newAvatar = document.getElementById('editAvatarUrl').value.trim();
-                userProfile.avatar = newAvatar;
-                saveUserProfile();
-                updateUserUI();
-                showNotification('Avatar berhasil diperbarui', 'success');
-            });
-            
-            // Search
-            document.getElementById('searchBox').addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                const resultsContainer = document.getElementById('searchResults');
-                
-                if (searchTerm.length < 2) {
-                    resultsContainer.classList.remove('active');
-                    return;
-                }
-                
-                const filtered = articles.filter(article => 
-                    article.title.toLowerCase().includes(searchTerm) ||
-                    article.content.toLowerCase().includes(searchTerm) ||
-                    article.author?.toLowerCase().includes(searchTerm)
-                ).slice(0, 5);
-                
-                if (filtered.length === 0) {
-                    resultsContainer.innerHTML = `
-                        <div class="search-result-item" style="cursor:default;">
-                            <div class="search-result-content">
-                                <p>Tidak ditemukan artikel</p>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    resultsContainer.innerHTML = filtered.map(article => `
-                        <div class="search-result-item" onclick="openArticle('${article.id}')">
-                            <img src="${article.image || 'https://via.placeholder.com/80x60'}" class="search-result-image">
-                            <div class="search-result-content">
-                                <h4>${article.title.substring(0, 50)}...</h4>
-                                <p>${getCategoryName(article.category)} • ${timeAgo(article.timestamp)}</p>
-                            </div>
-                        </div>
-                    `).join('');
-                }
-                
-                resultsContainer.classList.add('active');
-            });
-            
-            // Close popups when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('#userAvatar') && !e.target.closest('.profile-popup')) {
-                    document.getElementById('profilePopup').classList.remove('active');
-                }
-                if (e.target.classList.contains('modal')) {
-                    document.getElementById('loginModal').classList.remove('active');
-                    document.getElementById('monetizeModal').classList.remove('active');
-                    document.getElementById('createArticleModal').classList.remove('active');
-                }
-                if (!e.target.closest('.search-container')) {
-                    document.getElementById('searchResults').classList.remove('active');
-                }
-            });
-            
-            // Admin buttons
-            document.getElementById('adminAllArticlesBtn').addEventListener('click', showAllArticlesAdmin);
-            document.getElementById('addAdminBtn').addEventListener('click', addNewAdmin);
-            
-            // Title input for slug generation
-            document.getElementById('articleTitleInput').addEventListener('input', function() {
-                const slug = this.value.toLowerCase()
-                    .replace(/[^\w\s]/g, '')
-                    .replace(/\s+/g, '-')
-                    .substring(0, 50);
-                document.getElementById('articleSlugInput').value = slug;
-            });
-        }
-
-        // ========== REDIRECT FIX ==========
-        // Handle URL parameters for article opening
+        // ========== CHECK URL FOR ARTICLE ==========
         function checkUrlForArticle() {
             const urlParams = new URLSearchParams(window.location.search);
             const articleId = urlParams.get('article');
@@ -2078,18 +2161,19 @@
                 // Cari artikel dengan ID atau slug
                 const article = articles.find(a => a.id === articleId || a.slug === articleId);
                 if (article) {
-                    openArticle(article.id, true);
+                    setTimeout(() => openArticle(article.id, true), 1000);
                 }
             }
         }
 
+        // ========== MONETIZATION ==========
+        function showMonetizeModal(articleId) {
+            document.getElementById('monetizeModal').classList.add('active');
+            localStorage.setItem('pendingArticle', articleId);
+        }
+
         // ========== INITIALIZE APP ==========
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeApp().then(() => {
-                // Check URL for article after everything is loaded
-                setTimeout(checkUrlForArticle, 1000);
-            });
-        });
+        document.addEventListener('DOMContentLoaded', initializeApp);
         
         // Export functions to global scope
         window.showHomePage = showHomePage;
@@ -2097,6 +2181,9 @@
         window.showCreateArticleModal = showCreateArticleModal;
         window.showLoginModal = showLoginModal;
         window.showAdminPanel = showAdminPanel;
+        window.deleteArticleAdmin = deleteArticleAdmin;
+        window.deleteMyArticle = deleteMyArticle;
+        window.addNewAdmin = addNewAdmin;
     </script>
 </body>
 </html>
