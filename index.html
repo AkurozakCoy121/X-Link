@@ -3,456 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NExe - EXE Compiler</title>
+    <title>NexeID - Free URL Redirect Service</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔗</text></svg>">
     <style>
-        /* Reset dan base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* RESET */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 100%);
             color: #f0f0f0;
             min-height: 100vh;
-            overflow-x: hidden;
-            background: #0d1117;
+            padding: 20px;
         }
-
-        /* 3D Background dengan floating shapes */
-        .background-3d {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .shape {
-            position: absolute;
-            background: rgba(45, 125, 220, 0.1);
-            border-radius: 50%;
-            animation: float 20s infinite linear;
-        }
-
-        .shape:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            top: 10%;
-            left: 5%;
-            background: rgba(45, 125, 220, 0.08);
-            animation-delay: 0s;
-        }
-
-        .shape:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            top: 60%;
-            right: 10%;
-            background: rgba(100, 80, 220, 0.05);
-            animation-delay: -5s;
-            animation-duration: 25s;
-        }
-
-        .shape:nth-child(3) {
-            width: 150px;
-            height: 150px;
-            bottom: 15%;
-            left: 20%;
-            background: rgba(30, 150, 200, 0.07);
-            animation-delay: -10s;
-            animation-duration: 30s;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            33% {
-                transform: translate(30px, 50px) rotate(120deg);
-            }
-            66% {
-                transform: translate(-20px, 80px) rotate(240deg);
-            }
-            100% {
-                transform: translate(0, 0) rotate(360deg);
-            }
-        }
-
-        /* Container utama */
+        
         .container {
-            max-width: 1000px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 40px 20px;
-            position: relative;
-            z-index: 1;
         }
-
-        /* Header dan logo */
+        
+        /* HEADER */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 60px;
+            text-align: center;
+            margin-bottom: 50px;
         }
-
+        
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #2d7ddc, #1a5fb4);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 20px;
-            color: white;
-        }
-
-        .logo-text {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(to right, #58a6ff, #2d7ddc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Tombol GitHub-style */
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: 1px solid rgba(240, 246, 252, 0.1);
-            background-color: #21262d;
-            color: #c9d1d9;
-            text-align: center;
-            white-space: nowrap;
-            user-select: none;
-        }
-
-        .button:hover {
-            background-color: #30363d;
-            border-color: #8b949e;
-            transform: translateY(-1px);
-        }
-
-        .button.primary {
-            background-color: #238636;
-            border-color: #2ea043;
-            color: white;
-        }
-
-        .button.primary:hover {
-            background-color: #2ea043;
-            border-color: #3fb950;
-        }
-
-        .button.secondary {
-            background-color: transparent;
-            border-color: #58a6ff;
-            color: #58a6ff;
-        }
-
-        .button.secondary:hover {
-            background-color: rgba(88, 166, 255, 0.1);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 30px;
-        }
-        .btn-link {
-            display: inline-block;
-            margin-top: 20px;
-            font-size: 14px;
-            border-color: #1a5fb4;
-            color: #ffffff;
-            text-decoration: none;
-        }
-
-        /* Konten utama */
-        .hero {
-            text-align: center;
-            margin-bottom: 80px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero h1 {
             font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(to right, #ffffff, #58a6ff);
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(90deg, #58a6ff, #1a5fb4);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.2;
+            color: transparent;
+            margin-bottom: 10px;
         }
-
-        .hero p {
-            font-size: 20px;
+        
+        .tagline {
             color: #8b949e;
-            margin-bottom: 40px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
         }
-
-        /* Features section */
-        .features {
-            margin: 80px 0;
+        
+        /* MAIN CARD */
+        .card {
+            background: rgba(22, 27, 34, 0.9);
+            border: 1px solid #30363d;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
-
-        .section-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 40px;
-            text-align: center;
-            color: #f0f0f0;
+        
+        /* FORM */
+        .form-group {
+            margin-bottom: 25px;
         }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #c9d1d9;
+            font-weight: 500;
         }
-
-        .feature-card {
-            background: rgba(22, 27, 34, 0.7);
-            border: 1px solid rgba(240, 246, 252, 0.1);
-            border-radius: 12px;
-            padding: 24px;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: #58a6ff;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #2d7ddc, #1a5fb4);
+        
+        input[type="url"] {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            background: #0d1117;
+            border: 2px solid #30363d;
             border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-            font-size: 22px;
-        }
-
-        .feature-card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
             color: #f0f0f0;
+            transition: border 0.2s;
         }
-
-        .feature-card p {
-            color: #8b949e;
-            font-size: 14px;
+        
+        input[type="url"]:focus {
+            outline: none;
+            border-color: #58a6ff;
         }
-
-        /* Footer */
-        footer {
-            margin-top: 80px;
-            text-align: center;
-            padding-top: 40px;
-            border-top: 1px solid rgba(240, 246, 252, 0.1);
-            color: #8b949e;
-            font-size: 14px;
-        }
-
-        /* Responsiveness */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 36px;
-            }
-            
-            .hero p {
-                font-size: 18px;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .button-group {
-                flex-direction: column;
-            }
-            
-            .button-group .button {
-                width: 100%;
-            }
-        }
-
-        /* Efek glow untuk highlight */
-        .glow {
-            text-shadow: 0 0 10px rgba(88, 166, 255, 0.5);
-        }
-
-        /* Animasi untuk teks */
-        .fade-in {
-            animation: fadeIn 1s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        p.btn-link {
+        
+        .btn {
             display: inline-block;
-            margin-top: 20px;
-            font-size: 14px;
-            border-color: #1a5fb4;
-            color: #ffffff;
-            text-decoration: none;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #238636, #2ea043);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
         }
-        p.btn-link:hover {
-            text-decoration: underline;
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 160, 67, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #21262d;
+            border: 1px solid #30363d;
+            margin-top: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background: #30363d;
+            box-shadow: 0 6px 20px rgba(88, 166, 255, 0.2);
+        }
+        
+        /* RESULT */
+        #result {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(13, 17, 23, 0.7);
+            border-radius: 8px;
+            border-left: 4px solid #58a6ff;
+        }
+        
+        .result-url {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            word-break: break-all;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        /* FEATURES */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .feature {
+            background: rgba(22, 27, 34, 0.7);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+        }
+        
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        /* QUICK LINKS */
+        .quick-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .quick-link {
+            padding: 10px 20px;
+            background: #21262d;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #58a6ff;
+            border: 1px solid #30363d;
+            transition: all 0.2s;
+        }
+        
+        .quick-link:hover {
+            background: #30363d;
+            transform: translateY(-2px);
+        }
+        
+        /* FOOTER */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #8b949e;
+            font-size: 14px;
+            padding-top: 30px;
+            border-top: 1px solid #30363d;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 25px 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Background 3D dengan floating shapes -->
-    <div class="background-3d">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-
     <div class="container">
-        <!-- Header dengan logo dan navigasi -->
         <header>
-            <div class="logo">
-                <div class="logo-icon">N</div>
-                <div class="logo-text">NExe</div>
-            </div>
-            <div>
-                <a href="about.html" class="button secondary">About</a>
-            </div>
+            <div class="logo">🔗</div>
+            <h1>NexeID Redirect</h1>
+            <p class="tagline">Free, fast, and reliable URL redirection service</p>
         </header>
-
-        <!-- Hero section -->
-        <section class="hero fade-in">
-            <h1>Compile to .EXE in <span class="glow">Seconds</span></h1>
-            <p>NExe is an intelligent .exe compiler that makes it incredibly easy to create executable files from 9 different project types. Fast, lightweight, and completely free.</p>
+        
+        <main class="card">
+            <h2 style="margin-bottom: 25px; color: #f0f0f0;">Create Your Redirect Link</h2>
             
-            <div class="button-group">
-                <a href="download.html" class="button primary">Download NExe</a>
-                <a href="#features" class="button secondary">View Features</a>
+            <div class="form-group">
+                <label for="urlInput">Enter any URL:</label>
+                <input type="url" id="urlInput" placeholder="https://example.com" required>
             </div>
-            <div style="text-align: right;">
-            <a href="https://saweria.co/omedonation" class="btn-link">Support with Donate</a>
-            </div>
-        </section>
-
-
-        <!-- Features section -->
-        <section id="features" class="features fade-in">
-            <h2 class="section-title">Powerful Features</h2>
             
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Fast Compilation</h3>
-                    <p>Optimized compilation engine that creates executables in seconds, not minutes.</p>
+            <button class="btn" onclick="generateLink()">Generate NexeID Link</button>
+            
+            <div id="result">
+                <h3 style="color: #58a6ff; margin-bottom: 15px;">✅ Your Link is Ready!</h3>
+                <div class="result-url" id="generatedUrl"></div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn" onclick="copyLink()">📋 Copy Link</button>
+                    <button class="btn btn-secondary" onclick="resetForm()">🔄 Create Another</button>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🧩</div>
-                    <h3>9 Project Types</h3>
-                    <p>Supports compilation for 9 different project types with auto-detection for 8 of them.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🔧</div>
-                    <h3>Robust Error Handling</h3>
-                    <p>Intelligent error detection and helpful messages to solve compilation issues quickly.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🚀</div>
-                    <h3>Lightweight</h3>
-                    <p>Minimal footprint - NExe is designed to be fast and efficient without bloat.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🆓</div>
-                    <h3>Free & Open</h3>
-                    <p>Completely free to use with no hidden costs or limitations.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🪟</div>
-                    <h3>Windows Native</h3>
-                    <p>Built specifically for Windows OS with full compatibility and optimization.</p>
-                </div>
+                <p style="margin-top: 20px; color: #8b949e;">
+                    🔍 <a href="#" id="previewLink" style="color: #58a6ff;">Preview redirect page</a> • 
+                    ⏱️ Redirects after 5 seconds with NexeID branding
+                </p>
             </div>
-        </section>
-
-        <section>
-            <div style="height: 40px;">
-               <p>How NExe Works</p>
-                <img src="background.jpg" alt="img" style="width:100%; border-radius: 12px; margin-top: 10px;">
+        </main>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Fast Redirect</h3>
+                <p>5-second countdown then instant redirect. No delays.</p>
             </div>
-        </section>
+            <div class="feature">
+                <div class="feature-icon">🛡️</div>
+                <h3>Secure</h3>
+                <p>HTTPS enforced. No tracking or ads.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <h3>Branded</h3>
+                <p>Clean redirect page with NexeID branding.</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <p style="color: #8b949e; margin-bottom: 20px;">Try these examples:</p>
+            <div class="quick-links">
+                <a href="/r.html?to=https://github.com" class="quick-link">GitHub</a>
+                <a href="/r.html?to=https://youtube.com" class="quick-link">YouTube</a>
+                <a href="/r.html?to=https://twitter.com" class="quick-link">Twitter</a>
+                <a href="/r.html?to=https://open.spotify.com" class="quick-link">Spotify</a>
+                <a href="/donate" class="quick-link">Donate</a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Powered by <strong>nexeid.my.id</strong> • Made with ❤️ for the internet</p>
+            <p style="margin-top: 10px; font-size: 12px;">
+                This service is 100% free. No registration required.
+            </p>
+        </footer>
     </div>
-
+    
     <script>
-        // Efek interaktif untuk background shapes
-        document.addEventListener('mousemove', function(e) {
-            const shapes = document.querySelectorAll('.shape');
-            const mouseX = e.clientX / window.innerWidth;
-            const mouseY = e.clientY / window.innerHeight;
+        // Generate redirect link
+        function generateLink() {
+            let urlInput = document.getElementById('urlInput');
+            let url = urlInput.value.trim();
             
-            shapes.forEach((shape, index) => {
-                const speed = 0.5 + (index * 0.2);
-                const x = (mouseX * 20 * speed) - (10 * speed);
-                const y = (mouseY * 20 * speed) - (10 * speed);
-                
-                shape.style.transform = `translate(${x}px, ${y}px) rotate(${mouseX * 20}deg)`;
+            // Validate URL
+            if (!url) {
+                alert('Please enter a URL');
+                urlInput.focus();
+                return;
+            }
+            
+            // Add https if missing
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+            
+            // Validate URL format
+            try {
+                new URL(url);
+            } catch {
+                alert('Please enter a valid URL (e.g., https://example.com)');
+                return;
+            }
+            
+            // Encode URL
+            let encodedUrl = encodeURIComponent(url);
+            let redirectLink = window.location.origin + '/r.html?to=' + encodedUrl;
+            
+            // Display result
+            document.getElementById('generatedUrl').textContent = redirectLink;
+            document.getElementById('previewLink').href = redirectLink;
+            document.getElementById('result').style.display = 'block';
+            
+            // Scroll to result
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+            
+            // Save to history (localStorage)
+            saveToHistory(url, redirectLink);
+        }
+        
+        // Copy link to clipboard
+        function copyLink() {
+            let link = document.getElementById('generatedUrl').textContent;
+            navigator.clipboard.writeText(link)
+                .then(() => {
+                    // Change button text temporarily
+                    let btn = event.target;
+                    let originalText = btn.textContent;
+                    btn.textContent = '✅ Copied!';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Copy failed:', err);
+                    alert('Failed to copy. Please copy manually.');
+                });
+        }
+        
+        // Reset form
+        function resetForm() {
+            document.getElementById('urlInput').value = '';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('urlInput').focus();
+        }
+        
+        // Save to browsing history
+        function saveToHistory(originalUrl, redirectUrl) {
+            let history = JSON.parse(localStorage.getItem('nexeid_history')) || [];
+            history.unshift({
+                original: originalUrl,
+                redirect: redirectUrl,
+                timestamp: new Date().toISOString()
             });
+            
+            // Keep only last 20 items
+            history = history.slice(0, 20);
+            localStorage.setItem('nexeid_history', JSON.stringify(history));
+        }
+        
+        // Allow Enter key to submit
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateLink();
+            }
         });
         
-        // Animasi untuk fade-in elements saat scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+        // Auto-focus input on load
+        window.onload = function() {
+            document.getElementById('urlInput').focus();
         };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in');
-                }
-            });
-        }, observerOptions);
-        
-        // Observe semua feature cards
-        document.querySelectorAll('.feature-card').forEach(card => {
-            observer.observe(card);
-        });
     </script>
 </body>
 </html>
