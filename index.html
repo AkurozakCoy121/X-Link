@@ -3,700 +3,1196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ViralHub - Trending Stories & Viral Content</title>
+    <title>ShortenX | Advanced URL Shortener</title>
     
-    <!-- ====== PROPELLERADS ====== -->
-    <!-- Vignette -->
+    <!-- ====== ADS SCRIPTS ====== -->
+    <!-- PropellerAds Vignette -->
     <script>(function(s){s.dataset.zone='10381513',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     
-    <!-- Push 1 -->
+    <!-- PropellerAds Push 1 -->
     <script src="https://3nbf4.com/act/files/tag.min.js?z=10381259" data-cfasync="false" async></script>
     
-    <!-- Push 2 -->
+    <!-- PropellerAds Push 2 -->
     <script src="https://3nbf4.com/act/files/tag.min.js?z=10381292" data-cfasync="false" async></script>
     
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* RESET */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         
         body {
-            background: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
         }
         
-        /* HEADER - CLEAN */
-        .header {
-            background: white;
-            padding: 1rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            box-shadow: 0 8px 32px rgba(255, 107, 53, 0.08);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%);
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        
+        .text-orange {
+            color: #FF6B35;
+        }
+        
+        .bg-orange-light {
+            background: rgba(255, 107, 53, 0.08);
+        }
+        
+        .border-orange {
+            border-color: rgba(255, 107, 53, 0.2);
+        }
+        
+        .loading-spinner {
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            border-radius: 50%;
+            border-top: 2px solid #FF6B35;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .redirect-overlay {
+            position: fixed;
             top: 0;
-            z-index: 100;
-        }
-        
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%);
+            z-index: 9999;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
         }
         
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #ff4757;
-        }
-        
-        /* MAIN LAYOUT - 3 COLUMN */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 250px 1fr 250px;
-            gap: 1.5rem;
-            max-width: 1200px;
-            margin: 1.5rem auto;
-            padding: 0 1rem;
-        }
-        
-        @media (max-width: 1024px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* ADS CONTAINER */
+        /* Ad Containers */
         .ad-container {
             background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
+            padding: 16px;
+            margin-bottom: 20px;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         
         .ad-label {
-            font-size: 0.7rem;
-            color: #666;
-            margin-bottom: 0.5rem;
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 8px;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
-        /* LEFT/RIGHT SIDEBARS - FULL OF ADS */
-        .sidebar-left,
-        .sidebar-right {
-            position: sticky;
-            top: 80px;
-            align-self: start;
-        }
-        
-        /* MAIN CONTENT - VIRAL ARTICLES */
-        .main-content {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        /* ARTICLE */
-        .article {
-            padding: 2rem;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .article:last-child {
-            border-bottom: none;
-        }
-        
-        .article h2 {
-            color: #222;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-        
-        .article-meta {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-        
-        .article-content {
-            color: #444;
-            line-height: 1.8;
-        }
-        
-        .read-more {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            background: #ff4757;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        
-        /* TOP ADS */
-        .top-ads {
-            max-width: 1200px;
-            margin: 1rem auto;
-            padding: 0 1rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        
-        /* BOTTOM ADS */
-        .bottom-ads {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        /* BETWEEN ARTICLES ADS */
-        .between-ads {
-            margin: 2rem 0;
-        }
-        
-        /* FOOTER */
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            color: #666;
-            border-top: 1px solid #ddd;
-            margin-top: 2rem;
-        }
-        
-        /* PREMIUM BANNER */
-        .premium-banner {
-            background: linear-gradient(45deg, #ff6b6b, #ff4757);
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
-            margin: 2rem 0;
-            border-radius: 10px;
-        }
-        
-        /* NOTIFICATION */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            background: #10b981;
-            color: white;
-            border-radius: 5px;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        /* Badge Styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 500;
+            margin-right: 8px;
         }
         
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .top-ads {
-                grid-template-columns: 1fr;
-            }
-            
-            .article {
-                padding: 1rem;
-            }
+        .badge-orange {
+            background: rgba(255, 107, 53, 0.1);
+            color: #FF6B35;
         }
         
-        /* LOAD MORE BUTTON */
-        .load-more {
-            text-align: center;
-            padding: 2rem;
+        .badge-blue {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
         }
         
-        .load-more-btn {
-            padding: 1rem 2rem;
-            background: #3742fa;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            font-weight: bold;
+        /* History Item Hover */
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
         }
     </style>
 </head>
-<body>
-    <!-- PROPELLERADS AKTIF OTOMATIS -->
+<body class="min-h-screen">
+    <!-- Vignette & Push Ads Load Automatically -->
     
-    <!-- HEADER -->
-    <header class="header">
-        <div class="header-container">
-            <div class="logo">🔥 ViralHub</div>
-            <div style="color: #666;">Trending Stories • Updated Daily</div>
+    <!-- Header -->
+    <header class="py-4 border-b bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-link text-white"></i>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">ShortenX</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600 hidden md:block">Advanced URL Shortening</span>
+                    <button onclick="showPremiumOffer()" class="btn-primary px-4 py-2 rounded-lg text-sm">
+                        <i class="fas fa-crown mr-2"></i>Premium
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
     
-    <!-- TOP ADS - 2x 728x90 -->
-    <div class="top-ads">
-        <div class="ad-container">
-            <div class="ad-label">Sponsored</div>
-            <div id="topAd1"></div>
-        </div>
+    <!-- Top Banner Ad -->
+    <div class="container mx-auto px-4 mt-6">
         <div class="ad-container">
             <div class="ad-label">Advertisement</div>
-            <div id="topAd2"></div>
+            <div id="topBannerAd" class="flex justify-center"></div>
         </div>
     </div>
     
-    <!-- MAIN LAYOUT -->
-    <div class="main-layout">
-        <!-- LEFT SIDEBAR - ADS ONLY -->
-        <div class="sidebar-left">
-            <!-- 160x600 -->
-            <div class="ad-container">
-                <div class="ad-label">Trending Now</div>
-                <div id="leftAd1"></div>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Hero Section -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                    Shorten URLs Like a <span class="text-orange">Pro</span>
+                </h1>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    Create secure, trackable short links with advanced features. Free forever, no registration required.
+                </p>
             </div>
             
-            <!-- 300x250 -->
-            <div class="ad-container">
-                <div class="ad-label">Recommended</div>
-                <div id="leftAd2"></div>
+            <!-- Main Card -->
+            <div class="glass-card rounded-2xl p-6 md:p-8 mb-8 fade-in">
+                <!-- Strategy Selector -->
+                <div class="mb-8">
+                    <label class="block text-gray-700 font-semibold mb-3">
+                        <i class="fas fa-shield-alt text-orange mr-2"></i>Shortening Strategy
+                    </label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <button onclick="selectStrategy('direct')" 
+                                class="strategy-btn p-4 bg-orange-light border border-orange rounded-lg text-left hover:bg-orange-50 transition-colors" 
+                                data-strategy="direct">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-bolt text-orange"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800">Direct</div>
+                                    <div class="text-xs text-gray-500">Instant redirect</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectStrategy('timed')" 
+                                class="strategy-btn p-4 bg-gray-50 border border-gray-200 rounded-lg text-left hover:bg-gray-100 transition-colors" 
+                                data-strategy="timed">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-clock text-blue-500"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800">Timed</div>
+                                    <div class="text-xs text-gray-500">5-second delay</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectStrategy('password')" 
+                                class="strategy-btn p-4 bg-gray-50 border border-gray-200 rounded-lg text-left hover:bg-gray-100 transition-colors" 
+                                data-strategy="password">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-lock text-purple-500"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800">Password</div>
+                                    <div class="text-xs text-gray-500">Protected access</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectStrategy('burn')" 
+                                class="strategy-btn p-4 bg-gray-50 border border-gray-200 rounded-lg text-left hover:bg-gray-100 transition-colors" 
+                                data-strategy="burn">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-fire text-red-500"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800">One-Time</div>
+                                    <div class="text-xs text-gray-500">Single use only</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectStrategy('click-limit')" 
+                                class="strategy-btn p-4 bg-gray-50 border border-gray-200 rounded-lg text-left hover:bg-gray-100 transition-colors" 
+                                data-strategy="click-limit">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-chart-bar text-green-500"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800">Click Limit</div>
+                                    <div class="text-xs text-gray-500">Max click control</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectStrategy('custom-alias')" 
+                                class="strategy-btn p-4 bg-gray-50 border border-gray-200 rounded-lg text-left hover:bg-gray-100 transition-colors" 
+                                data-strategy="custom-alias">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-edit text-indigo-500"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800">Custom Alias</div>
+                                    <div class="text-xs text-gray-500">Personalized URL</div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- URL Input Form -->
+                <form id="urlForm" class="space-y-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">
+                            <i class="fas fa-link text-orange mr-2"></i>Original URL
+                        </label>
+                        <div class="relative">
+                            <input type="url" id="originalUrl" required 
+                                   class="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                   placeholder="https://example.com/very-long-url-path-here">
+                            <div class="absolute right-3 top-3">
+                                <i class="fas fa-globe text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Strategy-specific inputs -->
+                    <div id="strategyInputs" class="space-y-4"></div>
+                    
+                    <!-- Inline Ad -->
+                    <div class="ad-container">
+                        <div class="ad-label">Recommended</div>
+                        <div id="inlineAd1"></div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn" 
+                            class="w-full btn-primary py-3 px-6 rounded-lg font-semibold flex items-center justify-center">
+                        <i class="fas fa-wand-magic-sparkles mr-2"></i>
+                        <span>Create Short Link</span>
+                        <div id="loadingSpinner" class="loading-spinner ml-3 hidden"></div>
+                    </button>
+                </form>
+                
+                <!-- Result Section -->
+                <div id="result" class="hidden mt-8 p-6 bg-orange-light border border-orange rounded-xl">
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800 mb-2">Short Link Created Successfully!</h3>
+                            <div class="flex items-center space-x-3 mb-4">
+                                <input type="text" id="shortUrl" readonly 
+                                       class="flex-1 px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 font-mono">
+                                <button id="copyBtn" class="btn-primary px-4 py-2 rounded-lg">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button onclick="shareLink()" class="btn-secondary px-4 py-2 rounded-lg">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </div>
+                            <div id="qrCode" class="hidden text-center"></div>
+                            <div class="text-sm text-gray-600">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Link will expire in 30 days
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <!-- 160x600 -->
-            <div class="ad-container">
-                <div class="ad-label">Advertisement</div>
-                <div id="leftAd3"></div>
+            <!-- Stats Section -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold text-orange mb-2" id="totalLinks">0</div>
+                    <div class="text-gray-600">Links Created</div>
+                </div>
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold text-blue-500 mb-2" id="totalClicks">0</div>
+                    <div class="text-gray-600">Total Clicks</div>
+                </div>
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold text-green-500 mb-2" id="activeLinks">0</div>
+                    <div class="text-gray-600">Active Links</div>
+                </div>
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold text-purple-500 mb-2" id="savedTime">0</div>
+                    <div class="text-gray-600">Time Saved (hrs)</div>
+                </div>
             </div>
             
-            <!-- 300x250 -->
-            <div class="ad-container">
-                <div class="ad-label">Sponsored</div>
-                <div id="leftAd4"></div>
+            <!-- Premium Banner -->
+            <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl p-6 mb-8 text-white">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="mb-4 md:mb-0">
+                        <h3 class="text-xl font-bold mb-2">🚀 Upgrade to ShortenX Pro</h3>
+                        <p class="text-orange-100">Get custom domains, advanced analytics, and priority support.</p>
+                    </div>
+                    <button onclick="showPremiumOffer()" class="bg-white text-orange-600 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-crown mr-2"></i>Upgrade Now
+                    </button>
+                </div>
+            </div>
+            
+            <!-- History Section -->
+            <div class="glass-card rounded-2xl p-6 md:p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">
+                        <i class="fas fa-history text-orange mr-2"></i>Recent Links
+                    </h2>
+                    <button onclick="clearHistory()" class="btn-secondary px-4 py-2 rounded-lg text-sm">
+                        <i class="fas fa-trash mr-2"></i>Clear All
+                    </button>
+                </div>
+                
+                <div id="historyList" class="space-y-4">
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-link text-4xl mb-4"></i>
+                        <p>No links created yet</p>
+                        <p class="text-sm mt-2">Create your first short link above!</p>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <!-- MAIN CONTENT - ARTICLES -->
-        <div class="main-content">
-            <!-- ARTICLE 1 -->
-            <div class="article">
-                <h2>⚠️ Warning: New Phone Scam Targeting WhatsApp Users</h2>
-                <div class="article-meta">📅 Today • ⏱️ 5 min read • 🔥 2.5k views</div>
-                <div class="article-content">
-                    <p>A new type of phone scam has been reported targeting WhatsApp users. The scam involves receiving a verification code from an unknown number, followed by a call from someone claiming to be from WhatsApp support...</p>
-                    <p>Security experts warn users to never share verification codes with anyone. Here are 5 signs to identify this scam...</p>
-                </div>
-                <a href="javascript:void(0)" class="read-more" onclick="readArticle(1)">Read Full Story →</a>
-            </div>
-            
-            <!-- BETWEEN ARTICLES AD - 468x60 -->
-            <div class="between-ads">
-                <div class="ad-container">
-                    <div class="ad-label">Advertisement</div>
-                    <div id="betweenAd1"></div>
-                </div>
-            </div>
-            
-            <!-- ARTICLE 2 -->
-            <div class="article">
-                <h2>🎮 Free Game Giveaway: Claim Your Steam Keys Now!</h2>
-                <div class="article-meta">📅 2 hours ago • ⏱️ 3 min read • 🔥 5.7k views</div>
-                <div class="article-content">
-                    <p>Steam is currently giving away free game keys for a limited time! The promotion includes popular titles like "Cyberpunk 2077" and "Elden Ring" but there's a catch...</p>
-                    <p>Only the first 10,000 users can claim the free games. Here's the step-by-step guide to get your free Steam keys before they run out...</p>
-                </div>
-                <a href="javascript:void(0)" class="read-more" onclick="readArticle(2)">Claim Free Game →</a>
-            </div>
-            
-            <!-- PREMIUM BANNER -->
-            <div class="premium-banner">
-                <h3>🚀 EXCLUSIVE CONTENT UNLOCKED!</h3>
-                <p>Get access to premium stories, ad-free experience, and exclusive giveaways!</p>
-                <button onclick="showPremiumOffer()" style="padding: 0.75rem 2rem; background: white; color: #ff4757; border: none; border-radius: 5px; font-weight: bold; margin-top: 1rem; cursor: pointer;">
-                    🔓 UNLOCK PREMIUM NOW
-                </button>
-            </div>
-            
-            <!-- BETWEEN ARTICLES AD - 468x60 -->
-            <div class="between-ads">
-                <div class="ad-container">
-                    <div class="ad-label">Sponsored</div>
-                    <div id="betweenAd2"></div>
-                </div>
-            </div>
-            
-            <!-- ARTICLE 3 -->
-            <div class="article">
-                <h2>💰 Secret Method: Earn $100 Daily From Your Phone</h2>
-                <div class="article-meta">📅 Yesterday • ⏱️ 7 min read • 🔥 12.4k views</div>
-                <div class="article-content">
-                    <p>A TikTok user recently revealed a secret method to earn $100 daily using only your smartphone. The method doesn't require any investment or special skills...</p>
-                    <p>We tested the method for 7 days and here are the shocking results. Warning: This method may not work for everyone and requires consistent effort...</p>
-                </div>
-                <a href="javascript:void(0)" class="read-more" onclick="readArticle(3)">Reveal Secret Method →</a>
-            </div>
-            
-            <!-- BETWEEN ARTICLES AD - 300x250 -->
-            <div class="between-ads">
-                <div class="ad-container">
-                    <div class="ad-label">Advertisement</div>
-                    <div id="betweenAd3"></div>
-                </div>
-            </div>
-            
-            <!-- ARTICLE 4 -->
-            <div class="article">
-                <h2>📱 iPhone 16 Leaks: New Features You Won't Believe!</h2>
-                <div class="article-meta">📅 3 days ago • ⏱️ 4 min read • 🔥 8.9k views</div>
-                <div class="article-content">
-                    <p>New leaks from Apple's supply chain reveal stunning features of the upcoming iPhone 16. The most surprising leak? A completely portless design with magnetic charging...</p>
-                    <p>Other rumored features include holographic display, built-in projector, and AI-powered camera that can edit photos before you take them...</p>
-                </div>
-                <a href="javascript:void(0)" class="read-more" onclick="readArticle(4)">See All Leaks →</a>
-            </div>
-            
-            <!-- LOAD MORE -->
-            <div class="load-more">
-                <button class="load-more-btn" onclick="loadMoreArticles()">
-                    📚 LOAD MORE STORIES
-                </button>
-            </div>
-        </div>
-        
-        <!-- RIGHT SIDEBAR - ADS ONLY -->
-        <div class="sidebar-right">
-            <!-- 300x250 -->
-            <div class="ad-container">
-                <div class="ad-label">Advertisement</div>
-                <div id="rightAd1"></div>
-            </div>
-            
-            <!-- 160x600 -->
-            <div class="ad-container">
-                <div class="ad-label">Trending</div>
-                <div id="rightAd2"></div>
-            </div>
-            
-            <!-- 300x250 -->
-            <div class="ad-container">
-                <div class="ad-label">Sponsored</div>
-                <div id="rightAd3"></div>
-            </div>
-            
-            <!-- 160x600 -->
-            <div class="ad-container">
-                <div class="ad-label">Recommended</div>
-                <div id="rightAd4"></div>
-            </div>
-            
-            <!-- 300x250 -->
-            <div class="ad-container">
-                <div class="ad-label">Advertisement</div>
-                <div id="rightAd5"></div>
-            </div>
-        </div>
-    </div>
+    </main>
     
-    <!-- BOTTOM ADS - 728x90 -->
-    <div class="bottom-ads">
+    <!-- Bottom Banner Ad -->
+    <div class="container mx-auto px-4 mt-8 mb-12">
         <div class="ad-container">
             <div class="ad-label">Advertisement</div>
-            <div id="bottomAd1"></div>
+            <div id="bottomBannerAd"></div>
         </div>
     </div>
     
-    <!-- FOOTER -->
-    <footer class="footer">
-        <p>© 2025 ViralHub - All stories are for entertainment purposes only</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem;">
-            Read our <a href="#" style="color: #ff4757;">Disclaimer</a> | 
-            <a href="#" style="color: #ff4757;">Privacy Policy</a> | 
-            <a href="#" style="color: #ff4757;">Contact</a>
-        </p>
+    <!-- Footer -->
+    <footer class="bg-white border-t py-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <div class="flex justify-center items-center space-x-2 mb-4">
+                    <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-link text-white"></i>
+                    </div>
+                    <span class="text-lg font-bold text-gray-800">ShortenX</span>
+                </div>
+                <p class="text-gray-600 mb-6">Free URL shortener with advanced features. No registration required.</p>
+                <div class="text-sm text-gray-500">
+                    <p>© 2025 ShortenX. All rights reserved.</p>
+                    <p class="mt-2">
+                        <a href="#" class="text-orange hover:underline mx-2">Privacy Policy</a> • 
+                        <a href="#" class="text-orange hover:underline mx-2">Terms of Service</a> • 
+                        <a href="#" class="text-orange hover:underline mx-2">Contact</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </footer>
     
+    <!-- Redirect Overlay -->
+    <div id="redirectOverlay" class="redirect-overlay hidden">
+        <div class="text-center text-white max-w-md mx-auto px-4">
+            <div id="redirectContent"></div>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div id="notification" class="fixed top-4 right-4 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg z-50 hidden">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="notificationText"></span>
+    </div>
+
     <script>
+        // ==================== APP STATE ====================
+        let selectedStrategy = 'direct';
+        let demoLinks = JSON.parse(localStorage.getItem('shortenx_links') || '[]');
+        let adsLoaded = false;
+        
         // ==================== INITIALIZE ====================
-        window.onload = function() {
-            console.log("ViralHub loaded");
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            updateStats();
+            loadHistory();
             
-            // Load all ads with proper timing
-            setTimeout(loadAllAds, 1000);
+            // Load ads after 2 seconds
+            setTimeout(loadAds, 2000);
             
-            // Load PropellerAds In-Page Push after delay
-            setTimeout(loadInPagePush, 5000);
+            // Check for redirect hash
+            checkForRedirect();
+        });
+        
+        // ==================== EVENT LISTENERS ====================
+        function setupEventListeners() {
+            // Strategy selection
+            document.querySelectorAll('.strategy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.strategy-btn').forEach(b => {
+                        b.classList.remove('bg-orange-light', 'border-orange');
+                        b.classList.add('bg-gray-50', 'border-gray-200');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.remove('bg-gray-50', 'border-gray-200');
+                    this.classList.add('bg-orange-light', 'border-orange');
+                    
+                    selectedStrategy = this.dataset.strategy;
+                    updateStrategyInputs();
+                });
+            });
             
-            // Show welcome notification
-            setTimeout(() => {
-                showNotification("🔥 Welcome to ViralHub! Check out trending stories!", "info");
-            }, 1500);
-        };
+            // Form submission
+            document.getElementById('urlForm').addEventListener('submit', handleSubmit);
+            
+            // Copy button
+            document.getElementById('copyBtn').addEventListener('click', copyToClipboard);
+        }
+        
+        function selectStrategy(strategy) {
+            selectedStrategy = strategy;
+            
+            // Update button states
+            document.querySelectorAll('.strategy-btn').forEach(btn => {
+                btn.classList.remove('bg-orange-light', 'border-orange');
+                btn.classList.add('bg-gray-50', 'border-gray-200');
+                
+                if (btn.dataset.strategy === strategy) {
+                    btn.classList.remove('bg-gray-50', 'border-gray-200');
+                    btn.classList.add('bg-orange-light', 'border-orange');
+                }
+            });
+            
+            updateStrategyInputs();
+        }
+        
+        function updateStrategyInputs() {
+            const container = document.getElementById('strategyInputs');
+            container.innerHTML = '';
+            
+            switch(selectedStrategy) {
+                case 'password':
+                    container.innerHTML = `
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-lock text-purple-500 mr-2"></i>Set Password
+                            </label>
+                            <input type="password" id="linkPassword" required 
+                                   class="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                   placeholder="Enter password for this link">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'click-limit':
+                    container.innerHTML = `
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-chart-bar text-green-500 mr-2"></i>Click Limit
+                            </label>
+                            <input type="number" id="clickLimit" required min="1" max="1000" value="10"
+                                   class="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                   placeholder="Maximum number of clicks">
+                            <p class="text-sm text-gray-500 mt-1">Link will become inactive after reaching this limit</p>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'custom-alias':
+                    container.innerHTML = `
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-edit text-indigo-500 mr-2"></i>Custom Alias
+                            </label>
+                            <input type="text" id="customAlias" required pattern="[a-zA-Z0-9-_]+"
+                                   class="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                   placeholder="my-custom-link">
+                            <p class="text-sm text-gray-500 mt-1">Use letters, numbers, dashes and underscores only</p>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'timed':
+                    container.innerHTML = `
+                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-clock text-blue-500 mr-3"></i>
+                                <div>
+                                    <div class="font-semibold text-gray-800">5-Second Timer</div>
+                                    <div class="text-sm text-gray-600">Users will wait 5 seconds before redirect</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'burn':
+                    container.innerHTML = `
+                        <div class="p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-fire text-red-500 mr-3"></i>
+                                <div>
+                                    <div class="font-semibold text-gray-800">One-Time Use</div>
+                                    <div class="text-sm text-gray-600">Link will be destroyed after first use</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+        
+        // ==================== FORM HANDLING ====================
+        async function handleSubmit(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('loadingSpinner');
+            const originalUrl = document.getElementById('originalUrl').value;
+            
+            if (!originalUrl) {
+                showNotification('Please enter a URL', 'error');
+                return;
+            }
+            
+            // Validate URL
+            try {
+                new URL(originalUrl);
+            } catch {
+                showNotification('Please enter a valid URL', 'error');
+                return;
+            }
+            
+            // Show loading
+            submitBtn.disabled = true;
+            spinner.classList.remove('hidden');
+            
+            try {
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                const linkData = {
+                    id: 'link_' + Date.now(),
+                    originalUrl: originalUrl,
+                    strategy: selectedStrategy,
+                    createdAt: new Date().toISOString(),
+                    clicks: 0,
+                    active: true,
+                    shortCode: generateShortCode()
+                };
+                
+                // Add strategy-specific data
+                switch(selectedStrategy) {
+                    case 'password':
+                        const passwordInput = document.getElementById('linkPassword');
+                        if (passwordInput) {
+                            linkData.password = passwordInput.value;
+                        }
+                        break;
+                    case 'click-limit':
+                        const clickLimitInput = document.getElementById('clickLimit');
+                        if (clickLimitInput) {
+                            linkData.maxClicks = parseInt(clickLimitInput.value);
+                        }
+                        break;
+                    case 'custom-alias':
+                        const customAliasInput = document.getElementById('customAlias');
+                        if (customAliasInput) {
+                            const alias = customAliasInput.value.trim();
+                            if (!/^[a-zA-Z0-9-_]+$/.test(alias)) {
+                                throw new Error('Invalid alias format');
+                            }
+                            linkData.customAlias = alias;
+                            linkData.shortCode = alias;
+                        }
+                        break;
+                }
+                
+                // Save to localStorage (demo mode)
+                demoLinks.push(linkData);
+                localStorage.setItem('shortenx_links', JSON.stringify(demoLinks));
+                
+                // Show result
+                const shortUrl = `${window.location.origin}/${linkData.shortCode}`;
+                document.getElementById('shortUrl').value = shortUrl;
+                document.getElementById('result').classList.remove('hidden');
+                
+                // Generate QR code if needed
+                if (selectedStrategy === 'qr-code') {
+                    generateQRCode(shortUrl);
+                }
+                
+                // Reset form and inputs
+                document.getElementById('urlForm').reset();
+                document.getElementById('strategyInputs').innerHTML = '';
+                
+                // Update stats and history
+                updateStats();
+                loadHistory();
+                
+                // Show success notification
+                showNotification('Short link created successfully!', 'success');
+                
+                // Trigger monetization
+                triggerMonetization();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(error.message || 'Failed to create short link', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                spinner.classList.add('hidden');
+            }
+        }
+        
+        function generateShortCode() {
+            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 6; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        
+        function generateQRCode(url) {
+            const qrContainer = document.getElementById('qrCode');
+            qrContainer.innerHTML = `
+                <div class="mt-4">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}" 
+                         alt="QR Code" class="mx-auto border-4 border-white rounded-lg">
+                    <p class="text-gray-600 mt-2">Scan QR code to access link</p>
+                </div>
+            `;
+            qrContainer.classList.remove('hidden');
+        }
         
         // ==================== ADS LOADING ====================
-        function loadAllAds() {
-            console.log("Loading ALL ads...");
+        function loadAds() {
+            if (adsLoaded) return;
             
-            // Top Ads (728x90)
-            loadAdsterraAd('topAd1', 90, 728, '7d3f7dcf6c27eb36646280d85dba51ed');
-            loadAdsterraAd('topAd2', 90, 728, '90a2a0e622b40caa605de8a06516879d');
+            console.log('Loading ads...');
             
-            // Left Sidebar Ads
-            loadAdsterraAd('leftAd1', 600, 160, '5e0812e16f5b229c05c8d853fc6f9253');
-            loadAdsterraAd('leftAd2', 250, 300, 'df392223eb071195b98c897f97cb395d');
-            loadAdsterraAd('leftAd3', 600, 160, '5e0812e16f5b229c05c8d853fc6f9253');
-            loadAdsterraAd('leftAd4', 250, 300, '7d3f7dcf6c27eb36646280d85dba51ed');
+            // Top Banner (728x90)
+            loadAdsterraAd('topBannerAd', 90, 728, '90a2a0e622b40caa605de8a06516879d');
             
-            // Between Articles Ads
-            loadAdsterraAd('betweenAd1', 60, 468, '90a2a0e622b40caa605de8a06516879d');
-            loadAdsterraAd('betweenAd2', 60, 468, '90a2a0e622b40caa605de8a06516879d');
-            loadAdsterraAd('betweenAd3', 250, 300, 'df392223eb071195b98c897f97cb395d');
+            // Inline Ad (300x250)
+            loadAdsterraAd('inlineAd1', 250, 300, 'df392223eb071195b98c897f97cb395d');
             
-            // Right Sidebar Ads
-            loadAdsterraAd('rightAd1', 250, 300, '7d3f7dcf6c27eb36646280d85dba51ed');
-            loadAdsterraAd('rightAd2', 600, 160, '5e0812e16f5b229c05c8d853fc6f9253');
-            loadAdsterraAd('rightAd3', 250, 300, 'df392223eb071195b98c897f97cb395d');
-            loadAdsterraAd('rightAd4', 600, 160, '5e0812e16f5b229c05c8d853fc6f9253');
-            loadAdsterraAd('rightAd5', 250, 300, '7d3f7dcf6c27eb36646280d85dba51ed');
+            // Bottom Banner (728x90)
+            setTimeout(() => {
+                loadAdsterraAd('bottomBannerAd', 90, 728, '7d3f7dcf6c27eb36646280d85dba51ed');
+            }, 3000);
             
-            // Bottom Ad (728x90)
-            loadAdsterraAd('bottomAd1', 90, 728, '90a2a0e622b40caa605de8a06516879d');
+            adsLoaded = true;
         }
         
         function loadAdsterraAd(elementId, height, width, key) {
-            // Random delay for each ad
-            const delay = Math.random() * 2000;
-            
-            setTimeout(() => {
-                try {
-                    const element = document.getElementById(elementId);
-                    if (!element) return;
-                    
-                    // Create iframe for the ad
-                    const iframe = document.createElement('iframe');
-                    iframe.width = width;
-                    iframe.height = height;
-                    iframe.frameBorder = 0;
-                    iframe.scrolling = 'no';
-                    iframe.style.border = 'none';
-                    iframe.style.overflow = 'hidden';
-                    iframe.style.display = 'block';
-                    iframe.style.margin = '0 auto';
-                    
-                    // Adsterra script
-                    const adScript = `
-                        <!DOCTYPE html>
-                        <html>
-                        <head>
-                            <style>body {margin:0;padding:0;}</style>
-                        </head>
-                        <body>
-                            <script>
-                                atOptions = {
-                                    'key' : '${key}',
-                                    'format' : 'iframe',
-                                    'height' : ${height},
-                                    'width' : ${width},
-                                    'params' : {}
-                                };
-                            <\/script>
-                            <script src="https://www.highperformanceformat.com/${key}/invoke.js"><\/script>
-                        </body>
-                        </html>
+            try {
+                const element = document.getElementById(elementId);
+                if (!element) return;
+                
+                element.innerHTML = `
+                    <script>
+                        atOptions = {
+                            'key' : '${key}',
+                            'format' : 'iframe',
+                            'height' : ${height},
+                            'width' : ${width},
+                            'params' : {}
+                        };
+                    <\/script>
+                    <script src="https://www.highperformanceformat.com/${key}/invoke.js"><\/script>
+                `;
+                
+                console.log(`Ad loaded: ${elementId}`);
+            } catch (error) {
+                console.log(`Failed to load ad ${elementId}:`, error);
+                // Fallback
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.innerHTML = `
+                        <div class="p-3 bg-gradient-to-r from-orange-500 to-orange-600 rounded text-center">
+                            <a href="https://otieu.com/4/10381160" target="_blank" 
+                               class="text-white font-semibold text-sm">
+                               🚀 Upgrade to Premium URL Shortener
+                            </a>
+                        </div>
                     `;
-                    
-                    // Load via blob
-                    const blob = new Blob([adScript], { type: 'text/html' });
-                    iframe.src = URL.createObjectURL(blob);
-                    
-                    // Clear and append
-                    element.innerHTML = '';
-                    element.appendChild(iframe);
-                    
-                    console.log(`Ad loaded: ${elementId} (${width}x${height})`);
-                    
-                } catch (error) {
-                    console.log(`Failed to load ad ${elementId}:`, error);
-                    // Fallback: Show CPA link
-                    const element = document.getElementById(elementId);
-                    if (element) {
-                        element.innerHTML = `
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                                <a href="https://otieu.com/4/10381160" target="_blank" 
-                                   style="color: #ff4757; text-decoration: none; font-weight: bold;">
-                                   🚀 EXCLUSIVE OFFER: Click Here to Unlock Premium Content!
-                                </a>
-                            </div>
-                        `;
-                    }
                 }
-            }, delay);
+            }
         }
         
         // ==================== PROPELLERADS ====================
         function loadInPagePush() {
-            console.log("Loading In-Page Push...");
+            console.log('Loading In-Page Push...');
             try {
                 const script = document.createElement('script');
                 script.dataset.zone = '10380895';
                 script.src = 'https://nap5k.com/tag.min.js';
                 script.async = true;
                 document.body.appendChild(script);
-                console.log("In-Page Push loaded");
             } catch (error) {
-                console.log("In-Page Push failed:", error);
+                console.log('In-Page Push failed:', error);
             }
         }
         
         function loadPopunder() {
-            console.log("Loading Popunder...");
+            console.log('Loading Popunder...');
             try {
                 const script = document.createElement('script');
                 script.dataset.zone = '10380855';
                 script.src = 'https://al5sm.com/tag.min.js';
                 script.async = true;
                 document.body.appendChild(script);
-                console.log("Popunder loaded");
             } catch (error) {
-                console.log("Popunder failed:", error);
+                console.log('Popunder failed:', error);
             }
-        }
-        
-        // ==================== ARTICLE FUNCTIONS ====================
-        function readArticle(articleId) {
-            // Increment view count
-            const views = parseInt(localStorage.getItem(`article_${articleId}_views`) || '0');
-            localStorage.setItem(`article_${articleId}_views`, views + 1);
-            
-            // Show full article (simulated)
-            showNotification(`📖 Loading article ${articleId}...`, "info");
-            
-            // Trigger monetization
-            triggerMonetization();
-            
-            // Load In-Page Push after reading
-            setTimeout(loadInPagePush, 2000);
-            
-            // Open CPA offer for "premium content"
-            setTimeout(() => {
-                showPremiumOffer();
-            }, 3000);
-        }
-        
-        function loadMoreArticles() {
-            showNotification("📚 Loading more stories...", "info");
-            
-            // Simulate loading
-            setTimeout(() => {
-                // Add new articles
-                const mainContent = document.querySelector('.main-content');
-                const loadMoreBtn = document.querySelector('.load-more');
-                
-                const newArticle = document.createElement('div');
-                newArticle.className = 'article';
-                newArticle.innerHTML = `
-                    <h2>🎬 Netflix Secret Codes: Access Hidden Categories</h2>
-                    <div class="article-meta">📅 Just now • ⏱️ 4 min read • 🔥 1.2k views</div>
-                    <div class="article-content">
-                        <p>Did you know Netflix has secret codes to access hidden categories? These codes unlock content not visible in the normal interface...</p>
-                        <p>We've compiled a list of 50+ secret codes for movies, TV shows, and documentaries that Netflix doesn't want you to find easily...</p>
-                    </div>
-                    <a href="javascript:void(0)" class="read-more" onclick="readArticle(5)">Reveal Secret Codes →</a>
-                `;
-                
-                mainContent.insertBefore(newArticle, loadMoreBtn);
-                
-                // Load another ad between new articles
-                const newAd = document.createElement('div');
-                newAd.className = 'between-ads';
-                newAd.innerHTML = `
-                    <div class="ad-container">
-                        <div class="ad-label">Advertisement</div>
-                        <div id="newAd${Date.now()}"></div>
-                    </div>
-                `;
-                
-                mainContent.insertBefore(newAd, loadMoreBtn);
-                
-                // Load ad for the new position
-                setTimeout(() => {
-                    loadAdsterraAd(`newAd${Date.now()}`, 250, 300, 'df392223eb071195b98c897f97cb395d');
-                }, 500);
-                
-                // Trigger Popunder after loading more
-                setTimeout(loadPopunder, 1500);
-                
-            }, 1000);
         }
         
         // ==================== MONETIZATION ====================
         function triggerMonetization() {
-            const articlesRead = parseInt(localStorage.getItem('articles_read') || '0');
-            localStorage.setItem('articles_read', articlesRead + 1);
+            const totalLinks = demoLinks.length;
             
-            // Trigger Popunder every 3rd article
-            if (articlesRead > 0 && articlesRead % 3 === 0) {
-                setTimeout(loadPopunder, 2000);
+            // Load In-Page Push every 3rd link
+            if (totalLinks > 0 && totalLinks % 3 === 0) {
+                setTimeout(loadInPagePush, 2000);
+            }
+            
+            // Load Popunder every 5th link
+            if (totalLinks > 0 && totalLinks % 5 === 0) {
+                setTimeout(loadPopunder, 3000);
+            }
+            
+            // Show premium offer occasionally
+            if (totalLinks > 0 && totalLinks % 7 === 0) {
+                setTimeout(showPremiumOffer, 4000);
             }
         }
         
         function showPremiumOffer() {
-            // Open CPA offer
             window.open('https://otieu.com/4/10381160', '_blank', 'noopener,noreferrer');
-            
-            // Also trigger In-Page Push
-            setTimeout(loadInPagePush, 500);
-            
-            // Track conversion
-            const conversions = parseInt(localStorage.getItem('premium_conversions') || '0');
-            localStorage.setItem('premium_conversions', conversions + 1);
         }
         
-        // ==================== UI FUNCTIONS ====================
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.style.background = type === 'success' ? '#10b981' : 
-                                          type === 'error' ? '#ff4757' : '#3742fa';
+        // ==================== STATS & HISTORY ====================
+        function updateStats() {
+            const totalLinks = demoLinks.length;
+            const totalClicks = demoLinks.reduce((sum, link) => sum + (link.clicks || 0), 0);
+            const activeLinks = demoLinks.filter(link => link.active).length;
+            const savedTime = Math.round(totalClicks * 0.1); // Assuming 0.1 hours saved per click
             
-            notification.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span>${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
-                    <span>${message}</span>
+            document.getElementById('totalLinks').textContent = totalLinks;
+            document.getElementById('totalClicks').textContent = totalClicks;
+            document.getElementById('activeLinks').textContent = activeLinks;
+            document.getElementById('savedTime').textContent = savedTime;
+        }
+        
+        function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            
+            if (demoLinks.length === 0) {
+                historyList.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-link text-4xl mb-4"></i>
+                        <p>No links created yet</p>
+                        <p class="text-sm mt-2">Create your first short link above!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by creation date (newest first)
+            const sortedLinks = [...demoLinks].sort((a, b) => 
+                new Date(b.createdAt) - new Date(a.createdAt)
+            ).slice(0, 10); // Show only 10 most recent
+            
+            historyList.innerHTML = sortedLinks.map(link => {
+                const createdDate = new Date(link.createdAt).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                
+                const shortUrl = `${window.location.origin}/${link.shortCode}`;
+                
+                return `
+                    <div class="history-item bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between">
+                            <div class="flex-1 mb-3 md:mb-0">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="font-mono text-sm text-gray-800 bg-gray-100 px-2 py-1 rounded">${link.shortCode}</span>
+                                    <span class="badge badge-orange">
+                                        <i class="fas ${getStrategyIcon(link.strategy)} mr-1"></i>
+                                        ${link.strategy}
+                                    </span>
+                                    ${!link.active ? '<span class="badge badge-red">Inactive</span>' : ''}
+                                </div>
+                                <div class="text-sm text-gray-600 truncate mb-2" title="${link.originalUrl}">
+                                    ${link.originalUrl}
+                                </div>
+                                <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                    <span><i class="fas fa-calendar mr-1"></i>${createdDate}</span>
+                                    <span><i class="fas fa-mouse-pointer mr-1"></i>${link.clicks || 0} clicks</span>
+                                    ${link.maxClicks ? `<span><i class="fas fa-chart-line mr-1"></i>Limit: ${link.maxClicks}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="copyToClipboard('${shortUrl}', true)" 
+                                        class="btn-secondary px-3 py-2 rounded-lg text-sm">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button onclick="deleteLink('${link.id}')" 
+                                        class="px-3 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 transition-colors text-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function getStrategyIcon(strategy) {
+            switch(strategy) {
+                case 'direct': return 'fa-bolt';
+                case 'timed': return 'fa-clock';
+                case 'password': return 'fa-lock';
+                case 'burn': return 'fa-fire';
+                case 'click-limit': return 'fa-chart-bar';
+                case 'custom-alias': return 'fa-edit';
+                default: return 'fa-link';
+            }
+        }
+        
+        function clearHistory() {
+            if (confirm('Are you sure you want to clear all history? This cannot be undone.')) {
+                demoLinks = [];
+                localStorage.setItem('shortenx_links', JSON.stringify(demoLinks));
+                loadHistory();
+                updateStats();
+                showNotification('History cleared', 'success');
+            }
+        }
+        
+        window.deleteLink = function(linkId) {
+            if (confirm('Are you sure you want to delete this link?')) {
+                demoLinks = demoLinks.filter(link => link.id !== linkId);
+                localStorage.setItem('shortenx_links', JSON.stringify(demoLinks));
+                loadHistory();
+                updateStats();
+                showNotification('Link deleted', 'success');
+            }
+        };
+        
+        // ==================== REDIRECT HANDLING ====================
+        function checkForRedirect() {
+            const path = window.location.pathname.substring(1);
+            if (path && path !== 'index.html' && path !== '') {
+                handleRedirect(path);
+            }
+        }
+        
+        async function handleRedirect(shortCode) {
+            const overlay = document.getElementById('redirectOverlay');
+            const content = document.getElementById('redirectContent');
+            
+            // Hide main content
+            document.querySelector('main').style.display = 'none';
+            document.querySelector('footer').style.display = 'none';
+            
+            // Show redirect overlay
+            overlay.classList.remove('hidden');
+            
+            // Find the link
+            const link = demoLinks.find(l => l.shortCode === shortCode && l.active);
+            
+            if (!link) {
+                content.innerHTML = `
+                    <div class="text-center">
+                        <i class="fas fa-exclamation-triangle text-5xl mb-4"></i>
+                        <h2 class="text-2xl font-bold mb-4">Link Not Found</h2>
+                        <p class="mb-6">The link you're looking for doesn't exist or has been deleted.</p>
+                        <button onclick="goHome()" class="bg-white text-orange-600 font-semibold px-6 py-3 rounded-lg">
+                            Return to Home
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Check click limit
+            if (link.strategy === 'click-limit' && link.clicks >= (link.maxClicks || 0)) {
+                content.innerHTML = `
+                    <div class="text-center">
+                        <i class="fas fa-ban text-5xl mb-4"></i>
+                        <h2 class="text-2xl font-bold mb-4">Click Limit Reached</h2>
+                        <p class="mb-6">This link has reached its maximum click limit.</p>
+                        <button onclick="goHome()" class="bg-white text-orange-600 font-semibold px-6 py-3 rounded-lg">
+                            Return to Home
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Handle based on strategy
+            switch(link.strategy) {
+                case 'direct':
+                    await handleDirectRedirect(link);
+                    break;
+                    
+                case 'timed':
+                    await handleTimedRedirect(link);
+                    break;
+                    
+                case 'password':
+                    handlePasswordRedirect(link);
+                    break;
+                    
+                case 'burn':
+                    await handleBurnRedirect(link);
+                    break;
+                    
+                default:
+                    await handleDirectRedirect(link);
+            }
+        }
+        
+        async function handleDirectRedirect(link) {
+            // Update click count
+            link.clicks = (link.clicks || 0) + 1;
+            localStorage.setItem('shortenx_links', JSON.stringify(demoLinks));
+            
+            // Redirect
+            setTimeout(() => {
+                window.location.href = link.originalUrl;
+            }, 1000);
+            
+            document.getElementById('redirectContent').innerHTML = `
+                <div class="text-center">
+                    <div class="w-20 h-20 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+                    <h2 class="text-2xl font-bold mb-4">Redirecting...</h2>
+                    <p class="mb-2">You are being redirected to:</p>
+                    <p class="text-sm opacity-90">${link.originalUrl}</p>
                 </div>
             `;
+        }
+        
+        async function handleTimedRedirect(link) {
+            let countdown = 5;
             
-            document.body.appendChild(notification);
+            const updateCountdown = () => {
+                document.getElementById('redirectContent').innerHTML = `
+                    <div class="text-center">
+                        <div class="text-6xl font-bold mb-6">${countdown}</div>
+                        <h2 class="text-2xl font-bold mb-4">Redirecting in ${countdown} seconds</h2>
+                        <p class="mb-2">You will be redirected to:</p>
+                        <p class="text-sm opacity-90">${link.originalUrl}</p>
+                    </div>
+                `;
+            };
+            
+            updateCountdown();
+            
+            const timer = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    updateCountdown();
+                } else {
+                    clearInterval(timer);
+                    handleDirectRedirect(link);
+                }
+            }, 1000);
+        }
+        
+        function handlePasswordRedirect(link) {
+            document.getElementById('redirectContent').innerHTML = `
+                <div class="text-center max-w-sm mx-auto">
+                    <i class="fas fa-lock text-5xl mb-6"></i>
+                    <h2 class="text-2xl font-bold mb-4">Password Protected</h2>
+                    <p class="mb-6">This link is protected with a password.</p>
+                    <div class="space-y-4">
+                        <input type="password" id="passwordInput" 
+                               class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white"
+                               placeholder="Enter password">
+                        <button onclick="checkPasswordRedirect('${link.id}', '${link.password}')" 
+                                class="w-full bg-white text-orange-600 font-semibold px-6 py-3 rounded-lg">
+                            Access Link
+                        </button>
+                        <button onclick="goHome()" class="w-full bg-white/20 text-white font-semibold px-6 py-3 rounded-lg">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        window.checkPasswordRedirect = async function(linkId, correctPassword) {
+            const inputPassword = document.getElementById('passwordInput').value;
+            
+            if (inputPassword === correctPassword) {
+                const link = demoLinks.find(l => l.id === linkId);
+                if (link) {
+                    await handleDirectRedirect(link);
+                }
+            } else {
+                alert('Incorrect password!');
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        };
+        
+        async function handleBurnRedirect(link) {
+            document.getElementById('redirectContent').innerHTML = `
+                <div class="text-center">
+                    <i class="fas fa-fire text-5xl mb-6"></i>
+                    <h2 class="text-2xl font-bold mb-4">One-Time Link</h2>
+                    <p class="mb-6">This link will be destroyed after use.</p>
+                    <div class="space-y-4">
+                        <button onclick="proceedBurnRedirect('${link.id}')" 
+                                class="w-full bg-white text-orange-600 font-semibold px-6 py-3 rounded-lg">
+                            Proceed (Link will be destroyed)
+                        </button>
+                        <button onclick="goHome()" class="w-full bg-white/20 text-white font-semibold px-6 py-3 rounded-lg">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        window.proceedBurnRedirect = async function(linkId) {
+            const link = demoLinks.find(l => l.id === linkId);
+            if (link) {
+                // Mark as inactive
+                link.active = false;
+                localStorage.setItem('shortenx_links', JSON.stringify(demoLinks));
+                
+                // Redirect
+                await handleDirectRedirect(link);
+            }
+        };
+        
+        window.goHome = function() {
+            window.history.pushState({}, '', '/');
+            window.location.reload();
+        };
+        
+        // ==================== UTILITY FUNCTIONS ====================
+        function copyToClipboard(text = null, showNotificationFlag = false) {
+            const textToCopy = text || document.getElementById('shortUrl').value;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                if (showNotificationFlag) {
+                    showNotification('Link copied to clipboard!', 'success');
+                }
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = textToCopy;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                if (showNotificationFlag) {
+                    showNotification('Link copied to clipboard!', 'success');
+                }
+            });
+        }
+        
+        function shareLink() {
+            const url = document.getElementById('shortUrl').value;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out this short link',
+                    text: 'I created a short link using ShortenX',
+                    url: url
+                });
+            } else {
+                copyToClipboard(url, true);
+            }
+        }
+        
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            
+            if (type === 'error') {
+                notification.className = notification.className.replace('bg-green-500', 'bg-red-500');
+            } else if (type === 'warning') {
+                notification.className = notification.className.replace('bg-green-500', 'bg-yellow-500');
+            } else {
+                notification.className = notification.className.replace('bg-red-500', 'bg-green-500').replace('bg-yellow-500', 'bg-green-500');
+            }
+            
+            notification.classList.remove('hidden');
             
             setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transition = 'opacity 0.3s';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
+                notification.classList.add('hidden');
             }, 3000);
         }
         
-        // ==================== SCROLL TRACKING ====================
-        let scrollCount = 0;
-        window.addEventListener('scroll', function() {
-            scrollCount++;
-            
-            // Trigger In-Page Push when user scrolls deep
-            if (scrollCount > 50 && scrollCount % 50 === 0) {
-                setTimeout(loadInPagePush, 1000);
-            }
-        });
-        
-        // ==================== PAGE VIEW TRACKING ====================
-        let pageViews = parseInt(localStorage.getItem('page_views') || '0');
-        pageViews++;
-        localStorage.setItem('page_views', pageViews);
-        
-        console.log(`Total page views: ${pageViews}`);
+        // Initialize with direct strategy selected
+        document.querySelector('.strategy-btn[data-strategy="direct"]').click();
     </script>
 </body>
 </html>
