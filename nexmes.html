@@ -3,140 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexMes - Nexeid Mini Games</title>
+    <title>NexMes - Nexeid Modern Gaming</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #007bff;
+            --secondary: #eef6ff;
+            --text: #1a1a1a;
+            --glass: rgba(255, 255, 255, 0.8);
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f5f9; /* Putih kebiruan */
-            color: #333;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            color: var(--text);
             margin: 0;
-            padding: 0;
+            min-height: 100vh;
         }
-        header {
-            background-color: #007bff; /* Biru Utama */
-            color: white;
-            padding: 20px text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+        /* Navbar Modern */
+        nav {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
         }
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 10px;
-        }
-        .ad-slot {
-            background: #fff;
-            border: 1px dashed #007bff;
-            margin: 15px 0;
-            padding: 10px;
-            text-align: center;
-            border-radius: 8px;
-        }
-        .game-grid {
+
+        .logo { font-weight: 800; font-size: 24px; color: var(--primary); letter-spacing: -1px; }
+
+        .main-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: 1fr 180px; /* Space buat banner lu */
             gap: 20px;
+            padding: 20px 5%;
         }
-        .game-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-            border: 1px solid #e1e8ed;
+
+        /* Game Display Area */
+        .game-viewer {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            min-height: 500px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.5);
         }
-        .game-card:hover {
-            transform: translateY(-5px);
-            border-color: #007bff;
-        }
-        .game-thumb {
+
+        #game-stage {
             width: 100%;
-            height: 150px;
-            background-color: #007bff; /* Placeholder gambar */
+            height: 450px;
+            background: #fff;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: bold;
+            overflow: hidden;
+            border: 2px solid var(--secondary);
+            position: relative;
         }
-        .game-info {
-            padding: 15px;
+
+        /* Sidebar Ads */
+        .sidebar-ads {
+            position: sticky;
+            top: 85px;
+            height: fit-content;
         }
-        .game-info h3 {
-            margin: 0 0 10px;
-            font-size: 1.2rem;
-            color: #0056b3;
-        }
-        .btn-play {
-            display: inline-block;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 5px;
-            font-weight: 500;
-        }
-        .btn-play:hover {
-            background-color: #0056b3;
-        }
-        footer {
+
+        .ad-box {
+            background: #fff;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             text-align: center;
-            padding: 20px;
-            font-size: 0.8rem;
-            color: #777;
         }
+
+        /* Game Selector Tiles */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .game-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            border: 1px solid transparent;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(0,123,255,0.1);
+        }
+
+        .game-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .game-card span { font-weight: 600; font-size: 14px; }
+
+        footer { text-align: center; padding: 40px; color: #666; font-size: 13px; }
+
+        iframe { border: none; width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>NexMes</h1>
-    <p>Nexeid Mini Games - Main Bareng, Seru Bareng!</p>
-</header>
+<nav>
+    <div class="logo">NEXMES.</div>
+    <div class="nav-links">nexeid.my.id</div>
+</nav>
 
-<div class="container">
-    <div class="ad-slot">
-        <p style="font-size: 10px; color: #aaa; margin: 0;">ADVERTISEMENT</p>
-        <div id="monetag-ad-top">Iklan Monetag Lu</div>
-    </div>
-
-    <div class="game-grid">
-        <div class="game-card">
-            <div class="game-thumb">LOGIC GAME</div>
-            <div class="game-info">
-                <h3>Puzzle Misteri</h3>
-                <p>Uji logika lu buat mecahin teka-teki berita.</p>
-                <a href="game-1.html" class="btn-play">Main Sekarang</a>
+<div class="main-layout">
+    <div class="content-area">
+        <div class="game-viewer">
+            <h2 id="game-title">Pilih Game Buat Mulai</h2>
+            <div id="game-stage">
+                <p id="placeholder-text">Klik salah satu game di bawah buat main langsung!</p>
             </div>
-        </div>
 
-        <div class="game-card">
-            <div class="game-thumb">ACTION</div>
-            <div class="game-info">
-                <h3>Runner Nexe</h3>
-                <p>Lari dari kejaran deadline berita!</p>
-                <a href="game-2.html" class="btn-play">Main Sekarang</a>
-            </div>
-        </div>
-
-        <div class="game-card">
-            <div class="game-thumb">QUIZ</div>
-            <div class="game-info">
-                <h3>Tebak Fakta</h3>
-                <p>Pintar mana lu sama bot Nexeid?</p>
-                <a href="game-3.html" class="btn-play">Main Sekarang</a>
+            <div class="game-grid">
+                <div class="game-card" onclick="loadGame('2048', 'https://play2048.co/')">
+                    <span class="game-icon">🧩</span>
+                    <span>2048 Puzzle</span>
+                </div>
+                <div class="game-card" onclick="loadGame('Tower Stack', 'https://www.google.com/logos/2010/pacman10-i.html')">
+                    <span class="game-icon">🍒</span>
+                    <span>Retro Pacman</span>
+                </div>
+                <div class="game-card" onclick="loadGame('Hextris', 'https://hextris.io/')">
+                    <span class="game-icon">🔷</span>
+                    <span>Hextris</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="ad-slot">
-        <p style="font-size: 10px; color: #aaa; margin: 0;">ADVERTISEMENT</p>
-        <div id="monetag-ad-bottom">Iklan Monetag Lu</div>
+    <div class="sidebar-ads">
+        <div class="ad-box">
+            <p style="font-size: 9px; color: #bbb; margin-bottom: 5px;">ADVERTISEMENT</p>
+            <script>
+              atOptions = {
+                'key' : 'df392223eb071195b98c897f97cb395d',
+                'format' : 'iframe',
+                'height' : 300,
+                'width' : 160,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.js"></script>
+        </div>
     </div>
 </div>
 
 <footer>
-    &copy; 2025 nexeid.my.id - NexMes Portal
+    &copy; 2025 NexMes by Nexeid Network
 </footer>
+
+<script>
+    function loadGame(title, url) {
+        document.getElementById('game-title').innerText = title;
+        const stage = document.getElementById('game-stage');
+        stage.innerHTML = `<iframe src="${url}"></iframe>`;
+        
+        // Bonus: Efek scroll otomatis ke game biar enak di HP
+        window.scrollTo({ top: 100, behavior: 'smooth' });
+    }
+</script>
 
 </body>
 </html>
