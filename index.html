@@ -1,373 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexeID - Free URL Redirect Service</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔗</text></svg>">
-    <style>
-        /* RESET */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 100%);
-            color: #f0f0f0;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        
-        /* HEADER */
-        header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        
-        .logo {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-        
-        h1 {
-            font-size: 2.8rem;
-            background: linear-gradient(90deg, #58a6ff, #1a5fb4);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 10px;
-        }
-        
-        .tagline {
-            color: #8b949e;
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-        }
-        
-        /* MAIN CARD */
-        .card {
-            background: rgba(22, 27, 34, 0.9);
-            border: 1px solid #30363d;
-            border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* FORM */
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #c9d1d9;
-            font-weight: 500;
-        }
-        
-        input[type="url"] {
-            width: 100%;
-            padding: 16px;
-            font-size: 16px;
-            background: #0d1117;
-            border: 2px solid #30363d;
-            border-radius: 8px;
-            color: #f0f0f0;
-            transition: border 0.2s;
-        }
-        
-        input[type="url"]:focus {
-            outline: none;
-            border-color: #58a6ff;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 16px 32px;
-            background: linear-gradient(135deg, #238636, #2ea043);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(46, 160, 67, 0.3);
-        }
-        
-        .btn-secondary {
-            background: #21262d;
-            border: 1px solid #30363d;
-            margin-top: 15px;
-        }
-        
-        .btn-secondary:hover {
-            background: #30363d;
-            box-shadow: 0 6px 20px rgba(88, 166, 255, 0.2);
-        }
-        
-        /* RESULT */
-        #result {
-            display: none;
-            margin-top: 30px;
-            padding: 25px;
-            background: rgba(13, 17, 23, 0.7);
-            border-radius: 8px;
-            border-left: 4px solid #58a6ff;
-        }
-        
-        .result-url {
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 14px;
-            word-break: break-all;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 6px;
-            margin: 15px 0;
-        }
-        
-        /* FEATURES */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
-        }
-        
-        .feature {
-            background: rgba(22, 27, 34, 0.7);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #30363d;
-        }
-        
-        .feature-icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        
-        /* QUICK LINKS */
-        .quick-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .quick-link {
-            padding: 10px 20px;
-            background: #21262d;
-            border-radius: 20px;
-            text-decoration: none;
-            color: #58a6ff;
-            border: 1px solid #30363d;
-            transition: all 0.2s;
-        }
-        
-        .quick-link:hover {
-            background: #30363d;
-            transform: translateY(-2px);
-        }
-        
-        /* FOOTER */
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            color: #8b949e;
-            font-size: 14px;
-            padding-top: 30px;
-            border-top: 1px solid #30363d;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px 10px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .card {
-                padding: 25px 20px;
-            }
-        }
-    </style>
+<title>NexeID Redirect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">🔗</div>
-            <h1>NexeID Redirect</h1>
-            <p class="tagline">Free, fast, and reliable URL redirection service</p>
-        </header>
-        
-        <main class="card">
-            <h2 style="margin-bottom: 25px; color: #f0f0f0;">Create Your Redirect Link</h2>
-            
-            <div class="form-group">
-                <label for="urlInput">Enter any URL:</label>
-                <input type="url" id="urlInput" placeholder="https://example.com" required>
-            </div>
-            
-            <button class="btn" onclick="generateLink()">Generate NexeID Link</button>
-            
-            <div id="result">
-                <h3 style="color: #58a6ff; margin-bottom: 15px;">✅ Your Link is Ready!</h3>
-                <div class="result-url" id="generatedUrl"></div>
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button class="btn" onclick="copyLink()">📋 Copy Link</button>
-                    <button class="btn btn-secondary" onclick="resetForm()">🔄 Create Another</button>
-                </div>
-                <p style="margin-top: 20px; color: #8b949e;">
-                    🔍 <a href="#" id="previewLink" style="color: #58a6ff;">Preview redirect page</a> • 
-                    ⏱️ Redirects after 5 seconds with NexeID branding
-                </p>
-            </div>
-        </main>
-        
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon">⚡</div>
-                <h3>Fast Redirect</h3>
-                <p>5-second countdown then instant redirect. No delays.</p>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🛡️</div>
-                <h3>Secure</h3>
-                <p>HTTPS enforced. No tracking or ads.</p>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🎨</div>
-                <h3>Branded</h3>
-                <p>Clean redirect page with NexeID branding.</p>
-            </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 40px;">
-            <p style="color: #8b949e; margin-bottom: 20px;">Try these examples:</p>
-            <div class="quick-links">
-                <a href="/r.html?to=https://github.com" class="quick-link">GitHub</a>
-                <a href="/r.html?to=https://youtube.com" class="quick-link">YouTube</a>
-                <a href="/r.html?to=https://twitter.com" class="quick-link">Twitter</a>
-                <a href="/r.html?to=https://open.spotify.com" class="quick-link">Spotify</a>
-                <a href="/donate" class="quick-link">Donate</a>
-            </div>
-        </div>
-        
-        <footer>
-            <p>Powered by <strong>nexeid.my.id</strong> • Made with ❤️ for the internet</p>
-            <p style="margin-top: 10px; font-size: 12px;">
-                This service is 100% free. No registration required.
-            </p>
-        </footer>
-    </div>
-    
-    <script>
-        // Generate redirect link
-        function generateLink() {
-            let urlInput = document.getElementById('urlInput');
-            let url = urlInput.value.trim();
-            
-            // Validate URL
-            if (!url) {
-                alert('Please enter a URL');
-                urlInput.focus();
-                return;
-            }
-            
-            // Add https if missing
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = 'https://' + url;
-            }
-            
-            // Validate URL format
-            try {
-                new URL(url);
-            } catch {
-                alert('Please enter a valid URL (e.g., https://example.com)');
-                return;
-            }
-            
-            // Encode URL
-            let encodedUrl = encodeURIComponent(url);
-            let redirectLink = window.location.origin + '/r.html?to=' + encodedUrl;
-            
-            // Display result
-            document.getElementById('generatedUrl').textContent = redirectLink;
-            document.getElementById('previewLink').href = redirectLink;
-            document.getElementById('result').style.display = 'block';
-            
-            // Scroll to result
-            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
-            
-            // Save to history (localStorage)
-            saveToHistory(url, redirectLink);
-        }
-        
-        // Copy link to clipboard
-        function copyLink() {
-            let link = document.getElementById('generatedUrl').textContent;
-            navigator.clipboard.writeText(link)
-                .then(() => {
-                    // Change button text temporarily
-                    let btn = event.target;
-                    let originalText = btn.textContent;
-                    btn.textContent = '✅ Copied!';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                    }, 2000);
-                })
-                .catch(err => {
-                    console.error('Copy failed:', err);
-                    alert('Failed to copy. Please copy manually.');
-                });
-        }
-        
-        // Reset form
-        function resetForm() {
-            document.getElementById('urlInput').value = '';
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('urlInput').focus();
-        }
-        
-        // Save to browsing history
-        function saveToHistory(originalUrl, redirectUrl) {
-            let history = JSON.parse(localStorage.getItem('nexeid_history')) || [];
-            history.unshift({
-                original: originalUrl,
-                redirect: redirectUrl,
-                timestamp: new Date().toISOString()
-            });
-            
-            // Keep only last 20 items
-            history = history.slice(0, 20);
-            localStorage.setItem('nexeid_history', JSON.stringify(history));
-        }
-        
-        // Allow Enter key to submit
-        document.getElementById('urlInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                generateLink();
-            }
-        });
-        
-        // Auto-focus input on load
-        window.onload = function() {
-            document.getElementById('urlInput').focus();
-        };
-    </script>
+<center>
+
+<h1>🔗 NexeID Redirect</h1>
+<p><i>Free URL redirect service</i></p>
+
+<hr width="300">
+
+<h3>Create Redirect Link</h3>
+<form action="/r.html" method="get">
+<input type="url" name="to" placeholder="https://example.com" size="40" required><br><br>
+<input type="submit" value="Generate Link">
+</form>
+
+<hr width="300">
+
+<h3>Your Link Will Look Like:</h3>
+<code>https://nexeid.my.id/r.html?to=https://your-url.com</code>
+
+<h3>Quick Examples:</h3>
+<p>
+<a href="/r.html?to=https://github.com">GitHub</a> | 
+<a href="/r.html?to=https://youtube.com">YouTube</a> | 
+<a href="/r.html?to=https://twitter.com">Twitter</a>
+</p>
+
+<hr width="300">
+
+<p><small>Powered by <b>nexeid.my.id</b></small></p>
+<p><small>Redirects after 5 seconds with NexeID branding</small></p>
+
+</center>
 </body>
 </html>
