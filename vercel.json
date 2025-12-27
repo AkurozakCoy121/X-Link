@@ -1,4 +1,52 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    /* PREDEFINED ALIASES - Redirect di SERVER SIDE */
+    {
+      "source": "/github",
+      "destination": "https://github.com"
+    },
+    {
+      "source": "/gh",
+      "destination": "https://github.com"
+    },
+    {
+      "source": "/yt",
+      "destination": "https://youtube.com"
+    },
+    {
+      "source": "/twitter",
+      "destination": "https://twitter.com"
+    },
+    {
+      "source": "/tw",
+      "destination": "https://twitter.com"
+    },
+    {
+      "source": "/donate",
+      "destination": "https://saweria.co/omedonation"
+    },
+    {
+      "source": "/support",
+      "destination": "https://saweria.co/omedonation"
+    },
+    {
+      "source": "/rickroll",
+      "destination": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      "source": "/repo",
+      "destination": "https://github.com/AkurozakCoy121/X-Link"
+    },
+    {
+      "source": "/xlink",
+      "destination": "https://github.com/AkurozakCoy121/X-Link"
+    }
+  ],
   "cleanUrls": true
 }
