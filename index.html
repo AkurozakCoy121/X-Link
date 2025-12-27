@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexeID - URL Shortener & Redirect</title>
+    <title>NexeID - Free URL Shortener</title>
     
     <!-- ADS SCRIPT -->
     <script>
@@ -11,10 +11,7 @@
     </script>
     <script src="https://3nbf4.com/act/files/service-worker.min.js?r=sw"></script>
     <script>(function(s){s.dataset.zone='10380855',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-
-    
-<script>(function(s){s.dataset.zone='10380855',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<script>(function(s){s.dataset.zone='10380895',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <script>(function(s){s.dataset.zone='10380895',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <!-- END ADS -->
     
     <style>
@@ -26,32 +23,29 @@
         .tagline { color: #666; font-size: 16px; margin-bottom: 32px; text-align: center; }
         
         /* FORM */
-        .input-group { display: flex; gap: 12px; margin-bottom: 16px; }
-        input[type="text"], input[type="url"] { flex: 1; padding: 14px 18px; font-size: 16px; border: 2px solid #e1e4e8; border-radius: 8px; outline: none; }
+        .form-group { margin-bottom: 24px; }
+        input[type="url"] { width: 100%; padding: 14px 18px; font-size: 16px; border: 2px solid #e1e4e8; border-radius: 8px; outline: none; margin-bottom: 12px; }
         input:focus { border-color: #1a5fb4; }
-        button { padding: 14px 28px; background: #1a5fb4; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        button { padding: 14px 28px; background: #1a5fb4; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; }
         button:hover { background: #0d4a9c; }
-        
-        /* ALIAS CHECK */
-        .alias-check { margin: 20px 0; padding: 15px; background: #f1f8ff; border-radius: 8px; border-left: 4px solid #1a5fb4; }
-        .alias-available { color: #2ea043; font-weight: 600; }
-        .alias-taken { color: #da3633; font-weight: 600; }
         
         /* RESULT */
         .result { margin-top: 24px; padding: 20px; background: #f1f8ff; border-radius: 8px; border-left: 4px solid #1a5fb4; display: none; }
-        .short-url { font-family: monospace; font-size: 15px; word-break: break-all; padding: 12px; background: white; border-radius: 6px; border: 1px solid #e1e4e8; margin: 12px 0; }
+        .short-url { font-family: monospace; font-size: 18px; font-weight: bold; word-break: break-all; padding: 15px; background: white; border-radius: 6px; border: 1px solid #e1e4e8; margin: 12px 0; text-align: center; color: #1a5fb4; }
+        .btn-group { display: flex; gap: 12px; margin-top: 16px; }
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #5a6268; }
         
-        /* QUICK LINKS */
-        .quick-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 24px 0; }
-        .quick-link { padding: 10px 20px; background: #f8f9fa; border-radius: 20px; text-decoration: none; color: #1a5fb4; font-size: 14px; border: 1px solid #e1e4e8; }
-        .quick-link:hover { background: #e9ecef; }
+        /* RECENT LINKS */
+        .recent { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e1e4e8; }
+        .recent-list { max-height: 200px; overflow-y: auto; margin-top: 12px; }
+        .recent-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-family: monospace; font-size: 14px; }
         
         footer { margin-top: 40px; text-align: center; color: #999; font-size: 13px; }
         
         @media (max-width: 640px) {
             .container { padding: 30px 20px; }
-            .input-group { flex-direction: column; }
-            button { width: 100%; }
+            .btn-group { flex-direction: column; }
         }
     </style>
 </head>
@@ -59,47 +53,36 @@
     <div class="container">
         <div class="logo">🔗</div>
         <h1>NexeID</h1>
-        <p class="tagline">Custom alias URL shortener</p>
+        <p class="tagline">Free URL shortener with random short codes</p>
         
-        <!-- ALIAS CHECK FORM -->
-        <div class="input-group">
-            <input type="text" id="aliasInput" placeholder="your-alias" oninput="checkAlias()">
-            <input type="url" id="urlInput" placeholder="https://destination.com" oninput="checkAlias()">
-            <button onclick="createRedirect()">Create</button>
-        </div>
-        
-        <!-- ALIAS STATUS -->
-        <div class="alias-check" id="aliasStatus" style="display:none;">
-            Status: <span id="statusText"></span><br>
-            <small id="statusDetail"></small>
+        <!-- FORM -->
+        <div class="form-group">
+            <input type="url" id="urlInput" placeholder="https://very-long-url.com/very/long/path" required>
+            <button onclick="shortenUrl()">Shorten URL</button>
         </div>
         
         <!-- RESULT -->
         <div class="result" id="result">
-            <h3>✅ Your Custom Link is Ready!</h3>
-            <div class="short-url" id="generatedUrl"></div>
-            <button onclick="copyLink()">Copy Link</button>
+            <h3>✅ Your Short Link is Ready!</h3>
+            <div class="short-url" id="shortUrl"></div>
+            <div class="btn-group">
+                <button onclick="copyLink()">Copy Link</button>
+                <button class="btn-secondary" onclick="newLink()">Create Another</button>
+            </div>
             <p style="margin-top: 12px; font-size: 14px; color: #666;">
-                This link will redirect instantly (no countdown)
+                This link redirects instantly
             </p>
         </div>
         
-        <!-- EXISTING ALIASES -->
-        <div style="margin-top: 32px;">
-            <h3 style="font-size: 16px; color: #666; margin-bottom: 16px;">Available Aliases:</h3>
-            <div class="quick-grid">
-                <a href="/github" class="quick-link">github</a>
-                <a href="/yt" class="quick-link">yt</a>
-                <a href="/twitter" class="quick-link">twitter</a>
-                <a href="/donate" class="quick-link">donate</a>
-                <a href="/rickroll" class="quick-link">rickroll</a>
-                <a href="/repo" class="quick-link">repo</a>
-            </div>
+        <!-- RECENT LINKS -->
+        <div class="recent" id="recentSection" style="display:none;">
+            <h3 style="font-size: 16px; color: #666; margin-bottom: 12px;">Your Recent Links:</h3>
+            <div class="recent-list" id="recentList"></div>
         </div>
         
         <div style="margin-top: 32px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-            <p><strong>How it works:</strong> Claim a custom alias (e.g., "github") and point it to any URL.</p>
-            <p><strong>Example:</strong> <code>nexeid.my.id/github</code> → goes to GitHub</p>
+            <p><strong>How it works:</strong> Enter any long URL, get a short random code.</p>
+            <p><strong>Example:</strong> <code>nexeid.my.id/Q247</code> → short and easy to share!</p>
         </div>
     </div>
     
@@ -108,195 +91,139 @@
     </footer>
     
     <script>
-        // PREDEFINED ALIAS DATABASE (simpan di localStorage)
-        let aliasDB = {
-            'github': 'https://github.com',
-            'gh': 'https://github.com',
-            'yt': 'https://youtube.com',
-            'youtube': 'https://youtube.com',
-            'twitter': 'https://twitter.com',
-            'tw': 'https://twitter.com',
-            'instagram': 'https://instagram.com',
-            'ig': 'https://instagram.com',
-            'donate': 'https://saweria.co/omedonation',
-            'support': 'https://saweria.co/omedonation',
-            'rickroll': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-            'secret': 'https://www.youtube.com/watch?v=jNQXAC9IVRw',
-            'repo': 'https://github.com/AkurozakCoy121/X-Link',
-            'xlink': 'https://github.com/AkurozakCoy121/X-Link',
-            'spotify': 'https://open.spotify.com',
-            'music': 'https://open.spotify.com'
-        };
+        // DATABASE: Simpan mapping shortCode -> longUrl
+        let urlDatabase = JSON.parse(localStorage.getItem('nexeid_urls')) || {};
         
-        // Load user's custom aliases from localStorage
-        let userAliases = JSON.parse(localStorage.getItem('nexeid_aliases')) || {};
-        
-        // Merge databases
-        let allAliases = { ...aliasDB, ...userAliases };
-        
-        // CHECK IF CURRENT PATH IS AN ALIAS
-        const currentPath = window.location.pathname.replace(/^\//, '');
-        
-        if (currentPath && currentPath !== 'index.html' && currentPath !== '') {
-            // THIS IS AN ALIAS REQUEST!
-            if (allAliases[currentPath]) {
-                // Redirect immediately
-                window.location.href = allAliases[currentPath];
-            } else {
-                // Show "claim this alias" page
-                document.body.innerHTML = `
-                    <div class="container">
-                        <div class="logo">🔗</div>
-                        <h1>Alias "${currentPath}" is Available!</h1>
-                        <p style="margin: 20px 0; color: #666;">This alias is not yet claimed. Want to claim it?</p>
-                        <div class="input-group">
-                            <input type="url" id="claimUrl" placeholder="https://destination.com" style="flex:1;">
-                            <button onclick="claimAlias('${currentPath}')">Claim "${currentPath}"</button>
-                        </div>
-                        <p style="margin-top: 20px; font-size: 14px; color: #888;">
-                            Or <a href="/" style="color:#1a5fb4;">go back to homepage</a>
-                        </p>
-                    </div>
-                `;
+        // GENERATE RANDOM SHORT CODE (4-6 karakter)
+        function generateShortCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let code = '';
+            for (let i = 0; i < 5; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
             }
+            return code;
         }
         
-        // CHECK ALIAS AVAILABILITY
-        function checkAlias() {
-            const alias = document.getElementById('aliasInput').value.trim().toLowerCase();
-            const url = document.getElementById('urlInput').value.trim();
-            
-            const statusDiv = document.getElementById('aliasStatus');
-            const statusText = document.getElementById('statusText');
-            const statusDetail = document.getElementById('statusDetail');
-            
-            if (!alias) {
-                statusDiv.style.display = 'none';
-                return;
+        // CEK PATH SAAT INI (apakah ini short code request?)
+        const currentPath = window.location.pathname.substring(1); // Hapus slash depan
+        
+        if (currentPath && currentPath !== '') {
+            // INI SHORT CODE REQUEST!
+            if (urlDatabase[currentPath]) {
+                // Redirect langsung ke URL tujuan
+                window.location.href = urlDatabase[currentPath];
             }
-            
-            // Validasi alias format
-            const aliasRegex = /^[a-z0-9\-]+$/;
-            if (!aliasRegex.test(alias)) {
-                statusDiv.style.display = 'block';
-                statusText.innerHTML = '<span class="alias-taken">Invalid format</span>';
-                statusDetail.textContent = 'Only lowercase letters, numbers, and hyphens allowed';
-                return;
-            }
-            
-            // Cek apakah alias sudah dipakai
-            if (allAliases[alias]) {
-                statusDiv.style.display = 'block';
-                statusText.innerHTML = '<span class="alias-taken">Already taken</span>';
-                statusDetail.textContent = `Redirects to: ${allAliases[alias]}`;
-            } else {
-                statusDiv.style.display = 'block';
-                statusText.innerHTML = '<span class="alias-available">Available!</span>';
-                statusDetail.textContent = `nexeid.my.id/${alias} will be yours`;
-            }
+            // Kalau ngga ada di database, tetap tampilkan homepage (biar user bisa shorten URL)
         }
         
-        // CREATE REDIRECT
-        function createRedirect() {
-            const alias = document.getElementById('aliasInput').value.trim().toLowerCase();
-            let url = document.getElementById('urlInput').value.trim();
+        // SHORTEN URL
+        function shortenUrl() {
+            const longUrlInput = document.getElementById('urlInput');
+            let longUrl = longUrlInput.value.trim();
             
-            if (!alias || !url) {
-                alert('Please fill both alias and URL');
-                return;
-            }
-            
-            // Validasi alias
-            const aliasRegex = /^[a-z0-9\-]+$/;
-            if (!aliasRegex.test(alias)) {
-                alert('Alias can only contain lowercase letters, numbers, and hyphens');
-                return;
-            }
-            
-            // Cek ketersediaan
-            if (allAliases[alias]) {
-                alert(`Alias "${alias}" is already taken!`);
+            if (!longUrl) {
+                alert('Please enter a URL');
+                longUrlInput.focus();
                 return;
             }
             
             // Tambah https jika perlu
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = 'https://' + url;
+            if (!longUrl.startsWith('http://') && !longUrl.startsWith('https://')) {
+                longUrl = 'https://' + longUrl;
             }
             
             // Validasi URL
             try {
-                new URL(url);
+                new URL(longUrl);
             } catch {
                 alert('Please enter a valid URL');
                 return;
             }
             
-            // Simpan ke database user
-            userAliases[alias] = url;
-            localStorage.setItem('nexeid_aliases', JSON.stringify(userAliases));
+            // Generate short code
+            let shortCode;
+            do {
+                shortCode = generateShortCode();
+            } while (urlDatabase[shortCode]); // Pastikan unik
             
-            // Update global database
-            allAliases[alias] = url;
+            // Simpan ke database
+            urlDatabase[shortCode] = longUrl;
+            localStorage.setItem('nexeid_urls', JSON.stringify(urlDatabase));
             
             // Tampilkan hasil
-            const shortUrl = `https://nexeid.my.id/${alias}`;
-            document.getElementById('generatedUrl').textContent = shortUrl;
+            const shortUrl = `https://nexeid.my.id/${shortCode}`;
+            document.getElementById('shortUrl').textContent = shortUrl;
             document.getElementById('result').style.display = 'block';
             
-            // Reset form
-            document.getElementById('aliasInput').value = '';
-            document.getElementById('urlInput').value = '';
-            document.getElementById('aliasStatus').style.display = 'none';
+            // Update recent links
+            updateRecentLinks();
+            
+            // Scroll ke hasil
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
         }
         
-        // CLAIM ALIAS dari halaman khusus
-        function claimAlias(alias) {
-            const url = document.getElementById('claimUrl').value.trim();
+        // UPDATE RECENT LINKS
+        function updateRecentLinks() {
+            const recentList = document.getElementById('recentList');
+            const recentSection = document.getElementById('recentSection');
             
-            if (!url) {
-                alert('Please enter a destination URL');
+            if (Object.keys(urlDatabase).length === 0) {
+                recentSection.style.display = 'none';
                 return;
             }
             
-            // Tambah https jika perlu
-            let finalUrl = url;
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                finalUrl = 'https://' + url;
-            }
+            recentSection.style.display = 'block';
             
-            // Validasi URL
-            try {
-                new URL(finalUrl);
-            } catch {
-                alert('Please enter a valid URL');
-                return;
-            }
+            // Ambil 5 terbaru
+            const entries = Object.entries(urlDatabase);
+            const recent = entries.slice(-5).reverse();
             
-            // Simpan
-            userAliases[alias] = finalUrl;
-            localStorage.setItem('nexeid_aliases', JSON.stringify(userAliases));
+            let html = '';
+            recent.forEach(([code, url]) => {
+                const displayUrl = url.length > 40 ? url.substring(0, 40) + '...' : url;
+                html += `
+                    <div class="recent-item">
+                        <span title="${url}">${displayUrl}</span>
+                        <span><a href="/${code}" style="color:#1a5fb4; text-decoration:none;">${code}</a></span>
+                    </div>
+                `;
+            });
             
-            // Redirect ke alias yang baru dibuat
-            window.location.href = `/${alias}`;
+            recentList.innerHTML = html;
         }
         
         // COPY LINK
         function copyLink() {
-            const link = document.getElementById('generatedUrl').textContent;
+            const link = document.getElementById('shortUrl').textContent;
             navigator.clipboard.writeText(link)
                 .then(() => {
-                    alert('✅ Link copied to clipboard!');
+                    const btn = event.target;
+                    const original = btn.textContent;
+                    btn.textContent = '✅ Copied!';
+                    setTimeout(() => btn.textContent = original, 2000);
                 })
                 .catch(() => {
                     alert('Failed to copy. Please copy manually.');
                 });
         }
         
-        // Initialize (jika di homepage)
-        if (!currentPath) {
-            document.getElementById('aliasInput').focus();
+        // NEW LINK
+        function newLink() {
+            document.getElementById('urlInput').value = '';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('urlInput').focus();
         }
+        
+        // ENTER KEY SUPPORT
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') shortenUrl();
+        });
+        
+        // INIT
+        window.onload = function() {
+            document.getElementById('urlInput').focus();
+            updateRecentLinks();
+        };
     </script>
 </body>
 </html>
