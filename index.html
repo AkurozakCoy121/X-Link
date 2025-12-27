@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NexeNews - Platform Berita Viral Indonesia</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.5/dist/quill.snow.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -15,11 +15,8 @@
     <!-- FAVICON -->
     <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/841/841364.png">
     
-    <!-- ADS SCRIPTS YANG BENER -->
+    <!-- ADS SCRIPTS -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8227633300969971" crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        (function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://inklinkor.com/tag.min.js',10380895,document.body||document.documentElement);
-    </script>
     
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -27,147 +24,199 @@
             --primary:#2563EB; --secondary:#7C3AED; --accent:#F59E0B; 
             --white:#fff; --dark:#1E293B; --gray:#94A3B8; --light:#F8FAFC;
             --success:#10B981; --danger:#EF4444; --warning:#F59E0B; --info:#3B82F6;
-            --radius:12px; --shadow:0 4px 20px rgba(0,0,0,0.1); --shadow-lg:0 10px 40px rgba(0,0,0,0.15);
-            --sidebar-width:160px; --header-height:70px;
+            --radius:16px; --radius-sm:8px; --radius-lg:24px;
+            --shadow:0 8px 30px rgba(0,0,0,0.08); 
+            --shadow-lg:0 20px 60px rgba(0,0,0,0.15);
+            --shadow-sm:0 2px 10px rgba(0,0,0,0.05);
+            --transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --gradient-primary:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-warning:linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-success:linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --sidebar-width:240px; --header-height:80px;
         }
-        body { font-family:'Poppins',sans-serif; color:var(--dark); background:var(--light); line-height:1.6; }
+        body { font-family:'Poppins',sans-serif; color:var(--dark); background:#f5f7fa; line-height:1.6; }
         .container { max-width:1400px; margin:0 auto; padding:0 20px; }
         
+        /* GLASS MORPHISM EFFECT */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow);
+        }
+        
         /* BUTTONS */
-        .btn { border:none; border-radius:var(--radius); padding:12px 24px; font-weight:600; cursor:pointer; transition:0.3s; display:inline-flex; align-items:center; gap:8px; }
-        .btn-primary { background:var(--primary); color:var(--white); }
-        .btn-primary:hover { background:#1D4ED8; transform:translateY(-2px); box-shadow:var(--shadow); }
+        .btn { border:none; border-radius:var(--radius); padding:14px 28px; font-weight:600; cursor:pointer; transition:var(--transition); display:inline-flex; align-items:center; gap:10px; font-size:1rem; position:relative; overflow:hidden; }
+        .btn-primary { background:var(--gradient-primary); color:var(--white); box-shadow:0 4px 15px rgba(102, 126, 234, 0.3); }
+        .btn-primary:hover { transform:translateY(-3px); box-shadow:0 8px 25px rgba(102, 126, 234, 0.4); }
+        .btn-primary:active { transform:translateY(-1px); }
         .btn-secondary { background:transparent; color:var(--primary); border:2px solid var(--primary); }
-        .btn-secondary:hover { background:var(--primary); color:white; }
-        .btn-success { background:var(--success); color:white; }
-        .btn-danger { background:var(--danger); color:white; }
-        .btn-warning { background:var(--warning); color:white; }
-        .btn-sm { padding:8px 16px; font-size:0.9rem; }
-        .btn-lg { padding:16px 32px; font-size:1.1rem; }
+        .btn-secondary:hover { background:var(--primary); color:white; transform:translateY(-3px); }
+        .btn-success { background:var(--gradient-success); color:white; box-shadow:0 4px 15px rgba(67, 233, 123, 0.3); }
+        .btn-danger { background:var(--gradient-warning); color:white; box-shadow:0 4px 15px rgba(245, 87, 108, 0.3); }
+        .btn-warning { background:linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); color:var(--dark); box-shadow:0 4px 15px rgba(255, 154, 158, 0.3); }
+        .btn-sm { padding:10px 20px; font-size:0.9rem; }
+        .btn-lg { padding:18px 36px; font-size:1.1rem; }
+        .btn-icon { width:44px; height:44px; padding:0; justify-content:center; border-radius:50%; }
         
         /* MODAL */
-        .modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:2000; }
-        .modal.active { display:flex; }
-        .modal-content { background:white; border-radius:var(--radius); max-width:90%; max-height:90vh; overflow-y:auto; animation:modalFade 0.3s ease; }
-        @keyframes modalFade { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
-        .modal-header { padding:20px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; }
-        .modal-close { background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--gray); }
-        .modal-body { padding:20px; }
+        .modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:2000; backdrop-filter:blur(10px); }
+        .modal.active { display:flex; animation:modalBgFade 0.3s ease; }
+        @keyframes modalBgFade { from { background:rgba(0,0,0,0); backdrop-filter:blur(0); } to { background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); } }
+        .modal-content { background:white; border-radius:var(--radius-lg); max-width:90%; max-height:90vh; overflow-y:auto; animation:modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow:0 40px 80px rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.2); }
+        @keyframes modalSlideUp { from { opacity:0; transform:translateY(40px) scale(0.95); } to { opacity:1; transform:translateY(0) scale(1); } }
+        .modal-header { padding:25px 30px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; background:var(--gradient-primary); color:white; border-radius:var(--radius-lg) var(--radius-lg) 0 0; }
+        .modal-close { background:none; border:none; font-size:1.8rem; cursor:pointer; color:rgba(255,255,255,0.8); transition:var(--transition); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .modal-close:hover { background:rgba(255,255,255,0.1); color:white; transform:rotate(90deg); }
+        .modal-body { padding:30px; }
         
         /* NOTIFICATION */
-        .notification { position:fixed; top:20px; right:20px; padding:15px 25px; border-radius:var(--radius); color:white; z-index:3000; display:none; animation:slideInRight 0.3s ease; box-shadow:var(--shadow-lg); }
-        .notification.active { display:block; }
+        .notification { position:fixed; top:30px; right:30px; padding:18px 30px; border-radius:var(--radius); color:white; z-index:3000; display:none; animation:slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1); box-shadow:var(--shadow-lg); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.2); min-width:300px; }
+        .notification.active { display:flex; align-items:center; gap:15px; }
         @keyframes slideInRight { from { transform:translateX(100px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+        .notification-icon { font-size:1.5rem; }
         
         /* SEARCH RESULTS */
-        .search-result-item { padding:15px; border-bottom:1px solid #e2e8f0; display:flex; gap:15px; align-items:center; cursor:pointer; transition:0.2s; }
-        .search-result-item:hover { background:#f8fafc; }
-        .search-result-image { width:80px; height:60px; border-radius:8px; object-fit:cover; }
-        .search-result-content h4 { margin-bottom:5px; font-size:1rem; }
+        .search-result-item { padding:18px; border-bottom:1px solid rgba(226,232,240,0.5); display:flex; gap:15px; align-items:center; cursor:pointer; transition:var(--transition); }
+        .search-result-item:hover { background:rgba(248,250,252,0.7); transform:translateX(5px); }
+        .search-result-image { width:80px; height:60px; border-radius:var(--radius-sm); object-fit:cover; box-shadow:var(--shadow-sm); }
+        .search-result-content h4 { margin-bottom:8px; font-size:1rem; font-weight:600; }
         .search-result-content p { font-size:0.85rem; color:var(--gray); }
         
         /* HEADER */
-        .header { background:var(--white); box-shadow:0 2px 20px rgba(0,0,0,0.08); position:sticky; top:0; z-index:1000; height:var(--header-height); }
-        .header-container { display:flex; align-items:center; padding:0 20px; height:100%; max-width:1400px; margin:0 auto; }
-        .logo { display:flex; align-items:center; gap:12px; font-size:1.8rem; font-weight:800; color:var(--dark); text-decoration:none; }
-        .logo img { height:40px; width:auto; }
-        .logo-text { background:linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .header { background:var(--white); box-shadow:0 8px 30px rgba(0,0,0,0.08); position:sticky; top:0; z-index:1000; height:var(--header-height); backdrop-filter:blur(20px); background:rgba(255,255,255,0.9); }
+        .header-container { display:flex; align-items:center; padding:0 30px; height:100%; max-width:1400px; margin:0 auto; gap:30px; }
+        .logo { display:flex; align-items:center; gap:15px; font-size:2rem; font-weight:900; color:var(--dark); text-decoration:none; }
+        .logo-icon { width:50px; height:50px; background:var(--gradient-primary); border-radius:15px; display:flex; align-items:center; justify-content:center; color:white; box-shadow:0 10px 20px rgba(102, 126, 234, 0.3); }
+        .logo-text { background:var(--gradient-primary); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
         
-        .search-container { flex:1; max-width:600px; margin:0 30px; position:relative; }
-        .search-box { width:100%; padding:14px 50px 14px 20px; border:2px solid #e2e8f0; border-radius:50px; font-size:1rem; transition:0.3s; }
-        .search-box:focus { border-color:var(--primary); outline:none; box-shadow:0 0 0 3px rgba(37, 99, 235, 0.1); }
-        .search-icon { position:absolute; right:20px; top:50%; transform:translateY(-50%); color:var(--gray); font-size:1.2rem; }
-        .search-results { position:absolute; top:100%; left:0; right:0; background:white; border-radius:var(--radius); box-shadow:var(--shadow-lg); margin-top:10px; display:none; max-height:500px; overflow-y:auto; z-index:1000; }
-        .search-results.active { display:block; }
+        .search-container { flex:1; max-width:600px; position:relative; }
+        .search-box { width:100%; padding:18px 60px 18px 25px; border:2px solid rgba(226,232,240,0.5); border-radius:50px; font-size:1rem; transition:var(--transition); background:rgba(248,250,252,0.8); font-family:'Poppins',sans-serif; }
+        .search-box:focus { border-color:var(--primary); outline:none; box-shadow:0 0 0 4px rgba(37, 99, 235, 0.15); background:white; }
+        .search-icon { position:absolute; right:25px; top:50%; transform:translateY(-50%); color:var(--gray); font-size:1.2rem; }
+        .search-results { position:absolute; top:calc(100% + 10px); left:0; right:0; background:white; border-radius:var(--radius); box-shadow:var(--shadow-lg); margin-top:10px; display:none; max-height:500px; overflow-y:auto; z-index:1000; backdrop-filter:blur(20px); background:rgba(255,255,255,0.95); border:1px solid rgba(255,255,255,0.2); }
+        .search-results.active { display:block; animation:fadeInUp 0.3s ease; }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
         
-        .nav-actions { display:flex; align-items:center; gap:15px; }
-        .user-avatar { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; cursor:pointer; border:3px solid #e2e8f0; transition:0.3s; }
-        .user-avatar:hover { border-color:var(--primary); transform:scale(1.05); }
-        .user-avatar.anonymous { background:linear-gradient(135deg, #EF4444, #F59E0B); color:#fff; }
+        .nav-actions { display:flex; align-items:center; gap:20px; }
+        .user-avatar { width:50px; height:50px; border-radius:50%; background:var(--gradient-primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:800; cursor:pointer; border:3px solid rgba(255,255,255,0.8); transition:var(--transition); box-shadow:0 8px 20px rgba(102, 126, 234, 0.3); }
+        .user-avatar:hover { border-color:var(--primary); transform:scale(1.05) rotate(5deg); box-shadow:0 12px 30px rgba(102, 126, 234, 0.4); }
         
         /* POPUP PROFILE */
-        .profile-popup { position:fixed; top:80px; right:20px; width:320px; background:white; border-radius:var(--radius); box-shadow:var(--shadow-lg); z-index:1000; display:none; animation:slideDown 0.3s ease; }
-        @keyframes slideDown { from { transform:translateY(-20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+        .profile-popup { position:fixed; top:90px; right:30px; width:350px; background:white; border-radius:var(--radius); box-shadow:var(--shadow-lg); z-index:1000; display:none; animation:slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1); backdrop-filter:blur(20px); background:rgba(255,255,255,0.95); border:1px solid rgba(255,255,255,0.2); }
+        @keyframes slideDown { from { transform:translateY(-20px) scale(0.95); opacity:0; } to { transform:translateY(0) scale(1); opacity:1; } }
         .profile-popup.active { display:block; }
-        .profile-popup-header { padding:25px; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; border-radius:var(--radius) var(--radius) 0 0; }
-        .profile-popup-avatar { width:80px; height:80px; border-radius:50%; border:4px solid white; background:white; display:flex; align-items:center; justify-content:center; font-size:2.5rem; color:var(--primary); margin:0 auto 15px; }
-        .profile-popup-body { padding:20px; }
-        .profile-popup-info { text-align:center; margin-bottom:20px; }
-        .profile-popup-actions { display:flex; flex-direction:column; gap:10px; }
-        .profile-popup-btn { padding:12px; border:none; border-radius:var(--radius); background:#f8fafc; color:var(--dark); cursor:pointer; display:flex; align-items:center; gap:10px; transition:0.2s; }
-        .profile-popup-btn:hover { background:#e2e8f0; }
+        .profile-popup-header { padding:30px; background:var(--gradient-primary); color:white; border-radius:var(--radius) var(--radius) 0 0; text-align:center; }
+        .profile-popup-avatar { width:100px; height:100px; border-radius:50%; border:4px solid rgba(255,255,255,0.3); background:white; display:flex; align-items:center; justify-content:center; font-size:3rem; color:var(--primary); margin:0 auto 15px; box-shadow:0 15px 35px rgba(0,0,0,0.1); transition:var(--transition); }
+        .profile-popup-avatar:hover { transform:scale(1.05) rotate(5deg); }
+        .profile-popup-body { padding:25px; }
+        .profile-popup-info { text-align:center; margin-bottom:25px; }
+        .profile-popup-actions { display:flex; flex-direction:column; gap:12px; }
+        .profile-popup-btn { padding:16px; border:none; border-radius:var(--radius-sm); background:rgba(248,250,252,0.7); color:var(--dark); cursor:pointer; display:flex; align-items:center; gap:12px; transition:var(--transition); font-weight:500; font-size:0.95rem; }
+        .profile-popup-btn:hover { background:var(--primary); color:white; transform:translateX(5px); }
         
         /* ADS */
-        .ad-banner { background:#f8fafc; border:2px dashed #cbd5e1; border-radius:var(--radius); margin:20px 0; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; min-height:90px; }
-        .ad-banner.horizontal { height:90px; }
-        .ad-banner.vertical { height:600px; width:160px; }
-        .ad-banner.medium { height:250px; width:300px; }
-        .ad-label { position:absolute; top:8px; right:8px; background:var(--primary); color:white; padding:3px 10px; border-radius:20px; font-size:0.7rem; z-index:1; }
+        .ad-banner { background:#f8fafc; border:2px dashed #cbd5e1; border-radius:var(--radius); margin:20px 0; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; min-height:90px; transition:var(--transition); }
+        .ad-banner:hover { border-color:var(--primary); transform:translateY(-5px); box-shadow:var(--shadow); }
+        .ad-banner.horizontal { height:120px; }
+        .ad-banner.vertical { height:600px; width:240px; }
+        .ad-banner.medium { height:280px; width:320px; }
+        .ad-label { position:absolute; top:10px; right:10px; background:var(--primary); color:white; padding:5px 15px; border-radius:20px; font-size:0.7rem; font-weight:600; z-index:1; }
         
         /* ADS CONTENT */
         .ad-content { width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--gray); font-style:italic; }
         
         /* MAIN CONTENT */
-        .main-content { display:flex; margin-top:20px; gap:20px; }
+        .main-content { display:flex; margin-top:30px; gap:30px; padding:0 20px; }
         .content-area { flex:1; min-width:0; }
-        .sidebar-left { width:160px; flex-shrink:0; }
-        .sidebar-right { width:300px; flex-shrink:0; }
+        .sidebar-left { width:240px; flex-shrink:0; }
+        .sidebar-right { width:320px; flex-shrink:0; }
         
         /* ARTICLE */
-        .article-header { margin-bottom:30px; }
-        .article-meta { display:flex; gap:15px; color:var(--gray); margin-bottom:15px; flex-wrap:wrap; }
-        .article-title { font-size:2.2rem; line-height:1.2; margin-bottom:15px; }
-        .article-image { width:100%; height:400px; object-fit:cover; border-radius:var(--radius); margin:20px 0; }
-        .article-content { font-size:1.1rem; line-height:1.8; position:relative; }
-        .article-content p { margin-bottom:20px; }
-        .article-content img { max-width:100%; height:auto; border-radius:var(--radius); margin:20px auto; display:block; }
+        .article-header { margin-bottom:40px; position:relative; }
+        .article-meta { display:flex; gap:20px; color:var(--gray); margin-bottom:20px; flex-wrap:wrap; }
+        .article-title { font-size:3rem; line-height:1.2; margin-bottom:25px; font-weight:800; background:linear-gradient(135deg, #1e293b 0%, #475569 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .article-image { width:100%; height:500px; object-fit:cover; border-radius:var(--radius-lg); margin:30px 0; box-shadow:var(--shadow-lg); transition:var(--transition); }
+        .article-image:hover { transform:scale(1.005); }
+        .article-content { font-size:1.15rem; line-height:1.8; position:relative; background:white; padding:40px; border-radius:var(--radius); box-shadow:var(--shadow); }
+        .article-content p { margin-bottom:25px; }
+        .article-content img { max-width:100%; height:auto; border-radius:var(--radius); margin:30px auto; display:block; box-shadow:var(--shadow); }
         
         /* INLINE ADS */
-        .inline-ad { margin:30px 0; text-align:center; }
+        .inline-ad { margin:40px 0; text-align:center; }
         
         /* ACTION BUTTONS */
-        .article-actions { display:flex; gap:10px; margin:30px 0; flex-wrap:wrap; }
-        .action-btn { display:flex; align-items:center; gap:8px; padding:10px 20px; background:#f8fafc; border:none; border-radius:var(--radius); cursor:pointer; transition:0.2s; }
-        .action-btn:hover { background:#e2e8f0; }
-        .action-btn.liked { color:#EF4444; }
+        .article-actions { display:flex; gap:15px; margin:40px 0; flex-wrap:wrap; }
+        .action-btn { display:flex; align-items:center; gap:12px; padding:15px 25px; background:white; border:none; border-radius:var(--radius); cursor:pointer; transition:var(--transition); font-weight:600; box-shadow:var(--shadow-sm); border:1px solid rgba(226,232,240,0.5); }
+        .action-btn:hover { background:#f8fafc; transform:translateY(-3px); box-shadow:var(--shadow); }
+        .action-btn.liked { color:#EF4444; background:rgba(239,68,68,0.1); }
         
         /* COMMENTS */
-        .comments-section { margin-top:40px; }
-        .comment-form { background:#f8fafc; padding:20px; border-radius:var(--radius); margin-bottom:30px; }
-        .comment-input { width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius); margin-bottom:10px; resize:vertical; min-height:100px; }
-        .comment-list { margin-top:20px; }
-        .comment-item { background:white; padding:20px; border-radius:var(--radius); margin-bottom:15px; border:1px solid #e2e8f0; }
-        .comment-header { display:flex; justify-content:space-between; margin-bottom:10px; }
-        .comment-author { font-weight:600; display:flex; align-items:center; gap:10px; }
-        .comment-author-avatar { width:30px; height:30px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-size:0.9rem; }
+        .comments-section { margin-top:50px; }
+        .comment-form { background:white; padding:30px; border-radius:var(--radius); margin-bottom:40px; box-shadow:var(--shadow); }
+        .comment-input { width:100%; padding:20px; border:2px solid #e2e8f0; border-radius:var(--radius); margin-bottom:20px; resize:vertical; min-height:120px; font-family:'Poppins',sans-serif; font-size:1rem; transition:var(--transition); }
+        .comment-input:focus { border-color:var(--primary); outline:none; box-shadow:0 0 0 4px rgba(37, 99, 235, 0.1); }
+        .comment-list { margin-top:30px; }
+        .comment-item { background:white; padding:25px; border-radius:var(--radius); margin-bottom:20px; border:1px solid rgba(226,232,240,0.5); transition:var(--transition); position:relative; overflow:hidden; }
+        .comment-item:hover { transform:translateY(-5px); box-shadow:var(--shadow); }
+        .comment-item:before { content:''; position:absolute; top:0; left:0; width:5px; height:100%; background:var(--gradient-primary); }
+        .comment-header { display:flex; justify-content:space-between; margin-bottom:15px; align-items:center; }
+        .comment-author { font-weight:700; display:flex; align-items:center; gap:12px; }
+        .comment-author-avatar { width:40px; height:40px; border-radius:50%; background:var(--gradient-primary); color:white; display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:700; box-shadow:0 5px 15px rgba(102, 126, 234, 0.3); }
         .comment-time { font-size:0.85rem; color:var(--gray); }
-        .comment-actions { margin-top:15px; display:flex; gap:15px; }
-        .comment-reply { margin-left:40px; margin-top:15px; padding-left:20px; border-left:3px solid #e2e8f0; }
+        .comment-actions { margin-top:20px; display:flex; gap:15px; }
+        .comment-reply { margin-left:50px; margin-top:20px; padding-left:25px; border-left:3px solid #e2e8f0; }
         
         /* BADGES */
-        .trending-badge { background:linear-gradient(135deg, #FF6B35, #E55A2B); color:white; padding:5px 15px; border-radius:20px; font-size:0.8rem; font-weight:600; display:inline-block; margin-left:10px; }
-        .new-badge { background:var(--success); color:white; padding:5px 15px; border-radius:20px; font-size:0.8rem; font-weight:600; display:inline-block; margin-left:10px; }
+        .trending-badge { background:var(--gradient-warning); color:white; padding:8px 20px; border-radius:50px; font-size:0.85rem; font-weight:700; display:inline-block; margin-left:15px; box-shadow:0 5px 15px rgba(245, 87, 108, 0.3); }
+        .new-badge { background:var(--gradient-success); color:white; padding:8px 20px; border-radius:50px; font-size:0.85rem; font-weight:700; display:inline-block; margin-left:15px; box-shadow:0 5px 15px rgba(67, 233, 123, 0.3); }
         
         /* ARTICLE CARD */
-        .article-card { background:white; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transition:0.3s; cursor:pointer; }
-        .article-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-lg); }
+        .article-card { background:white; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transition:var(--transition); cursor:pointer; position:relative; }
+        .article-card:hover { transform:translateY(-10px); box-shadow:var(--shadow-lg); }
+        .article-card:before { content:''; position:absolute; top:0; left:0; width:100%; height:5px; background:var(--gradient-primary); }
         
         /* RESPONSIVE */
         @media (max-width: 1200px) {
             .sidebar-left { display:none; }
-            .sidebar-right { width:250px; }
+            .sidebar-right { width:280px; }
         }
         @media (max-width: 992px) {
             .sidebar-right { display:none; }
             .search-container { display:none; }
         }
         @media (max-width: 768px) {
-            .header-container { padding:0 10px; }
-            .logo-text { font-size:1.4rem; }
-            .article-title { font-size:1.8rem; }
-            .article-image { height:250px; }
-            .profile-popup { width:280px; right:10px; }
+            .header-container { padding:0 15px; gap:15px; }
+            .logo-text { font-size:1.6rem; }
+            .logo-icon { width:40px; height:40px; }
+            .article-title { font-size:2.2rem; }
+            .article-image { height:300px; }
+            .profile-popup { width:300px; right:15px; }
+            .article-content { padding:25px; }
+            .main-content { padding:0 15px; }
         }
+        
+        /* LOADING ANIMATION */
+        .loading-spinner { display:inline-block; width:50px; height:50px; border:5px solid rgba(37, 99, 235, 0.1); border-radius:50%; border-top-color:var(--primary); animation:spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        
+        /* CARD HOVER EFFECTS */
+        .hover-lift { transition:var(--transition); }
+        .hover-lift:hover { transform:translateY(-5px); }
+        
+        /* CATEGORY BADGES */
+        .category-badge { display:inline-block; padding:8px 20px; border-radius:50px; font-size:0.85rem; font-weight:600; margin-right:10px; margin-bottom:10px; }
+        .category-misteri { background:linear-gradient(135deg, #8B5CF6, #7C3AED); color:white; }
+        .category-fakta { background:linear-gradient(135deg, #10B981, #059669); color:white; }
+        .category-teknologi { background:linear-gradient(135deg, #3B82F6, #2563EB); color:white; }
+        .category-viral { background:linear-gradient(135deg, #EF4444, #DC2626); color:white; }
+        
+        /* STATS CARDS */
+        .stats-card { background:white; padding:25px; border-radius:var(--radius); box-shadow:var(--shadow); text-align:center; transition:var(--transition); }
+        .stats-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-lg); }
+        .stats-card-value { font-size:2.5rem; font-weight:800; margin-bottom:10px; }
+        .stats-card-label { color:var(--gray); font-size:0.9rem; }
     </style>
 </head>
 <body>
@@ -175,22 +224,24 @@
     <header class="header">
         <div class="header-container">
             <a href="#" class="logo" onclick="showHomePage(); return false;">
-                <img src="https://cdn-icons-png.flaticon.com/512/841/841364.png" alt="NexeNews Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/841/841364.png'">
+                <div class="logo-icon">
+                    <i class="fas fa-newspaper"></i>
+                </div>
                 <span class="logo-text">NexeNews</span>
             </a>
             
             <div class="search-container">
-                <input type="text" class="search-box" id="searchBox" placeholder="Cari artikel...">
+                <input type="text" class="search-box" id="searchBox" placeholder="Cari artikel viral...">
                 <i class="fas fa-search search-icon"></i>
                 <div class="search-results" id="searchResults"></div>
             </div>
             
             <div class="nav-actions">
                 <button class="btn btn-primary" id="writeArticleBtn" style="display:none;">
-                    <i class="fas fa-pen"></i> Buat Artikel
+                    <i class="fas fa-plus-circle"></i> Buat Artikel
                 </button>
                 <button class="btn btn-secondary" id="loginBtn">
-                    <i class="fas fa-sign-in-alt"></i> Login
+                    <i class="fas fa-sign-in-alt"></i> Masuk
                 </button>
                 <div class="user-avatar" id="userAvatar" style="display:none;">?</div>
             </div>
@@ -202,24 +253,24 @@
         <div class="profile-popup-header">
             <div class="profile-popup-avatar" id="popupAvatar">U</div>
             <h3 id="popupUsername">Username</h3>
-            <p id="popupEmail" style="opacity:0.8; font-size:0.9rem;">user@email.com</p>
+            <p id="popupEmail" style="opacity:0.9; font-size:0.95rem;">user@email.com</p>
         </div>
         <div class="profile-popup-body">
             <div class="profile-popup-info">
-                <div style="display:flex; gap:30px; justify-content:center; margin-bottom:20px;">
-                    <div style="text-align:center;">
-                        <div style="font-size:1.5rem; font-weight:700;" id="popupArticles">0</div>
-                        <div style="font-size:0.85rem; color:var(--gray);">Artikel</div>
+                <div style="display:flex; gap:30px; justify-content:center; margin-bottom:25px;">
+                    <div class="stats-card" style="padding:15px; min-width:80px;">
+                        <div style="font-size:1.8rem; font-weight:800;" id="popupArticles">0</div>
+                        <div style="font-size:0.8rem; color:var(--gray);">Artikel</div>
                     </div>
-                    <div style="text-align:center;">
-                        <div style="font-size:1.5rem; font-weight:700;" id="popupLikes">0</div>
-                        <div style="font-size:0.85rem; color:var(--gray);">Likes</div>
+                    <div class="stats-card" style="padding:15px; min-width:80px;">
+                        <div style="font-size:1.8rem; font-weight:800;" id="popupLikes">0</div>
+                        <div style="font-size:0.8rem; color:var(--gray);">Likes</div>
                     </div>
                 </div>
             </div>
             <div class="profile-popup-actions">
                 <button class="profile-popup-btn" id="popupProfileBtn">
-                    <i class="fas fa-user"></i> Profil Saya
+                    <i class="fas fa-user-circle"></i> Profil Saya
                 </button>
                 <button class="profile-popup-btn" id="popupMyArticlesBtn">
                     <i class="fas fa-newspaper"></i> Artikel Saya
@@ -228,7 +279,7 @@
                     <i class="fas fa-crown"></i> Admin Panel
                 </button>
                 <button class="profile-popup-btn" id="popupLogoutBtn" style="color:var(--danger);">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                    <i class="fas fa-sign-out-alt"></i> Keluar
                 </button>
             </div>
         </div>
@@ -237,40 +288,46 @@
     <!-- ==================== MODALS ==================== -->
     <div class="modal" id="loginModal">
         <div class="modal-content" style="max-width:500px;">
-            <div class="modal-header" style="background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white;">
-                <h2><i class="fas fa-sign-in-alt"></i> Login / Register</h2>
+            <div class="modal-header">
+                <h2><i class="fas fa-user-circle"></i> Masuk / Daftar</h2>
                 <button class="modal-close" id="closeLoginModal">&times;</button>
             </div>
             <div class="modal-body">
                 <div style="text-align:center; margin-bottom:30px;">
-                    <div style="font-size:3rem; color:var(--primary); margin-bottom:15px;">
-                        <i class="fas fa-user-circle"></i>
+                    <div style="width:80px; height:80px; background:var(--gradient-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:white; font-size:2.5rem;">
+                        <i class="fas fa-user"></i>
                     </div>
-                    <h3 style="margin-bottom:10px;">Masuk ke NexeNews</h3>
-                    <p style="color:var(--gray);">Login untuk buat artikel, like, dan komentar</p>
+                    <h3 style="margin-bottom:10px;">Selamat Datang di NexeNews</h3>
+                    <p style="color:var(--gray);">Buat artikel, like, dan komentari berita viral</p>
                 </div>
                 
-                <div style="margin-bottom:20px;">
-                    <label style="display:block; margin-bottom:8px; font-weight:500;">Nama Pengguna</label>
-                    <input type="text" id="loginUsername" placeholder="Masukkan username" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius); margin-bottom:15px;">
+                <div style="margin-bottom:25px;">
+                    <div style="margin-bottom:20px;">
+                        <label style="display:block; margin-bottom:10px; font-weight:600; color:var(--dark);">Nama Pengguna</label>
+                        <input type="text" id="loginUsername" placeholder="Masukkan username" style="width:100%; padding:15px; border:2px solid #e2e8f0; border-radius:var(--radius); font-family:'Poppins',sans-serif; transition:var(--transition);">
+                    </div>
                     
-                    <label style="display:block; margin-bottom:8px; font-weight:500;">Email (Opsional)</label>
-                    <input type="email" id="loginEmail" placeholder="email@example.com" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius); margin-bottom:20px;">
+                    <div style="margin-bottom:20px;">
+                        <label style="display:block; margin-bottom:10px; font-weight:600; color:var(--dark);">Email (Opsional)</label>
+                        <input type="email" id="loginEmail" placeholder="email@example.com" style="width:100%; padding:15px; border:2px solid #e2e8f0; border-radius:var(--radius); font-family:'Poppins',sans-serif; transition:var(--transition);">
+                    </div>
                     
-                    <label style="display:block; margin-bottom:8px; font-weight:500;">Avatar URL (Opsional)</label>
-                    <input type="text" id="loginAvatar" placeholder="https://example.com/avatar.jpg" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius); margin-bottom:20px;">
+                    <div style="margin-bottom:25px;">
+                        <label style="display:block; margin-bottom:10px; font-weight:600; color:var(--dark);">Avatar URL (Opsional)</label>
+                        <input type="text" id="loginAvatar" placeholder="https://example.com/avatar.jpg" style="width:100%; padding:15px; border:2px solid #e2e8f0; border-radius:var(--radius); font-family:'Poppins',sans-serif; transition:var(--transition);">
+                    </div>
                 </div>
                 
-                <button class="btn btn-primary" id="submitLoginBtn" style="width:100%; margin-bottom:15px;">
-                    <i class="fas fa-user-plus"></i> Login / Register
+                <button class="btn btn-primary btn-lg" id="submitLoginBtn" style="width:100%; margin-bottom:15px;">
+                    <i class="fas fa-user-plus"></i> Masuk / Daftar
                 </button>
                 
                 <button class="btn btn-secondary" id="continueAsGuestBtn" style="width:100%;">
                     <i class="fas fa-user"></i> Lanjut sebagai Tamu
                 </button>
                 
-                <div style="text-align:center; margin-top:20px; padding-top:20px; border-top:1px solid #e2e8f0;">
-                    <p style="color:var(--gray); font-size:0.9rem;">Dengan login, kamu bisa buat artikel, like, dan komentar</p>
+                <div style="text-align:center; margin-top:25px; padding-top:25px; border-top:1px solid rgba(226,232,240,0.5);">
+                    <p style="color:var(--gray); font-size:0.9rem;">Dengan masuk, kamu bisa buat artikel, like, dan komentar</p>
                 </div>
             </div>
         </div>
@@ -278,22 +335,22 @@
     
     <div class="modal" id="monetizeModal">
         <div class="modal-content" style="max-width:500px;">
-            <div class="modal-header" style="background:linear-gradient(135deg, #FF6B35, #E55A2B); color:white;">
-                <h2><i class="fas fa-coins"></i> Dukung Kami!</h2>
+            <div class="modal-header" style="background:var(--gradient-warning);">
+                <h2><i class="fas fa-hand-holding-heart"></i> Dukung Kami!</h2>
                 <button class="modal-close" id="closeMonetizeModal">&times;</button>
             </div>
             <div class="modal-body" style="text-align:center;">
-                <div style="font-size:4rem; color:var(--warning); margin-bottom:20px;">
-                    <i class="fas fa-hand-holding-usd"></i>
+                <div style="width:100px; height:100px; background:var(--gradient-warning); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 25px; color:white; font-size:3rem;">
+                    <i class="fas fa-heart"></i>
                 </div>
                 <h3 style="margin-bottom:15px;">Butuh Dukunganmu!</h3>
-                <p style="margin:20px 0;">Klik tombol di bawah untuk mendukung platform ini tetap gratis untuk semua orang!</p>
-                <a href="https://otieu.com/4/10381160" target="_blank" class="btn btn-warning btn-lg" style="margin-bottom:20px;">
+                <p style="margin:20px 0; line-height:1.6;">Klik tombol di bawah untuk mendukung platform ini tetap gratis untuk semua orang!</p>
+                <a href="#" onclick="supportPlatform(); return false;" class="btn btn-warning btn-lg" style="margin-bottom:20px; width:100%;">
                     <i class="fas fa-external-link-alt"></i> Klik untuk Support
                 </a>
-                <p style="font-size:0.9rem; color:var(--gray);">Setelah klik, silahkan tutup tab yang terbuka dan kembali ke halaman ini</p>
-                <button class="btn btn-success" id="continueAfterMonetize" style="margin-top:20px;">
-                    <i class="fas fa-check"></i> Saya Sudah Klik
+                <p style="font-size:0.9rem; color:var(--gray); margin-bottom:20px;">Setelah klik, silahkan tutup tab yang terbuka dan kembali ke halaman ini</p>
+                <button class="btn btn-success" id="continueAfterMonetize" style="width:100%;">
+                    <i class="fas fa-check-circle"></i> Saya Sudah Klik
                 </button>
             </div>
         </div>
@@ -302,18 +359,18 @@
     <div class="modal" id="createArticleModal">
         <div class="modal-content" style="max-width:800px;">
             <div class="modal-header">
-                <h2><i class="fas fa-plus-circle"></i> Buat Artikel Baru</h2>
+                <h2><i class="fas fa-edit"></i> Buat Artikel Baru</h2>
                 <button class="modal-close" id="closeCreateModal">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="form-group" style="margin-bottom:20px;">
-                    <label style="display:block; margin-bottom:8px; font-weight:500;">Judul Artikel</label>
-                    <input type="text" id="articleTitleInput" placeholder="Judul yang menarik..." style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius);">
+                <div class="form-group" style="margin-bottom:25px;">
+                    <label style="display:block; margin-bottom:10px; font-weight:600; color:var(--dark);">Judul Artikel</label>
+                    <input type="text" id="articleTitleInput" placeholder="Judul yang menarik..." style="width:100%; padding:15px; border:2px solid #e2e8f0; border-radius:var(--radius); font-family:'Poppins',sans-serif; font-size:1.1rem;">
                 </div>
                 
-                <div class="form-group" style="margin-bottom:20px;">
-                    <label style="display:block; margin-bottom:8px; font-weight:500;">Kategori</label>
-                    <select id="articleCategoryInput" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius);">
+                <div class="form-group" style="margin-bottom:25px;">
+                    <label style="display:block; margin-bottom:10px; font-weight:600; color:var(--dark);">Kategori</label>
+                    <select id="articleCategoryInput" style="width:100%; padding:15px; border:2px solid #e2e8f0; border-radius:var(--radius); font-family:'Poppins',sans-serif; background:white;">
                         <option value="misteri">🔮 Misteri & Horor</option>
                         <option value="fakta">💡 Fakta Unik</option>
                         <option value="sejarah">🏛️ Sejarah</option>
@@ -324,30 +381,30 @@
                     </select>
                 </div>
                 
-                <div class="form-group" style="margin-bottom:20px;">
-                    <label style="display:block; margin-bottom:8px; font-weight:500;">Gambar Utama (URL)</label>
-                    <input type="text" id="articleImageInput" placeholder="https://example.com/gambar.jpg" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius);">
-                </div>
-                
-                <div class="form-group" style="margin-bottom:20px;">
-                    <label style="display:block; margin-bottom:8px; font-weight:500;">Konten Artikel</label>
-                    <div id="articleEditor" style="height:300px;"></div>
+                <div class="form-group" style="margin-bottom:25px;">
+                    <label style="display:block; margin-bottom:10px; font-weight:600; color:var(--dark);">Gambar Utama (URL)</label>
+                    <input type="text" id="articleImageInput" placeholder="https://example.com/gambar.jpg" style="width:100%; padding:15px; border:2px solid #e2e8f0; border-radius:var(--radius); font-family:'Poppins',sans-serif;">
                 </div>
                 
                 <div class="form-group" style="margin-bottom:25px;">
-                    <label style="display:block; margin-bottom:8px; font-weight:500;">Slug URL (otomatis dari judul)</label>
-                    <input type="text" id="articleSlugInput" readonly style="width:100%; padding:12px; background:#f8fafc; border:2px solid #e2e8f0; border-radius:var(--radius); color:var(--gray);">
+                    <label style="display:block; margin-bottom:10px; font-weight:600; color:var(--dark);">Konten Artikel</label>
+                    <div id="articleEditor" style="height:350px; border-radius:var(--radius); overflow:hidden;"></div>
                 </div>
                 
-                <div style="text-align:center; padding:20px; background:#f8fafc; border-radius:var(--radius); margin-bottom:20px;">
-                    <h4><i class="fas fa-exclamation-circle"></i> Penting!</h4>
-                    <p style="margin:10px 0;">Sebelum membuat artikel, kamu harus mendukung platform ini terlebih dahulu</p>
-                    <button class="btn btn-warning" id="monetizeBeforeCreate">
-                        <i class="fas fa-hand-holding-usd"></i> Klik untuk Support
+                <div class="form-group" style="margin-bottom:30px;">
+                    <label style="display:block; margin-bottom:10px; font-weight:600; color:var(--dark);">Slug URL (otomatis dari judul)</label>
+                    <input type="text" id="articleSlugInput" readonly style="width:100%; padding:15px; background:#f8fafc; border:2px solid #e2e8f0; border-radius:var(--radius); color:var(--gray); font-family:'Poppins',sans-serif;">
+                </div>
+                
+                <div style="text-align:center; padding:25px; background:linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%); border-radius:var(--radius); margin-bottom:25px; border:1px solid rgba(226,232,240,0.5);">
+                    <h4><i class="fas fa-info-circle"></i> Informasi Penting</h4>
+                    <p style="margin:15px 0; line-height:1.6;">Sebelum membuat artikel, kamu harus mendukung platform ini terlebih dahulu</p>
+                    <button class="btn btn-warning" id="monetizeBeforeCreate" style="width:100%;">
+                        <i class="fas fa-heart"></i> Klik untuk Support
                     </button>
                 </div>
                 
-                <button class="btn btn-success" id="publishArticleBtn" style="width:100%;" disabled>
+                <button class="btn btn-success btn-lg" id="publishArticleBtn" style="width:100%;" disabled>
                     <i class="fas fa-paper-plane"></i> Terbitkan Artikel
                 </button>
             </div>
@@ -361,16 +418,21 @@
             <div class="ad-banner vertical">
                 <span class="ad-label">IKLAN</span>
                 <div class="ad-content" id="leftSidebarAd">
-                    <!-- Google Adsense -->
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-8227633300969971"
-                         data-ad-slot="1234567890"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
+                    <div style="padding:20px; text-align:center;">
+                        <div class="loading-spinner" style="margin:0 auto 15px;"></div>
+                        <p>Memuat iklan...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CATEGORIES -->
+            <div style="background:white; border-radius:var(--radius); padding:25px; margin-bottom:25px; box-shadow:var(--shadow);">
+                <h3 style="margin-bottom:20px; color:var(--primary);"><i class="fas fa-tags"></i> Kategori</h3>
+                <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                    <span class="category-badge category-misteri">🔮 Misteri</span>
+                    <span class="category-badge category-fakta">💡 Fakta</span>
+                    <span class="category-badge category-teknologi">💻 Teknologi</span>
+                    <span class="category-badge category-viral">🔥 Viral</span>
                 </div>
             </div>
         </aside>
@@ -383,28 +445,40 @@
                 <div class="ad-banner horizontal">
                     <span class="ad-label">IKLAN</span>
                     <div class="ad-content" id="topAd">
-                        <!-- In-Page Push Ads -->
-                        <div id="ad-container-10380895"></div>
+                        <div style="padding:20px; text-align:center;">
+                            <h4 style="color:var(--primary); margin-bottom:10px;">Dukung NexeNews</h4>
+                            <p style="color:var(--gray); margin-bottom:15px;">Support platform berita viral Indonesia</p>
+                            <a href="#" onclick="supportPlatform(); return false;" class="btn btn-primary btn-sm">
+                                <i class="fas fa-heart"></i> Support Sekarang
+                            </a>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- TRENDING ARTICLES -->
-                <section style="margin:30px 0;">
-                    <h2 style="margin-bottom:20px; color:var(--primary); display:flex; align-items:center; gap:10px;">
-                        <i class="fas fa-fire"></i> Trending Viral
-                        <span style="font-size:0.9rem; color:var(--gray); font-weight:normal;">(Algoritma: Views + Likes + Comments)</span>
-                    </h2>
-                    <div id="trendingArticles" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:25px;">
+                <section style="margin:40px 0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+                        <h2 style="color:var(--dark); font-weight:800; font-size:2rem; display:flex; align-items:center; gap:15px;">
+                            <i class="fas fa-fire" style="color:#EF4444;"></i> Trending Viral
+                        </h2>
+                        <span style="font-size:0.9rem; color:var(--gray); font-weight:500;">Algoritma: Views + Likes + Comments</span>
+                    </div>
+                    <div id="trendingArticles" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(350px, 1fr)); gap:30px;">
                         <!-- Trending articles loaded here -->
+                        <div style="grid-column:1/-1; text-align:center; padding:60px 20px; background:white; border-radius:var(--radius); box-shadow:var(--shadow);">
+                            <div class="loading-spinner" style="margin:0 auto 25px;"></div>
+                            <h3 style="margin-bottom:15px; color:var(--dark);">Memuat artikel trending...</h3>
+                            <p style="color:var(--gray);">Sedang mengambil data terbaru</p>
+                        </div>
                     </div>
                 </section>
                 
                 <!-- NEWEST ARTICLES -->
-                <section style="margin:40px 0;">
-                    <h2 style="margin-bottom:20px; color:var(--primary); display:flex; align-items:center; gap:10px;">
-                        <i class="fas fa-clock"></i> Terbaru
+                <section style="margin:60px 0;">
+                    <h2 style="margin-bottom:30px; color:var(--dark); font-weight:800; font-size:2rem; display:flex; align-items:center; gap:15px;">
+                        <i class="fas fa-clock" style="color:var(--primary);"></i> Terbaru
                     </h2>
-                    <div id="newestArticles" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:25px;">
+                    <div id="newestArticles" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(350px, 1fr)); gap:30px;">
                         <!-- Newest articles loaded here -->
                     </div>
                 </section>
@@ -415,25 +489,29 @@
                 <article>
                     <div class="article-header">
                         <div class="article-meta">
-                            <span><i class="far fa-calendar"></i> <span id="articleDate"></span></span>
+                            <span><i class="far fa-calendar"></i> <span id="articleDate">-</span></span>
                             <span><i class="far fa-eye"></i> <span id="articleViews">0</span> views</span>
                             <span><i class="fas fa-heart"></i> <span id="articleLikes">0</span> likes</span>
                             <span><i class="fas fa-comment"></i> <span id="articleComments">0</span> komentar</span>
                         </div>
                         <h1 class="article-title" id="articleTitle"></h1>
-                        <div style="display:flex; align-items:center; gap:15px; margin-top:15px;">
-                            <div id="authorAvatar" style="width:50px; height:50px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.2rem;"></div>
-                            <div>
-                                <div style="font-weight:600;" id="authorName"></div>
+                        <div style="display:flex; align-items:center; gap:20px; margin-top:20px; padding:20px; background:white; border-radius:var(--radius); box-shadow:var(--shadow-sm);">
+                            <div id="authorAvatar" style="width:60px; height:60px; border-radius:50%; background:var(--gradient-primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.5rem; box-shadow:0 8px 20px rgba(102, 126, 234, 0.3);"></div>
+                            <div style="flex:1;">
+                                <div style="font-weight:700; font-size:1.1rem;" id="authorName"></div>
                                 <div style="font-size:0.9rem; color:var(--gray);" id="articleTimestamp"></div>
                             </div>
+                            <span class="category-badge" id="articleCategoryBadge" style="margin:0;"></span>
                         </div>
                     </div>
                     
                     <img id="articleImage" class="article-image" alt="Article Image">
                     
                     <div class="article-content" id="articleContent">
-                        <!-- Content loaded here -->
+                        <div style="text-align:center; padding:60px 20px;">
+                            <div class="loading-spinner" style="margin:0 auto 25px;"></div>
+                            <h3 style="margin-bottom:15px; color:var(--dark);">Memuat konten artikel...</h3>
+                        </div>
                     </div>
                     
                     <!-- INLINE ADS -->
@@ -441,14 +519,13 @@
                         <div class="ad-banner medium" style="margin:0 auto;">
                             <span class="ad-label">IKLAN</span>
                             <div class="ad-content" id="inlineAd">
-                                <!-- Google Adsense -->
-                                <ins class="adsbygoogle"
-                                     style="display:inline-block;width:300px;height:250px"
-                                     data-ad-client="ca-pub-8227633300969971"
-                                     data-ad-slot="9876543210"></ins>
-                                <script>
-                                    (adsbygoogle = window.adsbygoogle || []).push({});
-                                </script>
+                                <div style="padding:30px; text-align:center;">
+                                    <h4 style="color:var(--primary); margin-bottom:15px;">NexeNews Premium</h4>
+                                    <p style="color:var(--gray); margin-bottom:20px;">Dapatkan akses eksklusif ke konten premium</p>
+                                    <button class="btn btn-primary" onclick="showSupportModal()">
+                                        <i class="fas fa-crown"></i> Upgrade Sekarang
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -462,57 +539,75 @@
                             <i class="fas fa-share-alt"></i> Share
                         </button>
                         <button class="btn btn-primary" id="readMoreBtn" style="margin-left:auto;" onclick="showHomePage()">
-                            <i class="fas fa-book"></i> Baca Juga
+                            <i class="fas fa-book-open"></i> Baca Artikel Lain
                         </button>
                     </div>
                     
                     <!-- COMMENTS SECTION -->
                     <div class="comments-section">
-                        <h3 style="margin-bottom:20px;"><i class="fas fa-comments"></i> Komentar (<span id="commentCount">0</span>)</h3>
+                        <h3 style="margin-bottom:25px; color:var(--dark); font-size:1.5rem; font-weight:700; display:flex; align-items:center; gap:10px;">
+                            <i class="fas fa-comments"></i> Komentar (<span id="commentCount">0</span>)
+                        </h3>
                         
                         <!-- COMMENT FORM -->
                         <div class="comment-form" id="commentForm" style="display:none;">
-                            <textarea class="comment-input" id="commentInput" placeholder="Tulis komentarmu..."></textarea>
+                            <h4 style="margin-bottom:20px; color:var(--dark);">Tambah Komentar</h4>
+                            <textarea class="comment-input" id="commentInput" placeholder="Bagaimana pendapatmu tentang artikel ini?"></textarea>
                             <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <button class="btn btn-primary" id="submitCommentBtn">
                                     <i class="fas fa-paper-plane"></i> Kirim Komentar
                                 </button>
-                                <span style="font-size:0.85rem; color:var(--gray);">Max 500 karakter</span>
+                                <div>
+                                    <span id="charCount" style="font-size:0.85rem; color:var(--gray);">0/500</span>
+                                    <span style="font-size:0.85rem; color:var(--gray); margin-left:15px;">Max 500 karakter</span>
+                                </div>
                             </div>
                         </div>
-                        <div id="loginToComment" style="text-align:center; padding:30px; background:#f8fafc; border-radius:var(--radius);">
-                            <p style="margin-bottom:15px;">Login untuk menambahkan komentar</p>
+                        <div id="loginToComment" style="text-align:center; padding:40px; background:white; border-radius:var(--radius); box-shadow:var(--shadow);">
+                            <div style="width:80px; height:80px; background:var(--gradient-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:white; font-size:2rem;">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <p style="margin-bottom:20px; font-size:1.1rem;">Login untuk menambahkan komentar</p>
                             <button class="btn btn-primary" id="loginForCommentBtn">
                                 <i class="fas fa-sign-in-alt"></i> Login Sekarang
                             </button>
                         </div>
                         
                         <!-- COMMENTS LIST -->
-                        <div class="comment-list" id="commentList"></div>
+                        <div class="comment-list" id="commentList">
+                            <div style="text-align:center; padding:40px; color:var(--gray);">
+                                <i class="far fa-comment" style="font-size:3rem; margin-bottom:15px; opacity:0.5;"></i>
+                                <p>Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+                            </div>
+                        </div>
                     </div>
                 </article>
             </div>
             
             <!-- PROFILE PAGE -->
             <div id="profilePage" style="display:none;">
-                <div style="max-width:800px; margin:0 auto;">
-                    <div style="background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; padding:40px; border-radius:var(--radius); margin-bottom:30px;">
-                        <div style="display:flex; align-items:center; gap:30px; flex-wrap:wrap;">
-                            <div id="profileBigAvatar" style="width:120px; height:120px; border-radius:50%; border:5px solid white; background:white; display:flex; align-items:center; justify-content:center; font-size:3rem; color:var(--primary);"></div>
+                <div style="max-width:900px; margin:0 auto;">
+                    <!-- PROFILE HEADER -->
+                    <div style="background:var(--gradient-primary); color:white; padding:50px; border-radius:var(--radius-lg); margin-bottom:40px; position:relative; overflow:hidden; box-shadow:var(--shadow-lg);">
+                        <div style="position:absolute; top:-100px; right:-100px; width:300px; height:300px; background:rgba(255,255,255,0.1); border-radius:50%;"></div>
+                        <div style="position:absolute; bottom:-50px; left:-50px; width:200px; height:200px; background:rgba(255,255,255,0.05); border-radius:50%;"></div>
+                        
+                        <div style="display:flex; align-items:center; gap:40px; flex-wrap:wrap; position:relative; z-index:1;">
+                            <div id="profileBigAvatar" style="width:150px; height:150px; border-radius:50%; border:5px solid rgba(255,255,255,0.3); background:white; display:flex; align-items:center; justify-content:center; font-size:4rem; color:var(--primary); box-shadow:0 20px 40px rgba(0,0,0,0.2);"></div>
                             <div style="flex:1;">
-                                <h1 id="profileBigUsername" style="font-size:2.5rem; margin-bottom:10px;"></h1>
-                                <p id="profileBigEmail" style="opacity:0.9; margin-bottom:20px;"></p>
-                                <div style="display:flex; gap:30px;">
-                                    <div style="text-align:center;">
-                                        <div style="font-size:2rem; font-weight:700;" id="profileBigArticles">0</div>
+                                <h1 id="profileBigUsername" style="font-size:3rem; margin-bottom:15px; font-weight:900;"></h1>
+                                <p id="profileBigEmail" style="opacity:0.9; margin-bottom:30px; font-size:1.1rem;"></p>
+                                <div style="display:flex; gap:40px;">
+                                    <div class="stats-card" style="background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); color:white; min-width:120px;">
+                                        <div style="font-size:2.5rem; font-weight:800;" id="profileBigArticles">0</div>
                                         <div>Artikel</div>
                                     </div>
-                                    <div style="text-align:center;">
-                                        <div style="font-size:2rem; font-weight:700;" id="profileBigLikes">0</div>
+                                    <div class="stats-card" style="background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); color:white; min-width:120px;">
+                                        <div style="font-size:2.5rem; font-weight:800;" id="profileBigLikes">0</div>
                                         <div>Likes</div>
                                     </div>
-                                    <div style="text-align:center;">
-                                        <div style="font-size:2rem; font-weight:700;" id="profileBigViews">0</div>
+                                    <div class="stats-card" style="background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); color:white; min-width:120px;">
+                                        <div style="font-size:2.5rem; font-weight:800;" id="profileBigViews">0</div>
                                         <div>Views</div>
                                     </div>
                                 </div>
@@ -521,42 +616,68 @@
                     </div>
                     
                     <!-- EDIT PROFILE -->
-                    <div style="background:white; padding:30px; border-radius:var(--radius); margin-bottom:30px;">
-                        <h3 style="margin-bottom:20px; color:var(--primary);"><i class="fas fa-user-edit"></i> Edit Profil</h3>
-                        <div style="margin-bottom:20px;">
-                            <label style="display:block; margin-bottom:8px; font-weight:500;">Username</label>
-                            <div style="display:flex; gap:10px;">
-                                <input type="text" id="editUsername" style="flex:1; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius);">
-                                <button class="btn btn-primary" id="saveUsernameBtn">Simpan</button>
+                    <div class="glass-effect" style="padding:40px; border-radius:var(--radius); margin-bottom:40px;">
+                        <h3 style="margin-bottom:30px; color:var(--primary); font-size:1.5rem; display:flex; align-items:center; gap:15px;">
+                            <i class="fas fa-user-edit"></i> Edit Profil
+                        </h3>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:30px;">
+                            <div>
+                                <label style="display:block; margin-bottom:12px; font-weight:600; color:var(--dark);">Username</label>
+                                <div style="display:flex; gap:15px;">
+                                    <input type="text" id="editUsername" style="flex:1; padding:15px; border:2px solid #e2e8f0; border-radius:var(--radius); font-family:'Poppins',sans-serif;">
+                                    <button class="btn btn-primary btn-icon" id="saveUsernameBtn">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label style="display:block; margin-bottom:12px; font-weight:600; color:var(--dark);">Avatar URL</label>
+                                <div style="display:flex; gap:15px;">
+                                    <input type="text" id="editAvatarUrl" placeholder="https://example.com/avatar.jpg" style="flex:1; padding:15px; border:2px solid #e2e8f0; border-radius:var(--radius); font-family:'Poppins',sans-serif;">
+                                    <button class="btn btn-primary btn-icon" id="saveAvatarBtn">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div style="margin-bottom:20px;">
-                            <label style="display:block; margin-bottom:8px; font-weight:500;">Avatar URL</label>
-                            <div style="display:flex; gap:10px;">
-                                <input type="text" id="editAvatarUrl" placeholder="https://example.com/avatar.jpg" style="flex:1; padding:12px; border:2px solid #e2e8f0; border-radius:var(--radius);">
-                                <button class="btn btn-primary" id="saveAvatarBtn">Simpan</button>
+                        <div style="background:rgba(248,250,252,0.8); padding:25px; border-radius:var(--radius);">
+                            <h4 style="margin-bottom:15px; color:var(--dark); display:flex; align-items:center; gap:10px;">
+                                <i class="fas fa-info-circle"></i> Informasi Akun
+                            </h4>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                                <div>
+                                    <p style="margin-bottom:8px; color:var(--gray);">User ID</p>
+                                    <p id="profileUserId" style="font-family:monospace; background:#e2e8f0; padding:10px 15px; border-radius:var(--radius-sm); word-break:break-all;"></p>
+                                </div>
+                                <div>
+                                    <p style="margin-bottom:8px; color:var(--gray);">Bergabung</p>
+                                    <p id="profileJoinDate" style="font-weight:600;"></p>
+                                </div>
                             </div>
-                        </div>
-                        <div style="background:#f8fafc; padding:20px; border-radius:var(--radius);">
-                            <h4 style="margin-bottom:10px; color:var(--dark);"><i class="fas fa-id-card"></i> Informasi Akun</h4>
-                            <p style="margin-bottom:8px;">User ID: <span id="profileUserId" style="font-family:monospace; background:#e2e8f0; padding:5px 10px; border-radius:4px;"></span></p>
-                            <p>Bergabung: <span id="profileJoinDate"></span></p>
                         </div>
                     </div>
                     
                     <!-- MY ARTICLES -->
-                    <div style="background:white; padding:30px; border-radius:var(--radius);">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                            <h3 style="color:var(--primary);"><i class="fas fa-newspaper"></i> Artikel Saya</h3>
-                            <div style="display:flex; gap:10px;">
-                                <input type="text" id="searchMyArticles" placeholder="Cari artikel saya..." style="padding:10px; border:2px solid #e2e8f0; border-radius:var(--radius); width:200px;">
-                                <button class="btn btn-secondary" id="refreshMyArticlesBtn">
+                    <div class="glass-effect" style="padding:40px; border-radius:var(--radius);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+                            <h3 style="color:var(--primary); font-size:1.5rem; display:flex; align-items:center; gap:15px;">
+                                <i class="fas fa-newspaper"></i> Artikel Saya
+                            </h3>
+                            <div style="display:flex; gap:15px;">
+                                <input type="text" id="searchMyArticles" placeholder="Cari artikel saya..." style="padding:12px 20px; border:2px solid #e2e8f0; border-radius:var(--radius); width:250px; font-family:'Poppins',sans-serif;">
+                                <button class="btn btn-secondary btn-icon" id="refreshMyArticlesBtn">
                                     <i class="fas fa-sync-alt"></i>
                                 </button>
                             </div>
                         </div>
                         <div id="myArticlesList">
-                            <!-- My articles loaded here -->
+                            <div style="text-align:center; padding:60px 20px; color:var(--gray);">
+                                <i class="fas fa-newspaper" style="font-size:4rem; margin-bottom:20px; opacity:0.3;"></i>
+                                <p style="font-size:1.1rem; margin-bottom:20px;">Belum ada artikel</p>
+                                <button class="btn btn-primary" onclick="showCreateArticleModal()">
+                                    <i class="fas fa-plus"></i> Buat Artikel Pertama
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -564,18 +685,25 @@
             
             <!-- ADMIN PANEL -->
             <div id="adminPage" style="display:none;">
-                <div style="background:white; border-radius:var(--radius); overflow:hidden; margin-bottom:30px;">
-                    <div style="background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; padding:30px;">
-                        <h1><i class="fas fa-crown"></i> Admin Panel</h1>
-                        <p>Kelola semua konten dan pengguna</p>
+                <div style="background:white; border-radius:var(--radius-lg); overflow:hidden; margin-bottom:40px; box-shadow:var(--shadow-lg);">
+                    <div style="background:var(--gradient-primary); color:white; padding:40px;">
+                        <div style="display:flex; align-items:center; gap:20px;">
+                            <div style="width:70px; height:70px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem;">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div>
+                                <h1 style="font-size:2.5rem; margin-bottom:10px; font-weight:900;">Admin Panel</h1>
+                                <p style="opacity:0.9;">Kelola semua konten dan pengguna</p>
+                            </div>
+                        </div>
                     </div>
-                    <div style="padding:20px;">
-                        <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+                    <div style="padding:30px;">
+                        <div style="display:flex; gap:15px; margin-bottom:30px; flex-wrap:wrap;">
                             <button class="btn btn-primary" id="adminAllArticlesBtn">
                                 <i class="fas fa-list"></i> Semua Artikel
                             </button>
                             <button class="btn btn-secondary" id="adminPendingBtn">
-                                <i class="fas fa-clock"></i> Menunggu (0)
+                                <i class="fas fa-clock"></i> Menunggu (<span id="pendingCount">0</span>)
                             </button>
                             <button class="btn btn-warning" id="adminStatsBtn">
                                 <i class="fas fa-chart-bar"></i> Statistik
@@ -588,7 +716,10 @@
                             </button>
                         </div>
                         <div id="adminContent">
-                            <!-- Admin content loaded here -->
+                            <div style="text-align:center; padding:60px 20px; color:var(--gray);">
+                                <div class="loading-spinner" style="margin:0 auto 25px;"></div>
+                                <p>Memuat panel admin...</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -598,38 +729,62 @@
         <!-- RIGHT SIDEBAR -->
         <aside class="sidebar-right">
             <!-- ADS -->
-            <div class="ad-banner medium" style="margin-bottom:25px;">
+            <div class="ad-banner medium" style="margin-bottom:30px;">
                 <span class="ad-label">IKLAN</span>
                 <div class="ad-content" id="rightSidebarAd">
-                    <!-- Google Adsense -->
-                    <ins class="adsbygoogle"
-                         style="display:inline-block;width:300px;height:250px"
-                         data-ad-client="ca-pub-8227633300969971"
-                         data-ad-slot="9876543210"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
+                    <div style="padding:30px; text-align:center;">
+                        <h4 style="color:var(--primary); margin-bottom:15px;">NexeNews Pro</h4>
+                        <p style="color:var(--gray); margin-bottom:20px;">Buat artikel tanpa batas</p>
+                        <button class="btn btn-primary" onclick="showSupportModal()">
+                            <i class="fas fa-rocket"></i> Upgrade Sekarang
+                        </button>
+                    </div>
                 </div>
             </div>
             
             <!-- RECOMMENDED ARTICLES -->
-            <div style="background:white; border-radius:var(--radius); padding:20px; margin-bottom:25px; box-shadow:var(--shadow);">
-                <h3 style="margin-bottom:15px; color:var(--primary);"><i class="fas fa-star"></i> Rekomendasi</h3>
-                <div id="recommendedArticles"></div>
+            <div class="glass-effect" style="padding:25px; margin-bottom:25px;">
+                <h3 style="margin-bottom:20px; color:var(--primary); display:flex; align-items:center; gap:10px;">
+                    <i class="fas fa-star" style="color:var(--warning);"></i> Rekomendasi
+                </h3>
+                <div id="recommendedArticles">
+                    <div style="text-align:center; padding:30px 0; color:var(--gray);">
+                        <div class="loading-spinner" style="width:30px; height:30px; margin:0 auto 15px;"></div>
+                        <p style="font-size:0.9rem;">Memuat rekomendasi...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- QUICK STATS -->
+            <div class="glass-effect" style="padding:25px; margin-bottom:25px;">
+                <h3 style="margin-bottom:20px; color:var(--primary); display:flex; align-items:center; gap:10px;">
+                    <i class="fas fa-chart-line"></i> Statistik
+                </h3>
+                <div style="display:grid; gap:15px;">
+                    <div class="stats-card" style="padding:15px;">
+                        <div style="font-size:1.5rem; font-weight:800; color:var(--primary);" id="totalArticles">0</div>
+                        <div style="font-size:0.85rem; color:var(--gray);">Total Artikel</div>
+                    </div>
+                    <div class="stats-card" style="padding:15px;">
+                        <div style="font-size:1.5rem; font-weight:800; color:var(--success);" id="totalLikes">0</div>
+                        <div style="font-size:0.85rem; color:var(--gray);">Total Likes</div>
+                    </div>
+                </div>
             </div>
             
             <!-- DIRECT LINK -->
-            <div style="text-align:center; padding:15px; background:#f8fafc; border-radius:var(--radius);">
-                <p style="margin-bottom:10px; font-size:0.9rem;">Support kami dengan klik link ini</p>
-                <a href="https://otieu.com/4/10381160" target="_blank" class="btn btn-warning btn-sm">
-                    <i class="fas fa-external-link-alt"></i> Support NexeNews
-                </a>
+            <div style="text-align:center; padding:25px; background:var(--gradient-primary); border-radius:var(--radius); color:white;">
+                <p style="margin-bottom:15px; font-size:0.95rem;">Support kami untuk perkembangan platform</p>
+                <button class="btn btn-warning" onclick="supportPlatform()" style="width:100%;">
+                    <i class="fas fa-heart"></i> Support NexeNews
+                </button>
             </div>
         </aside>
     </div>
     
     <!-- ==================== NOTIFICATION ==================== -->
     <div class="notification" id="notification">
+        <div class="notification-icon" id="notificationIcon"></div>
         <span id="notificationText"></span>
     </div>
     
@@ -657,8 +812,8 @@
         let isAdmin = false;
         let hasMonetized = false;
         const ADMIN_UIDS = [
-            "giv9y5uCw6XkES0QDqKu03SHdO72", // Admin utama
-            "user_1766850109401_5fdho9608" // Admin yang kamu kasih
+            "giv9y5uCw6XkES0QDqKu03SHdO72",
+            "user_1766850109401_5fdho9608"
         ];
 
         // ========== INITIALIZE ==========
@@ -686,10 +841,10 @@
                     });
                 }
                 
-                // Setup anonymous login dengan Firebase Authentication
+                // Setup anonymous login
                 await setupFirebaseAuth();
                 
-                // Load data dari Firebase REALTIME
+                // Load data dari Firebase
                 await loadArticlesFromFirebase();
                 
                 // Setup event listeners
@@ -698,8 +853,16 @@
                 // Check URL untuk article
                 checkUrlForArticle();
                 
+                // Update stats
+                updateStats();
+                
                 // Load ads setelah beberapa detik
-                setTimeout(loadAds, 2000);
+                setTimeout(loadAds, 1000);
+                
+                // Setup character counter untuk komentar
+                document.getElementById('commentInput')?.addEventListener('input', updateCharCount);
+                
+                showNotification('NexeNews siap! Selamat membaca berita viral', 'success');
                 
             } catch (error) {
                 console.error('Initialization error:', error);
@@ -707,36 +870,62 @@
             }
         }
 
-        // ========== LOAD ADS ==========
+        // ========== LOAD ADS (DIPERBAIKI) ==========
         function loadAds() {
             try {
-                // In-Page Push Ads
-                if (typeof window._ipushTag !== 'undefined') {
-                    window._ipushTag.init();
+                // Tunggu hingga DOM sepenuhnya siap
+                if (document.readyState !== 'loading') {
+                    initAds();
+                } else {
+                    document.addEventListener('DOMContentLoaded', initAds);
                 }
-                
-                // Google Adsense
-                if (typeof adsbygoogle !== 'undefined') {
-                    adsbygoogle = window.adsbygoogle || [];
-                    adsbygoogle.push({});
-                }
-                
-                // Show ads content
-                document.querySelectorAll('.ad-content').forEach(ad => {
-                    ad.innerHTML = `
-                        <div style="padding:20px; text-align:center;">
-                            <h4 style="color:var(--primary); margin-bottom:10px;">IKLAN SPONSOR</h4>
-                            <p style="color:var(--gray); margin-bottom:15px;">Support NexeNews dengan klik iklan</p>
-                            <a href="https://otieu.com/4/10381160" target="_blank" class="btn btn-warning btn-sm">
-                                <i class="fas fa-external-link-alt"></i> Support Sekarang
-                            </a>
-                        </div>
-                    `;
-                });
-                
             } catch (error) {
                 console.log('Error loading ads:', error);
+                showFallbackAdContent();
             }
+        }
+
+        function initAds() {
+            // Google Adsense - Gunakan pola yang lebih aman
+            if (typeof adsbygoogle !== 'undefined') {
+                // Tampilkan placeholder dulu, baru load ads
+                document.querySelectorAll('.adsbygoogle').forEach(ad => {
+                    if (!ad.hasAttribute('data-ad-requested')) {
+                        ad.setAttribute('data-ad-requested', 'true');
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    }
+                });
+            }
+            
+            // Update ads content setelah 2 detik
+            setTimeout(showFallbackAdContent, 2000);
+        }
+
+        function showFallbackAdContent() {
+            document.querySelectorAll('.ad-content').forEach(ad => {
+                // Hanya ganti jika konten iklan belum dimuat
+                if (ad.innerHTML.includes('Dukung NexeNews')) return;
+                
+                ad.innerHTML = `
+                    <div style="padding:20px; text-align:center;">
+                        <h4 style="color:var(--primary); margin-bottom:10px;">Dukung NexeNews</h4>
+                        <p style="color:var(--gray); margin-bottom:15px;">Support platform berita viral Indonesia</p>
+                        <button class="btn btn-primary btn-sm" onclick="supportPlatform()">
+                            <i class="fas fa-heart"></i> Support Sekarang
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function supportPlatform() {
+            showNotification('Terima kasih atas dukunganmu!', 'success');
+            hasMonetized = true;
+            document.getElementById('publishArticleBtn').disabled = false;
+        }
+
+        function showSupportModal() {
+            document.getElementById('monetizeModal').classList.add('active');
         }
 
         // ========== FIREBASE AUTHENTICATION ==========
@@ -773,7 +962,7 @@
                     // Create new user profile di Firebase
                     userProfile = {
                         uid: currentUser.uid,
-                        username: 'Guest_' + Math.random().toString(36).substr(2, 5),
+                        username: 'Pengguna_' + Math.floor(Math.random() * 10000),
                         email: '',
                         avatar: '',
                         isGuest: true,
@@ -806,7 +995,7 @@
                 const guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
                 userProfile = {
                     uid: guestId,
-                    username: 'Guest',
+                    username: 'Pengguna',
                     email: '',
                     avatar: '',
                     isGuest: true,
@@ -824,7 +1013,7 @@
             updateUserUI();
         }
 
-        // ========== FIREBASE ARTICLES ==========
+        // ========== FIREBASE ARTICLES (DIPERBAIKI) ==========
         async function loadArticlesFromFirebase() {
             try {
                 const db = firebase.database();
@@ -837,7 +1026,7 @@
                         ...data
                     }));
                     
-                    // Calculate scores
+                    // Calculate scores untuk trending algorithm
                     articles.forEach(article => {
                         article.score = calculateArticleScore(article);
                     });
@@ -854,6 +1043,7 @@
                 
             } catch (error) {
                 console.error('Error loading articles from Firebase:', error);
+                showNotification('Gagal memuat artikel, mencoba mode offline', 'warning');
                 // Load dari localStorage
                 loadArticlesFromLocalStorage();
             }
@@ -863,6 +1053,9 @@
             const storedArticles = localStorage.getItem('nexenews_articles');
             if (storedArticles) {
                 articles = JSON.parse(storedArticles);
+                articles.forEach(article => {
+                    article.score = calculateArticleScore(article);
+                });
                 displayTrendingArticles();
                 displayNewestArticles();
                 displayRecommendedArticles();
@@ -874,38 +1067,55 @@
         async function createSampleArticles() {
             const sampleArticles = [
                 {
-                    id: 'sample1_' + Date.now(),
-                    title: 'Selamat datang di NexeNews!',
+                    id: 'sample_' + Date.now(),
+                    title: 'Selamat datang di NexeNews! Platform Berita Viral Indonesia',
                     category: 'fakta',
-                    image: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1',
-                    content: '<h2>Platform Berita Viral Indonesia</h2><p>NexeNews adalah platform untuk berbagi cerita, fakta unik, dan konten viral dari Indonesia. Mulai buat artikel pertamamu sekarang!</p><p>Fitur lengkap: buat artikel, like, komentar, dan trending algorithm.</p>',
-                    excerpt: 'Platform berita viral Indonesia terbaru',
+                    image: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80',
+                    content: '<h2>Platform Berita Viral Terbaik</h2><p>NexeNews adalah platform untuk berbagi cerita, fakta unik, dan konten viral dari Indonesia. Mulai buat artikel pertamamu sekarang!</p><h3>Fitur Unggulan</h3><ul><li>Algoritma trending yang canggih</li><li>Sistem like dan komentar real-time</li><li>Editor artikel yang modern</li><li>Dashboard admin yang lengkap</li></ul>',
+                    excerpt: 'Platform berita viral Indonesia dengan fitur lengkap dan modern',
                     author: 'Admin NexeNews',
                     authorId: ADMIN_UIDS[0],
                     authorAvatar: '',
                     timestamp: Date.now() - 3600000,
-                    views: 150,
-                    likes: 25,
-                    comments: 0,
+                    views: 250,
+                    likes: 45,
+                    comments: 8,
                     status: 'published',
-                    score: 350
+                    score: 450
                 },
                 {
                     id: 'sample2_' + Date.now(),
-                    title: 'Fakta Unik: Indonesia Punya 17.000 Pulau',
+                    title: 'Fakta Unik: Indonesia Punya 17.000 Pulau dengan Keanekaragaman Budaya',
                     category: 'fakta',
-                    image: 'https://images.unsplash.com/photo-1551632811-561732d1e306',
-                    content: '<h2>Keunikan Indonesia</h2><p>Indonesia memiliki lebih dari 17.000 pulau, menjadikannya negara kepulauan terbesar di dunia. Setiap pulau memiliki budaya dan tradisi yang unik.</p><p>Dari Sabang sampai Merauke, Indonesia kaya akan keanekaragaman budaya dan alam.</p>',
+                    image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&auto=format&fit=crop&q=80',
+                    content: '<h2>Keunikan Negara Kepulauan</h2><p>Indonesia memiliki lebih dari 17.000 pulau, menjadikannya negara kepulauan terbesar di dunia. Setiap pulau memiliki budaya dan tradisi yang unik.</p><p>Dari Sabang sampai Merauke, Indonesia kaya akan keanekaragaman budaya dan alam yang memukau.</p><h3>Fakta Menarik</h3><p>Bahasa Indonesia memiliki 700 lebih bahasa daerah yang masih digunakan hingga saat ini.</p>',
                     excerpt: 'Fakta menarik tentang Indonesia yang mungkin belum kamu tahu',
                     author: 'Penjelajah',
-                    authorId: 'user2',
+                    authorId: 'user_sample',
                     authorAvatar: '',
                     timestamp: Date.now() - 7200000,
-                    views: 89,
-                    likes: 12,
-                    comments: 3,
+                    views: 189,
+                    likes: 32,
+                    comments: 5,
                     status: 'published',
-                    score: 120
+                    score: 220
+                },
+                {
+                    id: 'sample3_' + Date.now(),
+                    title: 'Misteri Segitiga Bermuda: Fakta atau Fiksi?',
+                    category: 'misteri',
+                    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&auto=format&fit=crop&q=80',
+                    content: '<h2>Misteri Lautan</h2><p>Segitiga Bermuda telah menjadi misteri selama puluhan tahun. Banyak kapal dan pesawat dilaporkan hilang secara misterius di area ini.</p><h3>Teori-teori yang Beredar</h3><ul><li>Medan magnet yang tidak biasa</li><li>Gas metana dari dasar laut</li><li>Piranti teknologi canggih</li><li>Fenomena alam yang belum terpecahkan</li></ul>',
+                    excerpt: 'Mengungkap misteri di balik Segitiga Bermuda yang terkenal',
+                    author: 'Peneliti Misteri',
+                    authorId: 'user_mystery',
+                    authorAvatar: '',
+                    timestamp: Date.now() - 10800000,
+                    views: 312,
+                    likes: 67,
+                    comments: 12,
+                    status: 'published',
+                    score: 520
                 }
             ];
             
@@ -926,9 +1136,10 @@
             displayTrendingArticles();
             displayNewestArticles();
             displayRecommendedArticles();
+            updateStats();
         }
 
-        // ========== REAL-TIME LIKE SYSTEM ==========
+        // ========== REAL-TIME LIKE SYSTEM (DIPERBAIKI) ==========
         async function toggleLike(articleId) {
             if (!userProfile || userProfile.isGuest) {
                 showNotification('Login dulu untuk like artikel', 'error');
@@ -946,7 +1157,7 @@
                 const alreadyLiked = likeSnapshot.exists();
                 
                 if (alreadyLiked) {
-                    // Unlike - REALTIME di Firebase
+                    // Unlike
                     await likeRef.remove();
                     await articleRef.child('likes').transaction(current => (current || 0) - 1);
                     
@@ -958,8 +1169,10 @@
                     // Update user stats
                     await updateUserStats('likes', -1);
                     
+                    showNotification('Like dihapus', 'info');
+                    
                 } else {
-                    // Like - REALTIME di Firebase
+                    // Like
                     await likeRef.set({
                         userId: userProfile.uid,
                         timestamp: Date.now()
@@ -973,12 +1186,13 @@
                     
                     // Update user stats
                     await updateUserStats('likes', 1);
+                    
+                    showNotification('Artikel disukai!', 'success');
                 }
                 
-                // Reload article data
+                // Update local article data
                 await reloadArticleData(articleId);
-                
-                showNotification(alreadyLiked ? 'Like dihapus' : 'Artikel disukai!', 'success');
+                updateStats();
                 
             } catch (error) {
                 console.error('Error toggling like:', error);
@@ -1028,7 +1242,7 @@
             }
         }
 
-        // ========== REAL-TIME COMMENT SYSTEM ==========
+        // ========== REAL-TIME COMMENT SYSTEM (DIPERBAIKI) ==========
         async function loadComments(articleId) {
             try {
                 const db = firebase.database();
@@ -1085,7 +1299,7 @@
                     timestamp: Date.now()
                 };
                 
-                // Save comment ke Firebase REALTIME
+                // Save comment ke Firebase
                 await db.ref(`comments/${currentArticle.id}/${commentId}`).set(newComment);
                 
                 // Update comment count di article
@@ -1093,6 +1307,7 @@
                 
                 // Clear input
                 document.getElementById('commentInput').value = '';
+                updateCharCount();
                 
                 // Show notification
                 showNotification('Komentar berhasil ditambahkan', 'success');
@@ -1143,9 +1358,9 @@
             
             if (comments.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align:center; padding:30px; color:var(--gray);">
-                        <i class="far fa-comment" style="font-size:2rem; margin-bottom:10px;"></i>
-                        <p>Belum ada komentar. Jadilah yang pertama!</p>
+                    <div style="text-align:center; padding:40px; color:var(--gray);">
+                        <i class="far fa-comment" style="font-size:3rem; margin-bottom:15px; opacity:0.5;"></i>
+                        <p>Belum ada komentar. Jadilah yang pertama berkomentar!</p>
                     </div>
                 `;
                 return;
@@ -1155,14 +1370,13 @@
                 // Warna avatar berdasarkan huruf pertama
                 const firstLetter = comment.authorName?.charAt(0) || 'A';
                 const colors = {
-                    'R': '#DC2626', // R = merah
-                    'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 'D': '#F59E0B',
-                    'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4', 'H': '#84CC16',
-                    'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1', 'L': '#14B8A6',
-                    'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B', 'P': '#10B981',
-                    'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED', 'U': '#10B981',
-                    'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6', 'Y': '#06B6D4',
-                    'Z': '#84CC16'
+                    'R': '#DC2626', 'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 
+                    'D': '#F59E0B', 'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4',
+                    'H': '#84CC16', 'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1',
+                    'L': '#14B8A6', 'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B',
+                    'P': '#10B981', 'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED',
+                    'U': '#10B981', 'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6',
+                    'Y': '#06B6D4', 'Z': '#84CC16'
                 };
                 const color = colors[firstLetter.toUpperCase()] || '#2563EB';
                 
@@ -1170,12 +1384,14 @@
                     <div class="comment-item">
                         <div class="comment-header">
                             <div class="comment-author">
-                                <div class="comment-author-avatar" style="background-color:${color};">${firstLetter}</div>
+                                <div class="comment-author-avatar" style="background:linear-gradient(135deg, ${color}, ${adjustColor(color, -20)});">
+                                    ${firstLetter}
+                                </div>
                                 ${comment.authorName || 'Anonymous'}
                             </div>
                             <div class="comment-time">${timeAgo(comment.timestamp)}</div>
                         </div>
-                        <div class="comment-content">${comment.text}</div>
+                        <div class="comment-content" style="line-height:1.6; font-size:1rem;">${comment.text}</div>
                         ${comment.authorId === userProfile?.uid ? `
                             <div class="comment-actions">
                                 <button class="btn btn-sm btn-danger" onclick="deleteComment('${comment.id}')">
@@ -1357,25 +1573,24 @@
                 
                 // Warna berdasarkan huruf pertama
                 const colors = {
-                    'R': '#DC2626',
-                    'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 'D': '#F59E0B',
-                    'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4', 'H': '#84CC16',
-                    'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1', 'L': '#14B8A6',
-                    'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B', 'P': '#10B981',
-                    'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED', 'U': '#10B981',
-                    'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6', 'Y': '#06B6D4',
-                    'Z': '#84CC16'
+                    'R': '#DC2626', 'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 
+                    'D': '#F59E0B', 'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4',
+                    'H': '#84CC16', 'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1',
+                    'L': '#14B8A6', 'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B',
+                    'P': '#10B981', 'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED',
+                    'U': '#10B981', 'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6',
+                    'Y': '#06B6D4', 'Z': '#84CC16'
                 };
                 
                 const color = colors[firstLetter] || '#2563EB';
-                avatar.style.background = color;
+                avatar.style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
                 avatar.style.color = 'white';
                 
                 // Update profile popup
                 document.getElementById('popupUsername').textContent = userProfile.username;
                 document.getElementById('popupEmail').textContent = userProfile.email || 'Tidak ada email';
                 document.getElementById('popupAvatar').textContent = firstLetter;
-                document.getElementById('popupAvatar').style.backgroundColor = color;
+                document.getElementById('popupAvatar').style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
                 document.getElementById('popupArticles').textContent = userProfile.stats?.articles || 0;
                 document.getElementById('popupLikes').textContent = userProfile.stats?.likes || 0;
                 
@@ -1435,6 +1650,11 @@
                 return;
             }
             
+            if (!hasMonetized) {
+                showNotification('Harap support platform terlebih dahulu', 'warning');
+                return;
+            }
+            
             try {
                 const db = firebase.database();
                 const articleId = 'article_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -1443,9 +1663,9 @@
                     id: articleId,
                     title,
                     category,
-                    image: image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop',
+                    image: image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80',
                     content,
-                    excerpt: content.replace(/<[^>]*>/g, '').substring(0, 150) + '...',
+                    excerpt: content.replace(/<[^>]*>/g, '').substring(0, 200) + '...',
                     slug,
                     author: userProfile.username,
                     authorId: userProfile.uid,
@@ -1458,7 +1678,7 @@
                     score: 0
                 };
                 
-                // Save ke Firebase REALTIME
+                // Save ke Firebase
                 await db.ref(`articles/${articleId}`).set(newArticle);
                 
                 // Update user stats
@@ -1477,6 +1697,7 @@
                 displayTrendingArticles();
                 displayNewestArticles();
                 displayRecommendedArticles();
+                updateStats();
                 
                 // Open the new article
                 openArticle(articleId, true);
@@ -1487,11 +1708,11 @@
             }
         }
 
-        // ========== OPEN ARTICLE ==========
+        // ========== OPEN ARTICLE (DIPERBAIKI) ==========
         async function openArticle(articleId, skipMonetize = false) {
-            // RANDOM MONETIZATION (20% chance)
-            if (!skipMonetize && Math.random() < 0.2) {
-                showMonetizeModal(articleId);
+            // RANDOM MONETIZATION (15% chance)
+            if (!skipMonetize && Math.random() < 0.15) {
+                showSupportModal();
                 return;
             }
             
@@ -1503,40 +1724,64 @@
             
             currentArticle = article;
             
-            // Update view count REALTIME
-            await updateViewCount(articleId);
-            
             // Show article page
             showArticlePage();
             
+            // Set loading state
+            document.getElementById('articleContent').innerHTML = `
+                <div style="text-align:center; padding:60px 20px;">
+                    <div class="loading-spinner" style="margin:0 auto 25px;"></div>
+                    <h3 style="margin-bottom:15px; color:var(--dark);">Memuat artikel...</h3>
+                </div>
+            `;
+            
+            // Update view count
+            await updateViewCount(articleId);
+            
             // Set article data
             document.getElementById('articleTitle').textContent = article.title;
-            document.getElementById('articleDate').textContent = new Date(article.timestamp).toLocaleDateString('id-ID');
+            document.getElementById('articleDate').textContent = new Date(article.timestamp).toLocaleDateString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
             document.getElementById('articleViews').textContent = formatNumber(article.views || 0);
             document.getElementById('articleLikes').textContent = formatNumber(article.likes || 0);
             document.getElementById('articleComments').textContent = formatNumber(article.comments || 0);
             document.getElementById('authorName').textContent = article.author || 'Anonymous';
             
+            // Set category badge
+            const categoryBadge = document.getElementById('articleCategoryBadge');
+            categoryBadge.className = 'category-badge';
+            categoryBadge.classList.add(`category-${article.category}`);
+            categoryBadge.textContent = getCategoryName(article.category);
+            
             // Set author avatar
             const authorFirstLetter = (article.author || 'A').charAt(0).toUpperCase();
             const colors = {
-                'R': '#DC2626',
-                'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 'D': '#F59E0B',
-                'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4', 'H': '#84CC16',
-                'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1', 'L': '#14B8A6',
-                'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B', 'P': '#10B981',
-                'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED', 'U': '#10B981',
-                'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6', 'Y': '#06B6D4',
-                'Z': '#84CC16'
+                'R': '#DC2626', 'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 
+                'D': '#F59E0B', 'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4',
+                'H': '#84CC16', 'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1',
+                'L': '#14B8A6', 'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B',
+                'P': '#10B981', 'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED',
+                'U': '#10B981', 'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6',
+                'Y': '#06B6D4', 'Z': '#84CC16'
             };
             
             const authorColor = colors[authorFirstLetter] || '#2563EB';
             document.getElementById('authorAvatar').textContent = authorFirstLetter;
-            document.getElementById('authorAvatar').style.backgroundColor = authorColor;
+            document.getElementById('authorAvatar').style.background = `linear-gradient(135deg, ${authorColor}, ${adjustColor(authorColor, -20)})`;
             
             document.getElementById('articleTimestamp').textContent = timeAgo(article.timestamp);
-            document.getElementById('articleImage').src = article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop';
-            document.getElementById('articleContent').innerHTML = article.content || '<p>Artikel tidak memiliki konten.</p>';
+            document.getElementById('articleImage').src = article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80';
+            document.getElementById('articleImage').onerror = function() {
+                this.src = 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80';
+            };
+            
+            // Load content with delay untuk efek smooth
+            setTimeout(() => {
+                document.getElementById('articleContent').innerHTML = article.content || '<p>Artikel tidak memiliki konten.</p>';
+            }, 500);
             
             // Check if user liked this article
             const liked = await checkIfLiked(articleId);
@@ -1552,10 +1797,10 @@
             // Update comment form
             updateCommentForm();
             
-            // Load comments REALTIME
+            // Load comments
             await loadComments(articleId);
             
-            // Scroll to top
+            // Scroll to top dengan animasi smooth
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -1572,7 +1817,7 @@
             }
         }
 
-        // ========== DISPLAY FUNCTIONS ==========
+        // ========== DISPLAY FUNCTIONS (DIPERBAIKI) ==========
         function displayTrendingArticles() {
             const container = document.getElementById('trendingArticles');
             if (!container) return;
@@ -1584,10 +1829,13 @@
             
             if (trending.length === 0) {
                 container.innerHTML = `
-                    <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--gray);">
-                        <i class="fas fa-fire" style="font-size:3rem; margin-bottom:20px;"></i>
-                        <p>Belum ada artikel trending</p>
-                        <button class="btn btn-primary" onclick="showCreateArticleModal()" style="margin-top:15px;">
+                    <div style="grid-column:1/-1; text-align:center; padding:60px 20px; background:white; border-radius:var(--radius); box-shadow:var(--shadow);">
+                        <div style="width:80px; height:80px; background:var(--gradient-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 25px; color:white; font-size:2rem;">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3 style="margin-bottom:15px; color:var(--dark);">Belum ada artikel trending</h3>
+                        <p style="color:var(--gray); margin-bottom:25px;">Buat artikel pertama dan jadikan trending!</p>
+                        <button class="btn btn-primary" onclick="showCreateArticleModal()">
                             <i class="fas fa-plus"></i> Buat Artikel Pertama
                         </button>
                     </div>
@@ -1596,17 +1844,22 @@
             }
             
             container.innerHTML = trending.map(article => `
-                <div class="article-card" onclick="openArticle('${article.id}')">
+                <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
                     <div style="position:relative;">
-                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop'}" alt="${article.title}" style="width:100%; height:200px; object-fit:cover;">
+                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:220px; object-fit:cover;">
                         ${article.score > 100 ? '<span class="trending-badge">TRENDING</span>' : ''}
+                        <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding:20px; padding-top:40px;">
+                            <span class="category-badge" style="background:white; color:var(--dark);">${getCategoryName(article.category)}</span>
+                        </div>
                     </div>
-                    <div style="padding:20px;">
-                        <h3 style="margin-bottom:10px; font-size:1.1rem; line-height:1.4;">${article.title}</h3>
-                        <div style="display:flex; justify-content:space-between; color:var(--gray); font-size:0.85rem; margin-top:15px;">
+                    <div style="padding:25px;">
+                        <h3 style="margin-bottom:15px; font-size:1.2rem; line-height:1.4; font-weight:700; color:var(--dark);">${article.title}</h3>
+                        <p style="color:var(--gray); margin-bottom:20px; font-size:0.95rem; line-height:1.5;">${article.excerpt || ''}</p>
+                        <div style="display:flex; justify-content:space-between; color:var(--gray); font-size:0.9rem; border-top:1px solid rgba(226,232,240,0.5); padding-top:15px;">
                             <span><i class="far fa-eye"></i> ${formatNumber(article.views || 0)}</span>
                             <span><i class="far fa-heart"></i> ${formatNumber(article.likes || 0)}</span>
                             <span><i class="far fa-comment"></i> ${formatNumber(article.comments || 0)}</span>
+                            <span>${timeAgo(article.timestamp)}</span>
                         </div>
                     </div>
                 </div>
@@ -1624,25 +1877,30 @@
             
             if (newest.length === 0) {
                 container.innerHTML = `
-                    <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--gray);">
-                        <i class="fas fa-clock" style="font-size:3rem; margin-bottom:20px;"></i>
-                        <p>Belum ada artikel</p>
+                    <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--gray);">
+                        <i class="fas fa-clock" style="font-size:3rem; margin-bottom:20px; opacity:0.3;"></i>
+                        <p>Belum ada artikel terbaru</p>
                     </div>
                 `;
                 return;
             }
             
             container.innerHTML = newest.map(article => `
-                <div class="article-card" onclick="openArticle('${article.id}')">
-                    <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop'}" alt="${article.title}" style="width:100%; height:180px; object-fit:cover;">
-                    <div style="padding:20px;">
-                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px;">
-                            <span style="background:#f0f9ff; color:var(--primary); padding:4px 12px; border-radius:20px; font-size:0.8rem;">${getCategoryName(article.category)}</span>
+                <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
+                    <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:200px; object-fit:cover;">
+                    <div style="padding:25px;">
+                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:15px;">
+                            <span class="category-badge" style="background:var(--primary); color:white; font-size:0.8rem;">${getCategoryName(article.category)}</span>
                             ${Date.now() - article.timestamp < 86400000 ? '<span class="new-badge">BARU</span>' : ''}
                         </div>
-                        <h3 style="margin-bottom:10px; font-size:1rem; line-height:1.4;">${article.title}</h3>
-                        <div style="font-size:0.85rem; color:var(--gray);">
-                            ${timeAgo(article.timestamp)}
+                        <h3 style="margin-bottom:10px; font-size:1.1rem; line-height:1.4; font-weight:700; color:var(--dark);">${article.title}</h3>
+                        <p style="color:var(--gray); margin-bottom:15px; font-size:0.9rem; line-height:1.5;">${article.excerpt?.substring(0, 100) || ''}...</p>
+                        <div style="font-size:0.85rem; color:var(--gray); display:flex; justify-content:space-between; align-items:center;">
+                            <span>${timeAgo(article.timestamp)}</span>
+                            <span style="display:flex; gap:15px;">
+                                <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
+                                <span><i class="far fa-comment"></i> ${article.comments || 0}</span>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -1656,17 +1914,20 @@
             const recommended = [...articles]
                 .filter(a => a.status === 'published')
                 .sort(() => Math.random() - 0.5)
-                .slice(0, 3);
+                .slice(0, 5);
             
             if (recommended.length === 0) return;
             
             container.innerHTML = recommended.map(article => `
-                <div style="margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid #eee; cursor:pointer;" onclick="openArticle('${article.id}')">
-                    <div style="display:flex; gap:10px;">
-                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=400&auto=format&fit=crop'}" alt="${article.title}" style="width:80px; height:60px; border-radius:8px; object-fit:cover;">
-                        <div>
-                            <h4 style="font-size:0.95rem; margin-bottom:5px; line-height:1.3;">${article.title.substring(0, 60)}...</h4>
-                            <div style="font-size:0.8rem; color:var(--gray);">${timeAgo(article.timestamp)}</div>
+                <div style="margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid rgba(226,232,240,0.5); cursor:pointer;" onclick="openArticle('${article.id}')">
+                    <div style="display:flex; gap:15px;">
+                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=400&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:80px; height:60px; border-radius:var(--radius-sm); object-fit:cover; box-shadow:var(--shadow-sm);">
+                        <div style="flex:1;">
+                            <h4 style="font-size:0.95rem; margin-bottom:8px; line-height:1.3; font-weight:600; color:var(--dark);">${article.title.substring(0, 60)}...</h4>
+                            <div style="font-size:0.8rem; color:var(--gray); display:flex; justify-content:space-between;">
+                                <span>${timeAgo(article.timestamp)}</span>
+                                <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1743,15 +2004,73 @@
         function showNotification(message, type = 'info') {
             const notification = document.getElementById('notification');
             const text = document.getElementById('notificationText');
+            const icon = document.getElementById('notificationIcon');
             
             text.textContent = message;
-            notification.style.background = type === 'error' ? '#EF4444' : 
-                                          type === 'success' ? '#10B981' : 
-                                          type === 'warning' ? '#F59E0B' : 
-                                          '#2563EB';
+            
+            switch(type) {
+                case 'error':
+                    notification.style.background = 'linear-gradient(135deg, #EF4444, #DC2626)';
+                    icon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+                    break;
+                case 'success':
+                    notification.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+                    icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                    break;
+                case 'warning':
+                    notification.style.background = 'linear-gradient(135deg, #F59E0B, #D97706)';
+                    icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                    break;
+                default:
+                    notification.style.background = 'linear-gradient(135deg, #3B82F6, #2563EB)';
+                    icon.innerHTML = '<i class="fas fa-info-circle"></i>';
+            }
             
             notification.classList.add('active');
-            setTimeout(() => notification.classList.remove('active'), 3000);
+            setTimeout(() => notification.classList.remove('active'), 4000);
+        }
+
+        function updateCharCount() {
+            const input = document.getElementById('commentInput');
+            const charCount = document.getElementById('charCount');
+            if (input && charCount) {
+                const length = input.value.length;
+                charCount.textContent = `${length}/500`;
+                if (length > 450) {
+                    charCount.style.color = 'var(--warning)';
+                } else if (length > 400) {
+                    charCount.style.color = 'var(--gray)';
+                } else {
+                    charCount.style.color = 'var(--success)';
+                }
+            }
+        }
+
+        function adjustColor(color, amount) {
+            let usePound = false;
+            if (color[0] === "#") {
+                color = color.slice(1);
+                usePound = true;
+            }
+            const num = parseInt(color, 16);
+            let r = (num >> 16) + amount;
+            if (r > 255) r = 255;
+            else if (r < 0) r = 0;
+            let b = ((num >> 8) & 0x00FF) + amount;
+            if (b > 255) b = 255;
+            else if (b < 0) b = 0;
+            let g = (num & 0x0000FF) + amount;
+            if (g > 255) g = 255;
+            else if (g < 0) g = 0;
+            return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16).padStart(6, '0');
+        }
+
+        function updateStats() {
+            const totalArticles = articles.filter(a => a.status === 'published').length;
+            const totalLikes = articles.reduce((sum, article) => sum + (article.likes || 0), 0);
+            
+            document.getElementById('totalArticles').textContent = formatNumber(totalArticles);
+            document.getElementById('totalLikes').textContent = formatNumber(totalLikes);
         }
 
         // ========== ADMIN FUNCTIONS ==========
@@ -1780,45 +2099,54 @@
             if (!container) return;
             
             const allArticles = [...articles].sort((a, b) => b.timestamp - a.timestamp);
+            const pendingCount = allArticles.filter(a => a.status !== 'published').length;
+            document.getElementById('pendingCount').textContent = pendingCount;
             
             container.innerHTML = `
-                <h3 style="margin-bottom:20px; color:var(--primary);">Semua Artikel (${allArticles.length})</h3>
-                <div style="overflow-x:auto;">
-                    <table style="width:100%; border-collapse:collapse;">
-                        <thead>
-                            <tr style="background:#f8fafc;">
-                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Judul</th>
-                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Penulis</th>
-                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Status</th>
-                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Views</th>
-                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Likes</th>
-                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${allArticles.map(article => `
-                                <tr style="border-bottom:1px solid #e2e8f0;">
-                                    <td style="padding:12px;">${article.title}</td>
-                                    <td style="padding:12px;">${article.author}</td>
-                                    <td style="padding:12px;">
-                                        <span style="background:${article.status === 'published' ? '#10B981' : '#F59E0B'}; color:white; padding:4px 12px; border-radius:20px; font-size:0.8rem;">
-                                            ${article.status === 'published' ? 'Published' : 'Pending'}
-                                        </span>
-                                    </td>
-                                    <td style="padding:12px;">${article.views || 0}</td>
-                                    <td style="padding:12px;">${article.likes || 0}</td>
-                                    <td style="padding:12px;">
-                                        <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)" style="margin-right:5px;">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" onclick="deleteArticleAdmin('${article.id}')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
+                <div style="background:white; border-radius:var(--radius); padding:25px; box-shadow:var(--shadow);">
+                    <h3 style="margin-bottom:20px; color:var(--primary); font-size:1.3rem;">Semua Artikel (${allArticles.length})</h3>
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%; border-collapse:collapse;">
+                            <thead>
+                                <tr style="background:#f8fafc;">
+                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Judul</th>
+                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Penulis</th>
+                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Status</th>
+                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Views</th>
+                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Likes</th>
+                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Aksi</th>
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                ${allArticles.map(article => `
+                                    <tr style="border-bottom:1px solid rgba(226,232,240,0.5); transition:var(--transition);" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">
+                                        <td style="padding:15px; vertical-align:top;">
+                                            <div style="font-weight:500; margin-bottom:5px;">${article.title}</div>
+                                            <div style="font-size:0.85rem; color:var(--gray);">${timeAgo(article.timestamp)}</div>
+                                        </td>
+                                        <td style="padding:15px; vertical-align:top;">${article.author}</td>
+                                        <td style="padding:15px; vertical-align:top;">
+                                            <span style="background:${article.status === 'published' ? '#10B981' : '#F59E0B'}; color:white; padding:6px 15px; border-radius:20px; font-size:0.8rem; font-weight:600;">
+                                                ${article.status === 'published' ? 'Published' : 'Pending'}
+                                            </span>
+                                        </td>
+                                        <td style="padding:15px; vertical-align:top;">${article.views || 0}</td>
+                                        <td style="padding:15px; vertical-align:top;">${article.likes || 0}</td>
+                                        <td style="padding:15px; vertical-align:top;">
+                                            <div style="display:flex; gap:10px;">
+                                                <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)" style="padding:8px 15px;">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="deleteArticleAdmin('${article.id}')" style="padding:8px 15px;">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             `;
         }
@@ -1852,6 +2180,7 @@
                 displayTrendingArticles();
                 displayNewestArticles();
                 displayRecommendedArticles();
+                updateStats();
                 
                 showNotification('Artikel berhasil dihapus', 'success');
                 
@@ -1935,13 +2264,12 @@
                 document.getElementById('monetizeModal').classList.remove('active');
                 hasMonetized = true;
                 document.getElementById('publishArticleBtn').disabled = false;
+                showNotification('Terima kasih sudah support!', 'success');
             });
             
             document.getElementById('monetizeBeforeCreate').addEventListener('click', () => {
-                window.open('https://otieu.com/4/10381160', '_blank');
-                hasMonetized = true;
-                document.getElementById('publishArticleBtn').disabled = false;
-                showNotification('Terima kasih sudah support!', 'success');
+                document.getElementById('createArticleModal').classList.remove('active');
+                showSupportModal();
             });
             
             // Create article modal
@@ -1962,8 +2290,11 @@
             document.getElementById('shareArticleBtn').addEventListener('click', () => {
                 if (currentArticle) {
                     const url = window.location.href.split('?')[0] + '?article=' + currentArticle.id;
-                    navigator.clipboard.writeText(url);
-                    showNotification('Link artikel disalin!', 'success');
+                    navigator.clipboard.writeText(url).then(() => {
+                        showNotification('Link artikel disalin!', 'success');
+                    }).catch(() => {
+                        prompt('Salin link berikut:', url);
+                    });
                 }
             });
             
@@ -2022,8 +2353,9 @@
                 
                 if (filtered.length === 0) {
                     resultsContainer.innerHTML = `
-                        <div class="search-result-item" style="cursor:default;">
+                        <div class="search-result-item" style="cursor:default; padding:30px 20px; text-align:center;">
                             <div class="search-result-content">
+                                <i class="fas fa-search" style="font-size:1.5rem; margin-bottom:10px; color:var(--gray);"></i>
                                 <p>Tidak ditemukan artikel</p>
                             </div>
                         </div>
@@ -2031,7 +2363,7 @@
                 } else {
                     resultsContainer.innerHTML = filtered.map(article => `
                         <div class="search-result-item" onclick="openArticle('${article.id}')">
-                            <img src="${article.image || 'https://via.placeholder.com/80x60'}" class="search-result-image">
+                            <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=200&auto=format&fit=crop&q=80'}" class="search-result-image">
                             <div class="search-result-content">
                                 <h4>${article.title.substring(0, 50)}...</h4>
                                 <p>${getCategoryName(article.category)} • ${timeAgo(article.timestamp)}</p>
@@ -2084,6 +2416,10 @@
             displayTrendingArticles();
             displayNewestArticles();
             displayRecommendedArticles();
+            updateStats();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function showArticlePage() {
@@ -2113,26 +2449,29 @@
             // Set avatar dengan warna
             const firstLetter = userProfile.username.charAt(0).toUpperCase();
             const colors = {
-                'R': '#DC2626',
-                'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 'D': '#F59E0B',
-                'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4', 'H': '#84CC16',
-                'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1', 'L': '#14B8A6',
-                'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B', 'P': '#10B981',
-                'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED', 'U': '#10B981',
-                'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6', 'Y': '#06B6D4',
-                'Z': '#84CC16'
+                'R': '#DC2626', 'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 
+                'D': '#F59E0B', 'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4',
+                'H': '#84CC16', 'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1',
+                'L': '#14B8A6', 'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B',
+                'P': '#10B981', 'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED',
+                'U': '#10B981', 'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6',
+                'Y': '#06B6D4', 'Z': '#84CC16'
             };
             const color = colors[firstLetter] || '#2563EB';
             
             document.getElementById('profileBigAvatar').textContent = firstLetter;
-            document.getElementById('profileBigAvatar').style.backgroundColor = color;
+            document.getElementById('profileBigAvatar').style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
             document.getElementById('profileBigArticles').textContent = userProfile.stats?.articles || 0;
             document.getElementById('profileBigLikes').textContent = userProfile.stats?.likes || 0;
             document.getElementById('profileBigViews').textContent = userProfile.stats?.views || 0;
             document.getElementById('editUsername').value = userProfile.username;
             document.getElementById('editAvatarUrl').value = userProfile.avatar || '';
             document.getElementById('profileUserId').textContent = userProfile.uid;
-            document.getElementById('profileJoinDate').textContent = new Date(userProfile.joinDate).toLocaleDateString('id-ID');
+            document.getElementById('profileJoinDate').textContent = new Date(userProfile.joinDate).toLocaleDateString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
             
             // Load my articles
             loadMyArticles();
@@ -2146,10 +2485,12 @@
             
             if (myArticles.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align:center; padding:30px; color:var(--gray);">
-                        <i class="fas fa-newspaper" style="font-size:2rem; margin-bottom:15px;"></i>
-                        <p>Belum ada artikel</p>
-                        <button class="btn btn-primary" onclick="showCreateArticleModal()" style="margin-top:15px;">
+                    <div style="text-align:center; padding:60px 20px; color:var(--gray);">
+                        <div style="width:80px; height:80px; background:var(--gradient-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:white; font-size:2rem;">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        <p style="font-size:1.1rem; margin-bottom:20px;">Belum ada artikel</p>
+                        <button class="btn btn-primary" onclick="showCreateArticleModal()">
                             <i class="fas fa-plus"></i> Buat Artikel Pertama
                         </button>
                     </div>
@@ -2158,21 +2499,22 @@
             }
             
             container.innerHTML = myArticles.map(article => `
-                <div style="background:#f8fafc; padding:15px; border-radius:var(--radius); margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                <div class="glass-effect" style="padding:20px; border-radius:var(--radius); margin-bottom:15px; display:flex; justify-content:space-between; align-items:center; transition:var(--transition);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
                     <div style="flex:1;">
-                        <h4 style="margin-bottom:5px;">${article.title}</h4>
-                        <div style="font-size:0.85rem; color:var(--gray); display:flex; gap:15px;">
+                        <h4 style="margin-bottom:8px; font-weight:600; color:var(--dark);">${article.title}</h4>
+                        <div style="font-size:0.85rem; color:var(--gray); display:flex; gap:20px;">
                             <span><i class="far fa-eye"></i> ${article.views || 0}</span>
                             <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
                             <span><i class="far fa-comment"></i> ${article.comments || 0}</span>
                             <span>${article.status === 'published' ? '<span style="color:var(--success);">Published</span>' : '<span style="color:var(--warning);">Pending</span>'}</span>
+                            <span>${timeAgo(article.timestamp)}</span>
                         </div>
                     </div>
                     <div style="display:flex; gap:10px;">
-                        <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)">
+                        <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)" style="padding:8px 15px;">
                             <i class="fas fa-external-link-alt"></i> Buka
                         </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteMyArticle('${article.id}')">
+                        <button class="btn btn-sm btn-danger" onclick="deleteMyArticle('${article.id}')" style="padding:8px 15px;">
                             <i class="fas fa-trash"></i> Hapus
                         </button>
                     </div>
@@ -2213,6 +2555,7 @@
                 displayTrendingArticles();
                 displayNewestArticles();
                 displayRecommendedArticles();
+                updateStats();
                 
                 // Reload my articles
                 if (document.getElementById('profilePage').style.display === 'block') {
@@ -2241,8 +2584,8 @@
 
         // ========== MONETIZATION ==========
         function showMonetizeModal(articleId) {
-            document.getElementById('monetizeModal').classList.add('active');
             localStorage.setItem('pendingArticle', articleId);
+            showSupportModal();
         }
 
         // ========== INITIALIZE APP ==========
@@ -2257,6 +2600,8 @@
         window.deleteArticleAdmin = deleteArticleAdmin;
         window.deleteMyArticle = deleteMyArticle;
         window.addNewAdmin = addNewAdmin;
+        window.supportPlatform = supportPlatform;
+        window.showSupportModal = showSupportModal;
     </script>
 </body>
 </html>
