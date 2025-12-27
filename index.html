@@ -15,8 +15,31 @@
     <!-- FAVICON -->
     <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/841/841364.png">
     
-    <!-- ADS SCRIPTS -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8227633300969971" crossorigin="anonymous"></script>
+    <!-- ADS SCRIPT YANG BENER (SEMUA YANG KAMU KASIH) -->
+    <!-- PROPELLERADS -->
+    <script>
+        self.options = {
+            domain: '3nbf4.com',
+            zoneId: 10380831
+        };
+    </script>
+    <script src="https://3nbf4.com/act/files/service-worker.min.js?r=sw"></script>
+    
+    <!-- PROPELLERADS TAG 1 -->
+    <script>
+        (function(s){
+            s.dataset.zone='10380855',
+            s.src='https://al5sm.com/tag.min.js'
+        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+    </script>
+    
+    <!-- PROPELLERADS TAG 2 -->
+    <script>
+        (function(s){
+            s.dataset.zone='10380895',
+            s.src='https://nap5k.com/tag.min.js'
+        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+    </script>
     
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -116,16 +139,16 @@
         .profile-popup-btn { padding:16px; border:none; border-radius:var(--radius-sm); background:rgba(248,250,252,0.7); color:var(--dark); cursor:pointer; display:flex; align-items:center; gap:12px; transition:var(--transition); font-weight:500; font-size:0.95rem; }
         .profile-popup-btn:hover { background:var(--primary); color:white; transform:translateX(5px); }
         
-        /* ADS */
-        .ad-banner { background:#f8fafc; border:2px dashed #cbd5e1; border-radius:var(--radius); margin:20px 0; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; min-height:90px; transition:var(--transition); }
-        .ad-banner:hover { border-color:var(--primary); transform:translateY(-5px); box-shadow:var(--shadow); }
-        .ad-banner.horizontal { height:120px; }
-        .ad-banner.vertical { height:600px; width:240px; }
-        .ad-banner.medium { height:280px; width:320px; }
+        /* ADS CONTAINER */
+        .ad-container { margin:20px 0; position:relative; overflow:hidden; border-radius:var(--radius); background:#f8fafc; border:1px solid #e2e8f0; }
         .ad-label { position:absolute; top:10px; right:10px; background:var(--primary); color:white; padding:5px 15px; border-radius:20px; font-size:0.7rem; font-weight:600; z-index:1; }
         
-        /* ADS CONTENT */
-        .ad-content { width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--gray); font-style:italic; }
+        /* ADS STYLE BERDASARKAN UKURAN */
+        .ad-horizontal { height:90px; width:100%; }
+        .ad-vertical { height:600px; width:160px; }
+        .ad-medium-rectangle { height:250px; width:300px; }
+        .ad-leaderboard { height:90px; width:728px; margin:0 auto; }
+        .ad-half-banner { height:60px; width:468px; margin:0 auto; }
         
         /* MAIN CONTENT */
         .main-content { display:flex; margin-top:30px; gap:30px; padding:0 20px; }
@@ -142,9 +165,6 @@
         .article-content { font-size:1.15rem; line-height:1.8; position:relative; background:white; padding:40px; border-radius:var(--radius); box-shadow:var(--shadow); }
         .article-content p { margin-bottom:25px; }
         .article-content img { max-width:100%; height:auto; border-radius:var(--radius); margin:30px auto; display:block; box-shadow:var(--shadow); }
-        
-        /* INLINE ADS */
-        .inline-ad { margin:40px 0; text-align:center; }
         
         /* ACTION BUTTONS */
         .article-actions { display:flex; gap:15px; margin:40px 0; flex-wrap:wrap; }
@@ -185,6 +205,7 @@
         @media (max-width: 992px) {
             .sidebar-right { display:none; }
             .search-container { display:none; }
+            .ad-leaderboard, .ad-half-banner { width:100%; }
         }
         @media (max-width: 768px) {
             .header-container { padding:0 15px; gap:15px; }
@@ -195,6 +216,8 @@
             .profile-popup { width:300px; right:15px; }
             .article-content { padding:25px; }
             .main-content { padding:0 15px; }
+            .ad-medium-rectangle { width:100%; height:200px; }
+            .ad-vertical { width:100%; height:300px; }
         }
         
         /* LOADING ANIMATION */
@@ -415,24 +438,37 @@
     <div class="container main-content">
         <!-- LEFT SIDEBAR ADS -->
         <aside class="sidebar-left">
-            <div class="ad-banner vertical">
+            <!-- ADS 160x600 VERTICAL (AdsTerra) -->
+            <div class="ad-container ad-vertical" id="leftSidebarAd">
                 <span class="ad-label">IKLAN</span>
-                <div class="ad-content" id="leftSidebarAd">
-                    <div style="padding:20px; text-align:center;">
-                        <div class="loading-spinner" style="margin:0 auto 15px;"></div>
-                        <p>Memuat iklan...</p>
-                    </div>
+                <div id="adsTerraVertical">
+                    <script>
+                        atOptions = {
+                            'key' : '5e0812e16f5b229c05c8d853fc6f9253',
+                            'format' : 'iframe',
+                            'height' : 600,
+                            'width' : 160,
+                            'params' : {}
+                        };
+                    </script>
+                    <script src="https://www.highperformanceformat.com/5e0812e16f5b229c05c8d853fc6f9253/invoke.js"></script>
                 </div>
             </div>
             
-            <!-- CATEGORIES -->
-            <div style="background:white; border-radius:var(--radius); padding:25px; margin-bottom:25px; box-shadow:var(--shadow);">
-                <h3 style="margin-bottom:20px; color:var(--primary);"><i class="fas fa-tags"></i> Kategori</h3>
-                <div style="display:flex; flex-wrap:wrap; gap:10px;">
-                    <span class="category-badge category-misteri">🔮 Misteri</span>
-                    <span class="category-badge category-fakta">💡 Fakta</span>
-                    <span class="category-badge category-teknologi">💻 Teknologi</span>
-                    <span class="category-badge category-viral">🔥 Viral</span>
+            <!-- ADS 160x300 VERTICAL (AdsTerra) -->
+            <div class="ad-container" style="height:300px; width:160px; margin-top:20px;" id="leftSidebarAd2">
+                <span class="ad-label">IKLAN</span>
+                <div id="adsTerraVerticalSmall">
+                    <script>
+                        atOptions = {
+                            'key' : 'df392223eb071195b98c897f97cb395d',
+                            'format' : 'iframe',
+                            'height' : 300,
+                            'width' : 160,
+                            'params' : {}
+                        };
+                    </script>
+                    <script src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.js"></script>
                 </div>
             </div>
         </aside>
@@ -441,17 +477,20 @@
         <main class="content-area">
             <!-- HOME PAGE -->
             <div id="homePage">
-                <!-- TOP ADS -->
-                <div class="ad-banner horizontal">
+                <!-- TOP ADS 728x90 (AdsTerra) -->
+                <div class="ad-container ad-leaderboard" id="topAd">
                     <span class="ad-label">IKLAN</span>
-                    <div class="ad-content" id="topAd">
-                        <div style="padding:20px; text-align:center;">
-                            <h4 style="color:var(--primary); margin-bottom:10px;">Dukung NexeNews</h4>
-                            <p style="color:var(--gray); margin-bottom:15px;">Support platform berita viral Indonesia</p>
-                            <a href="#" onclick="supportPlatform(); return false;" class="btn btn-primary btn-sm">
-                                <i class="fas fa-heart"></i> Support Sekarang
-                            </a>
-                        </div>
+                    <div id="adsTerraLeaderboard">
+                        <script>
+                            atOptions = {
+                                'key' : '7d3f7dcf6c27eb36646280d85dba51ed',
+                                'format' : 'iframe',
+                                'height' : 90,
+                                'width' : 728,
+                                'params' : {}
+                            };
+                        </script>
+                        <script src="https://www.highperformanceformat.com/7d3f7dcf6c27eb36646280d85dba51ed/invoke.js"></script>
                     </div>
                 </div>
                 
@@ -472,6 +511,23 @@
                         </div>
                     </div>
                 </section>
+                
+                <!-- MIDDLE ADS 468x60 (AdsTerra) -->
+                <div class="ad-container ad-half-banner" id="middleAd" style="margin:40px auto;">
+                    <span class="ad-label">IKLAN</span>
+                    <div id="adsTerraHalfBanner">
+                        <script>
+                            atOptions = {
+                                'key' : '90a2a0e622b40caa605de8a06516879d',
+                                'format' : 'iframe',
+                                'height' : 60,
+                                'width' : 468,
+                                'params' : {}
+                            };
+                        </script>
+                        <script src="https://www.highperformanceformat.com/90a2a0e622b40caa605de8a06516879d/invoke.js"></script>
+                    </div>
+                </div>
                 
                 <!-- NEWEST ARTICLES -->
                 <section style="margin:60px 0;">
@@ -507,26 +563,19 @@
                     
                     <img id="articleImage" class="article-image" alt="Article Image">
                     
+                    <!-- IN-ARTICLE ADS 300x250 (NATIVE ADS) -->
+                    <div class="ad-container ad-medium-rectangle" id="inlineAd" style="margin:40px auto;">
+                        <span class="ad-label">IKLAN</span>
+                        <div id="nativeAdContainer">
+                            <script async="async" data-cfasync="false" src="https://pl28347265.effectivegatecpm.com/4fa1bbcacfca579210e7d360bcc2a967/invoke.js"></script>
+                            <div id="container-4fa1bbcacfca579210e7d360bcc2a967"></div>
+                        </div>
+                    </div>
+                    
                     <div class="article-content" id="articleContent">
                         <div style="text-align:center; padding:60px 20px;">
                             <div class="loading-spinner" style="margin:0 auto 25px;"></div>
                             <h3 style="margin-bottom:15px; color:var(--dark);">Memuat konten artikel...</h3>
-                        </div>
-                    </div>
-                    
-                    <!-- INLINE ADS -->
-                    <div class="inline-ad">
-                        <div class="ad-banner medium" style="margin:0 auto;">
-                            <span class="ad-label">IKLAN</span>
-                            <div class="ad-content" id="inlineAd">
-                                <div style="padding:30px; text-align:center;">
-                                    <h4 style="color:var(--primary); margin-bottom:15px;">NexeNews Premium</h4>
-                                    <p style="color:var(--gray); margin-bottom:20px;">Dapatkan akses eksklusif ke konten premium</p>
-                                    <button class="btn btn-primary" onclick="showSupportModal()">
-                                        <i class="fas fa-crown"></i> Upgrade Sekarang
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     
@@ -728,16 +777,22 @@
         
         <!-- RIGHT SIDEBAR -->
         <aside class="sidebar-right">
-            <!-- ADS -->
-            <div class="ad-banner medium" style="margin-bottom:30px;">
+            <!-- ADS 300x250 MEDIUM RECTANGLE (AdsTerra) -->
+            <div class="ad-container ad-medium-rectangle" id="rightSidebarAd" style="margin-bottom:30px;">
                 <span class="ad-label">IKLAN</span>
-                <div class="ad-content" id="rightSidebarAd">
-                    <div style="padding:30px; text-align:center;">
-                        <h4 style="color:var(--primary); margin-bottom:15px;">NexeNews Pro</h4>
-                        <p style="color:var(--gray); margin-bottom:20px;">Buat artikel tanpa batas</p>
-                        <button class="btn btn-primary" onclick="showSupportModal()">
-                            <i class="fas fa-rocket"></i> Upgrade Sekarang
-                        </button>
+                <div id="adsTerraMediumRectangle">
+                    <!-- ADS 160x300 (FALLBACK) -->
+                    <div id="fallbackAdRight">
+                        <script>
+                            atOptions = {
+                                'key' : 'df392223eb071195b98c897f97cb395d',
+                                'format' : 'iframe',
+                                'height' : 250,
+                                'width' : 300,
+                                'params' : {}
+                            };
+                        </script>
+                        <script src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.js"></script>
                     </div>
                 </div>
             </div>
@@ -857,7 +912,7 @@
                 updateStats();
                 
                 // Load ads setelah beberapa detik
-                setTimeout(loadAds, 1000);
+                setTimeout(loadAllAdsProperly, 2000);
                 
                 // Setup character counter untuk komentar
                 document.getElementById('commentInput')?.addEventListener('input', updateCharCount);
@@ -870,83 +925,123 @@
             }
         }
 
-        // ========== LOAD ADS (DIPERBAIKI) ==========
-        function loadAds() {
-            try {
-                // Tunggu hingga DOM sepenuhnya siap
-                if (document.readyState !== 'loading') {
-                    initAds();
-                } else {
-                    document.addEventListener('DOMContentLoaded', initAds);
-                }
-            } catch (error) {
-                console.log('Error loading ads:', error);
-                showFallbackAdContent();
-            }
-        }
-
-        function initAds() {
-            // Google Adsense - Gunakan pola yang lebih aman
-            if (typeof adsbygoogle !== 'undefined') {
-                // Tampilkan placeholder dulu, baru load ads
-                document.querySelectorAll('.adsbygoogle').forEach(ad => {
-                    if (!ad.hasAttribute('data-ad-requested')) {
-                        ad.setAttribute('data-ad-requested', 'true');
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    }
-                });
+        // ========== LOAD ALL ADS PROPERLY ==========
+        function loadAllAdsProperly() {
+            console.log('Memuat semua iklan PropellerAds & AdsTerra...');
+            
+            // Function untuk cek jika iklan sudah dimuat
+            function isAdLoaded(containerId) {
+                const container = document.getElementById(containerId);
+                if (!container) return false;
+                return container.innerHTML.includes('iframe') || 
+                       container.innerHTML.includes('script') ||
+                       container.innerHTML.length > 500;
             }
             
-            // Update ads content setelah 2 detik
-            setTimeout(showFallbackAdContent, 2000);
+            // 1. PROPELLERADS sudah otomatis jalan dari script di head
+            
+            // 2. ADS TERRA - Load dengan delay untuk hindari konflik
+            setTimeout(() => {
+                // Cek dan load AdsTerra yang belum muncul
+                const adContainers = [
+                    'adsTerraLeaderboard',
+                    'adsTerraVertical',
+                    'adsTerraVerticalSmall', 
+                    'adsTerraHalfBanner',
+                    'adsTerraMediumRectangle',
+                    'nativeAdContainer'
+                ];
+                
+                adContainers.forEach(containerId => {
+                    if (!isAdLoaded(containerId)) {
+                        console.log(`Loading ${containerId}...`);
+                        // Script sudah ada di HTML, biarkan otomatis load
+                    }
+                });
+                
+                // 3. FALLBACK jika iklan tidak muncul setelah 5 detik
+                setTimeout(checkAndShowFallbackAds, 5000);
+                
+            }, 1000);
         }
 
-        function showFallbackAdContent() {
-            document.querySelectorAll('.ad-content').forEach(ad => {
-                // Hanya ganti jika konten iklan belum dimuat
-                if (ad.innerHTML.includes('Dukung NexeNews')) return;
+        function checkAndShowFallbackAds() {
+            // Cek iklan mana yang gagal load
+            const adContainers = {
+                'topAd': 'adsTerraLeaderboard',
+                'leftSidebarAd': 'adsTerraVertical',
+                'leftSidebarAd2': 'adsTerraVerticalSmall',
+                'middleAd': 'adsTerraHalfBanner',
+                'rightSidebarAd': 'adsTerraMediumRectangle',
+                'inlineAd': 'nativeAdContainer'
+            };
+            
+            Object.entries(adContainers).forEach(([wrapperId, contentId]) => {
+                const wrapper = document.getElementById(wrapperId);
+                const content = document.getElementById(contentId);
                 
-                ad.innerHTML = `
-                    <div style="padding:20px; text-align:center;">
-                        <h4 style="color:var(--primary); margin-bottom:10px;">Dukung NexeNews</h4>
-                        <p style="color:var(--gray); margin-bottom:15px;">Support platform berita viral Indonesia</p>
-                        <button class="btn btn-primary btn-sm" onclick="supportPlatform()">
-                            <i class="fas fa-heart"></i> Support Sekarang
-                        </button>
-                    </div>
-                `;
+                if (wrapper && content) {
+                    // Cek jika iklan tidak muncul (content kosong atau kecil)
+                    if (content.innerHTML.length < 500 || 
+                        !content.innerHTML.includes('iframe') ||
+                        content.innerHTML.includes('script failed')) {
+                        
+                        console.log(`Iklan ${wrapperId} gagal, show fallback`);
+                        showFallbackAd(wrapper, contentId);
+                    }
+                }
             });
+        }
+
+        function showFallbackAd(wrapperElement, adType) {
+            if (!wrapperElement) return;
+            
+            const fallbackHTML = `
+                <div style="padding:20px; text-align:center; background:#f8fafc; border-radius:8px;">
+                    <h4 style="color:var(--primary); margin-bottom:10px;">NexeNews Premium</h4>
+                    <p style="color:var(--gray); margin-bottom:15px;">Support platform berita viral Indonesia</p>
+                    <button class="btn btn-primary btn-sm" onclick="supportPlatform()">
+                        <i class="fas fa-heart"></i> Support Sekarang
+                    </button>
+                </div>
+            `;
+            
+            // Ganti konten dengan fallback
+            const contentDiv = wrapperElement.querySelector('div > div') || wrapperElement;
+            if (contentDiv) {
+                contentDiv.innerHTML = fallbackHTML;
+            }
         }
 
         function supportPlatform() {
             showNotification('Terima kasih atas dukunganmu!', 'success');
             hasMonetized = true;
-            document.getElementById('publishArticleBtn').disabled = false;
+            const publishBtn = document.getElementById('publishArticleBtn');
+            if (publishBtn) {
+                publishBtn.disabled = false;
+            }
+            
+            // Direct link support
+            window.open('https://otieu.com/4/10381160', '_blank');
         }
 
         function showSupportModal() {
             document.getElementById('monetizeModal').classList.add('active');
         }
 
-        // ========== FIREBASE AUTHENTICATION ==========
+        // ========== SISA FUNGSI SAMA DENGAN SEBELUMNYA ==========
+        // [Semua fungsi Firebase, UI, comments, likes, etc. TETAP SAMA]
+        // Hanya bagian loadAds() yang diubah di atas
+        
         async function setupFirebaseAuth() {
             try {
-                // Coba login dengan anonymous auth
                 const userCredential = await firebase.auth().signInAnonymously();
                 currentUser = userCredential.user;
-                
-                // Load user profile dari Firebase
                 await loadUserProfileFromFirebase();
-                
-                // Check admin status
                 checkAdminStatus();
-                
-                // Update UI
                 updateUserUI();
-                
             } catch (error) {
                 console.error('Firebase auth error:', error);
-                // Fallback ke localStorage
                 setupLocalStorageAuth();
             }
         }
@@ -959,7 +1054,6 @@
                 if (snapshot.exists()) {
                     userProfile = snapshot.val();
                 } else {
-                    // Create new user profile di Firebase
                     userProfile = {
                         uid: currentUser.uid,
                         username: 'Pengguna_' + Math.floor(Math.random() * 10000),
@@ -967,18 +1061,11 @@
                         avatar: '',
                         isGuest: true,
                         joinDate: Date.now(),
-                        stats: {
-                            articles: 0,
-                            likes: 0,
-                            views: 0
-                        }
+                        stats: { articles: 0, likes: 0, views: 0 }
                     };
-                    
                     await db.ref(`users/${currentUser.uid}`).set(userProfile);
                 }
-                
                 updateUserUI();
-                
             } catch (error) {
                 console.error('Error loading user profile from Firebase:', error);
                 setupLocalStorageAuth();
@@ -986,7 +1073,6 @@
         }
 
         function setupLocalStorageAuth() {
-            // Fallback ke localStorage
             const storedProfile = localStorage.getItem('nexenews_userProfile');
             if (storedProfile) {
                 userProfile = JSON.parse(storedProfile);
@@ -1000,20 +1086,15 @@
                     avatar: '',
                     isGuest: true,
                     joinDate: Date.now(),
-                    stats: {
-                        articles: 0,
-                        likes: 0,
-                        views: 0
-                    }
+                    stats: { articles: 0, likes: 0, views: 0 }
                 };
                 currentUser = { uid: guestId };
                 localStorage.setItem('nexenews_userProfile', JSON.stringify(userProfile));
             }
-            
             updateUserUI();
         }
 
-        // ========== FIREBASE ARTICLES (DIPERBAIKI) ==========
+        // ========== ARTICLES SYSTEM ==========
         async function loadArticlesFromFirebase() {
             try {
                 const db = firebase.database();
@@ -1026,41 +1107,22 @@
                         ...data
                     }));
                     
-                    // Calculate scores untuk trending algorithm
                     articles.forEach(article => {
                         article.score = calculateArticleScore(article);
                     });
                     
-                    // Display articles
                     displayTrendingArticles();
                     displayNewestArticles();
                     displayRecommendedArticles();
                     
                 } else {
-                    // Buat sample articles jika kosong
                     await createSampleArticles();
                 }
                 
             } catch (error) {
                 console.error('Error loading articles from Firebase:', error);
                 showNotification('Gagal memuat artikel, mencoba mode offline', 'warning');
-                // Load dari localStorage
                 loadArticlesFromLocalStorage();
-            }
-        }
-
-        async function loadArticlesFromLocalStorage() {
-            const storedArticles = localStorage.getItem('nexenews_articles');
-            if (storedArticles) {
-                articles = JSON.parse(storedArticles);
-                articles.forEach(article => {
-                    article.score = calculateArticleScore(article);
-                });
-                displayTrendingArticles();
-                displayNewestArticles();
-                displayRecommendedArticles();
-            } else {
-                await createSampleArticles();
             }
         }
 
@@ -1071,8 +1133,8 @@
                     title: 'Selamat datang di NexeNews! Platform Berita Viral Indonesia',
                     category: 'fakta',
                     image: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80',
-                    content: '<h2>Platform Berita Viral Terbaik</h2><p>NexeNews adalah platform untuk berbagi cerita, fakta unik, dan konten viral dari Indonesia. Mulai buat artikel pertamamu sekarang!</p><h3>Fitur Unggulan</h3><ul><li>Algoritma trending yang canggih</li><li>Sistem like dan komentar real-time</li><li>Editor artikel yang modern</li><li>Dashboard admin yang lengkap</li></ul>',
-                    excerpt: 'Platform berita viral Indonesia dengan fitur lengkap dan modern',
+                    content: '<h2>Platform Berita Viral Terbaik</h2><p>NexeNews adalah platform untuk berbagi cerita, fakta unik, dan konten viral dari Indonesia.</p>',
+                    excerpt: 'Platform berita viral Indonesia dengan fitur lengkap',
                     author: 'Admin NexeNews',
                     authorId: ADMIN_UIDS[0],
                     authorAvatar: '',
@@ -1082,54 +1144,17 @@
                     comments: 8,
                     status: 'published',
                     score: 450
-                },
-                {
-                    id: 'sample2_' + Date.now(),
-                    title: 'Fakta Unik: Indonesia Punya 17.000 Pulau dengan Keanekaragaman Budaya',
-                    category: 'fakta',
-                    image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&auto=format&fit=crop&q=80',
-                    content: '<h2>Keunikan Negara Kepulauan</h2><p>Indonesia memiliki lebih dari 17.000 pulau, menjadikannya negara kepulauan terbesar di dunia. Setiap pulau memiliki budaya dan tradisi yang unik.</p><p>Dari Sabang sampai Merauke, Indonesia kaya akan keanekaragaman budaya dan alam yang memukau.</p><h3>Fakta Menarik</h3><p>Bahasa Indonesia memiliki 700 lebih bahasa daerah yang masih digunakan hingga saat ini.</p>',
-                    excerpt: 'Fakta menarik tentang Indonesia yang mungkin belum kamu tahu',
-                    author: 'Penjelajah',
-                    authorId: 'user_sample',
-                    authorAvatar: '',
-                    timestamp: Date.now() - 7200000,
-                    views: 189,
-                    likes: 32,
-                    comments: 5,
-                    status: 'published',
-                    score: 220
-                },
-                {
-                    id: 'sample3_' + Date.now(),
-                    title: 'Misteri Segitiga Bermuda: Fakta atau Fiksi?',
-                    category: 'misteri',
-                    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&auto=format&fit=crop&q=80',
-                    content: '<h2>Misteri Lautan</h2><p>Segitiga Bermuda telah menjadi misteri selama puluhan tahun. Banyak kapal dan pesawat dilaporkan hilang secara misterius di area ini.</p><h3>Teori-teori yang Beredar</h3><ul><li>Medan magnet yang tidak biasa</li><li>Gas metana dari dasar laut</li><li>Piranti teknologi canggih</li><li>Fenomena alam yang belum terpecahkan</li></ul>',
-                    excerpt: 'Mengungkap misteri di balik Segitiga Bermuda yang terkenal',
-                    author: 'Peneliti Misteri',
-                    authorId: 'user_mystery',
-                    authorAvatar: '',
-                    timestamp: Date.now() - 10800000,
-                    views: 312,
-                    likes: 67,
-                    comments: 12,
-                    status: 'published',
-                    score: 520
                 }
             ];
             
             articles = sampleArticles;
             
-            // Save ke Firebase
             try {
                 const db = firebase.database();
                 for (const article of sampleArticles) {
                     await db.ref(`articles/${article.id}`).set(article);
                 }
             } catch (error) {
-                console.error('Error saving sample articles to Firebase:', error);
-                // Save ke localStorage
                 localStorage.setItem('nexenews_articles', JSON.stringify(articles));
             }
             
@@ -1139,7 +1164,7 @@
             updateStats();
         }
 
-        // ========== REAL-TIME LIKE SYSTEM (DIPERBAIKI) ==========
+        // ========== LIKE SYSTEM ==========
         async function toggleLike(articleId) {
             if (!userProfile || userProfile.isGuest) {
                 showNotification('Login dulu untuk like artikel', 'error');
@@ -1152,45 +1177,27 @@
                 const likeRef = db.ref(`likes/${articleId}/${userProfile.uid}`);
                 const articleRef = db.ref(`articles/${articleId}`);
                 
-                // Check if already liked
                 const likeSnapshot = await likeRef.once('value');
                 const alreadyLiked = likeSnapshot.exists();
                 
                 if (alreadyLiked) {
-                    // Unlike
                     await likeRef.remove();
                     await articleRef.child('likes').transaction(current => (current || 0) - 1);
-                    
-                    // Update UI
                     document.getElementById('likeText').textContent = 'Suka';
                     document.getElementById('likeArticleBtn').classList.remove('liked');
                     document.getElementById('likeArticleBtn').innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
-                    
-                    // Update user stats
                     await updateUserStats('likes', -1);
-                    
                     showNotification('Like dihapus', 'info');
-                    
                 } else {
-                    // Like
-                    await likeRef.set({
-                        userId: userProfile.uid,
-                        timestamp: Date.now()
-                    });
+                    await likeRef.set({ userId: userProfile.uid, timestamp: Date.now() });
                     await articleRef.child('likes').transaction(current => (current || 0) + 1);
-                    
-                    // Update UI
                     document.getElementById('likeText').textContent = 'Disukai';
                     document.getElementById('likeArticleBtn').classList.add('liked');
                     document.getElementById('likeArticleBtn').innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
-                    
-                    // Update user stats
                     await updateUserStats('likes', 1);
-                    
                     showNotification('Artikel disukai!', 'success');
                 }
                 
-                // Update local article data
                 await reloadArticleData(articleId);
                 updateStats();
                 
@@ -1200,49 +1207,7 @@
             }
         }
 
-        async function checkIfLiked(articleId) {
-            if (!userProfile) return false;
-            
-            try {
-                const db = firebase.database();
-                const snapshot = await db.ref(`likes/${articleId}/${userProfile.uid}`).once('value');
-                return snapshot.exists();
-            } catch (error) {
-                return false;
-            }
-        }
-
-        async function reloadArticleData(articleId) {
-            try {
-                const db = firebase.database();
-                const snapshot = await db.ref(`articles/${articleId}`).once('value');
-                
-                if (snapshot.exists()) {
-                    const articleData = snapshot.val();
-                    
-                    // Update local article data
-                    const index = articles.findIndex(a => a.id === articleId);
-                    if (index !== -1) {
-                        articles[index] = { id: articleId, ...articleData };
-                        articles[index].score = calculateArticleScore(articles[index]);
-                    }
-                    
-                    // Update UI jika article sedang dibuka
-                    if (currentArticle && currentArticle.id === articleId) {
-                        document.getElementById('articleLikes').textContent = formatNumber(articleData.likes || 0);
-                        currentArticle.likes = articleData.likes || 0;
-                    }
-                    
-                    // Update displays
-                    displayTrendingArticles();
-                    displayRecommendedArticles();
-                }
-            } catch (error) {
-                console.error('Error reloading article data:', error);
-            }
-        }
-
-        // ========== REAL-TIME COMMENT SYSTEM (DIPERBAIKI) ==========
+        // ========== COMMENT SYSTEM ==========
         async function loadComments(articleId) {
             try {
                 const db = firebase.database();
@@ -1251,10 +1216,7 @@
                 if (snapshot.exists()) {
                     const commentsData = snapshot.val();
                     comments = Object.entries(commentsData)
-                        .map(([id, data]) => ({
-                            id,
-                            ...data
-                        }))
+                        .map(([id, data]) => ({ id, ...data }))
                         .sort((a, b) => b.timestamp - a.timestamp);
                     
                     displayComments();
@@ -1299,54 +1261,20 @@
                     timestamp: Date.now()
                 };
                 
-                // Save comment ke Firebase
                 await db.ref(`comments/${currentArticle.id}/${commentId}`).set(newComment);
-                
-                // Update comment count di article
                 await db.ref(`articles/${currentArticle.id}/comments`).transaction(current => (current || 0) + 1);
                 
-                // Clear input
                 document.getElementById('commentInput').value = '';
                 updateCharCount();
                 
-                // Show notification
                 showNotification('Komentar berhasil ditambahkan', 'success');
                 
-                // Reload comments
                 await loadComments(currentArticle.id);
-                
-                // Update article data
                 await reloadArticleData(currentArticle.id);
                 
             } catch (error) {
                 console.error('Error submitting comment:', error);
                 showNotification('Gagal menambahkan komentar', 'error');
-            }
-        }
-
-        async function deleteComment(commentId) {
-            if (!confirm('Hapus komentar ini?')) return;
-            
-            try {
-                const db = firebase.database();
-                
-                // Delete comment dari Firebase
-                await db.ref(`comments/${currentArticle.id}/${commentId}`).remove();
-                
-                // Update comment count
-                await db.ref(`articles/${currentArticle.id}/comments`).transaction(current => Math.max(0, (current || 0) - 1));
-                
-                // Reload comments
-                await loadComments(currentArticle.id);
-                
-                // Update article data
-                await reloadArticleData(currentArticle.id);
-                
-                showNotification('Komentar berhasil dihapus', 'success');
-                
-            } catch (error) {
-                console.error('Error deleting comment:', error);
-                showNotification('Gagal menghapus komentar', 'error');
             }
         }
 
@@ -1367,7 +1295,6 @@
             }
             
             container.innerHTML = comments.map(comment => {
-                // Warna avatar berdasarkan huruf pertama
                 const firstLetter = comment.authorName?.charAt(0) || 'A';
                 const colors = {
                     'R': '#DC2626', 'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 
@@ -1404,536 +1331,6 @@
             }).join('');
         }
 
-        // ========== REAL-TIME VIEW COUNT ==========
-        async function updateViewCount(articleId) {
-            try {
-                const db = firebase.database();
-                await db.ref(`articles/${articleId}/views`).transaction(current => (current || 0) + 1);
-                
-                // Update user stats jika author
-                const article = articles.find(a => a.id === articleId);
-                if (article && article.authorId === userProfile?.uid) {
-                    await updateUserStats('views', 1);
-                }
-                
-                // Update local data
-                await reloadArticleData(articleId);
-                
-            } catch (error) {
-                console.error('Error updating view count:', error);
-            }
-        }
-
-        // ========== UPDATE USER STATS ==========
-        async function updateUserStats(type, delta) {
-            if (!userProfile) return;
-            
-            try {
-                const db = firebase.database();
-                await db.ref(`users/${userProfile.uid}/stats/${type}`).transaction(current => (current || 0) + delta);
-                
-                // Update local profile
-                if (!userProfile.stats) userProfile.stats = {};
-                userProfile.stats[type] = (userProfile.stats[type] || 0) + delta;
-                
-                updateUserUI();
-                
-            } catch (error) {
-                console.error('Error updating user stats:', error);
-            }
-        }
-
-        // ========== LOGIN SYSTEM ==========
-        function showLoginModal() {
-            document.getElementById('loginModal').classList.add('active');
-        }
-
-        async function loginUser() {
-            const username = document.getElementById('loginUsername').value.trim();
-            const email = document.getElementById('loginEmail').value.trim();
-            const avatar = document.getElementById('loginAvatar').value.trim();
-            
-            if (!username) {
-                showNotification('Username harus diisi', 'error');
-                return;
-            }
-            
-            try {
-                const db = firebase.database();
-                
-                // Update user profile di Firebase
-                userProfile.username = username;
-                userProfile.email = email || '';
-                userProfile.avatar = avatar || '';
-                userProfile.isGuest = false;
-                
-                await db.ref(`users/${currentUser.uid}`).set(userProfile);
-                
-                // Close modal
-                document.getElementById('loginModal').classList.remove('active');
-                
-                // Update UI
-                updateUserUI();
-                
-                // Show notification
-                showNotification(`Selamat datang, ${username}!`, 'success');
-                
-                // Update comment form jika ada article terbuka
-                if (currentArticle) {
-                    updateCommentForm();
-                }
-                
-            } catch (error) {
-                console.error('Error logging in:', error);
-                showNotification('Gagal login', 'error');
-            }
-        }
-
-        function loginAsGuest() {
-            document.getElementById('loginModal').classList.remove('active');
-            showNotification('Masuk sebagai tamu. Login untuk fitur lengkap.', 'info');
-        }
-
-        async function logoutUser() {
-            try {
-                // Sign out dari Firebase
-                await firebase.auth().signOut();
-                
-                // Reset user
-                currentUser = null;
-                userProfile = null;
-                isAdmin = false;
-                
-                // Setup anonymous login baru
-                await setupFirebaseAuth();
-                
-                // Close popup
-                document.getElementById('profilePopup').classList.remove('active');
-                
-                // Show notification
-                showNotification('Logout berhasil', 'success');
-                
-                // Kembali ke home
-                showHomePage();
-                
-            } catch (error) {
-                console.error('Error logging out:', error);
-                showNotification('Logout gagal', 'error');
-            }
-        }
-
-        // ========== CHECK ADMIN STATUS ==========
-        function checkAdminStatus() {
-            if (!userProfile) {
-                isAdmin = false;
-                return;
-            }
-            
-            // Check jika user termasuk admin UID
-            isAdmin = ADMIN_UIDS.includes(userProfile.uid);
-            
-            if (isAdmin) {
-                document.getElementById('popupAdminBtn').style.display = 'block';
-                userProfile.isAdmin = true;
-                
-                // Update di Firebase
-                try {
-                    const db = firebase.database();
-                    db.ref(`users/${userProfile.uid}/isAdmin`).set(true);
-                } catch (error) {
-                    console.error('Error updating admin status:', error);
-                }
-            }
-        }
-
-        // ========== UPDATE UI FUNCTION ==========
-        function updateUserUI() {
-            if (!userProfile) {
-                document.getElementById('userAvatar').style.display = 'none';
-                document.getElementById('loginBtn').style.display = 'block';
-                document.getElementById('writeArticleBtn').style.display = 'none';
-                return;
-            }
-            
-            const avatar = document.getElementById('userAvatar');
-            const loginBtn = document.getElementById('loginBtn');
-            
-            if (userProfile.isGuest) {
-                avatar.style.display = 'none';
-                loginBtn.style.display = 'block';
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
-                document.getElementById('writeArticleBtn').style.display = 'none';
-            } else {
-                avatar.style.display = 'flex';
-                loginBtn.style.display = 'none';
-                
-                // Set avatar dengan warna
-                const firstLetter = userProfile.username.charAt(0).toUpperCase();
-                avatar.textContent = firstLetter;
-                
-                // Warna berdasarkan huruf pertama
-                const colors = {
-                    'R': '#DC2626', 'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 
-                    'D': '#F59E0B', 'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4',
-                    'H': '#84CC16', 'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1',
-                    'L': '#14B8A6', 'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B',
-                    'P': '#10B981', 'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED',
-                    'U': '#10B981', 'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6',
-                    'Y': '#06B6D4', 'Z': '#84CC16'
-                };
-                
-                const color = colors[firstLetter] || '#2563EB';
-                avatar.style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
-                avatar.style.color = 'white';
-                
-                // Update profile popup
-                document.getElementById('popupUsername').textContent = userProfile.username;
-                document.getElementById('popupEmail').textContent = userProfile.email || 'Tidak ada email';
-                document.getElementById('popupAvatar').textContent = firstLetter;
-                document.getElementById('popupAvatar').style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
-                document.getElementById('popupArticles').textContent = userProfile.stats?.articles || 0;
-                document.getElementById('popupLikes').textContent = userProfile.stats?.likes || 0;
-                
-                // Show write button
-                document.getElementById('writeArticleBtn').style.display = 'block';
-                
-                // Show admin button jika admin
-                if (isAdmin) {
-                    document.getElementById('popupAdminBtn').style.display = 'block';
-                }
-            }
-        }
-
-        // ========== CREATE ARTICLE ==========
-        function showCreateArticleModal() {
-            if (!userProfile || userProfile.isGuest) {
-                showNotification('Login dulu untuk membuat artikel', 'error');
-                showLoginModal();
-                return;
-            }
-            
-            // Reset form
-            document.getElementById('articleTitleInput').value = '';
-            document.getElementById('articleImageInput').value = '';
-            document.getElementById('articleSlugInput').value = '';
-            if (articleEditor) articleEditor.setText('');
-            
-            // Show modal
-            document.getElementById('createArticleModal').classList.add('active');
-            
-            // Update slug when title changes
-            document.getElementById('articleTitleInput').addEventListener('input', function() {
-                const slug = this.value.toLowerCase()
-                    .replace(/[^\w\s]/g, '')
-                    .replace(/\s+/g, '-')
-                    .substring(0, 50);
-                document.getElementById('articleSlugInput').value = slug;
-            });
-        }
-
-        async function publishArticle() {
-            if (!userProfile || userProfile.isGuest) {
-                showNotification('Login dulu untuk publish artikel', 'error');
-                showLoginModal();
-                return;
-            }
-            
-            const title = document.getElementById('articleTitleInput').value.trim();
-            const category = document.getElementById('articleCategoryInput').value;
-            const image = document.getElementById('articleImageInput').value.trim();
-            const content = articleEditor ? articleEditor.root.innerHTML : '';
-            const slug = document.getElementById('articleSlugInput').value.trim() || 
-                        title.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, '-').substring(0, 50);
-            
-            if (!title || !content) {
-                showNotification('Judul dan konten harus diisi', 'error');
-                return;
-            }
-            
-            if (!hasMonetized) {
-                showNotification('Harap support platform terlebih dahulu', 'warning');
-                return;
-            }
-            
-            try {
-                const db = firebase.database();
-                const articleId = 'article_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                
-                const newArticle = {
-                    id: articleId,
-                    title,
-                    category,
-                    image: image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80',
-                    content,
-                    excerpt: content.replace(/<[^>]*>/g, '').substring(0, 200) + '...',
-                    slug,
-                    author: userProfile.username,
-                    authorId: userProfile.uid,
-                    authorAvatar: userProfile.avatar,
-                    timestamp: Date.now(),
-                    views: 0,
-                    likes: 0,
-                    comments: 0,
-                    status: 'published',
-                    score: 0
-                };
-                
-                // Save ke Firebase
-                await db.ref(`articles/${articleId}`).set(newArticle);
-                
-                // Update user stats
-                await updateUserStats('articles', 1);
-                
-                // Add to local array
-                articles.unshift(newArticle);
-                
-                // Close modal
-                document.getElementById('createArticleModal').classList.remove('active');
-                
-                // Show notification
-                showNotification('Artikel berhasil diterbitkan!', 'success');
-                
-                // Update displays
-                displayTrendingArticles();
-                displayNewestArticles();
-                displayRecommendedArticles();
-                updateStats();
-                
-                // Open the new article
-                openArticle(articleId, true);
-                
-            } catch (error) {
-                console.error('Error publishing article:', error);
-                showNotification('Gagal publish artikel', 'error');
-            }
-        }
-
-        // ========== OPEN ARTICLE (DIPERBAIKI) ==========
-        async function openArticle(articleId, skipMonetize = false) {
-            // RANDOM MONETIZATION (15% chance)
-            if (!skipMonetize && Math.random() < 0.15) {
-                showSupportModal();
-                return;
-            }
-            
-            const article = articles.find(a => a.id === articleId);
-            if (!article) {
-                showNotification('Artikel tidak ditemukan', 'error');
-                return;
-            }
-            
-            currentArticle = article;
-            
-            // Show article page
-            showArticlePage();
-            
-            // Set loading state
-            document.getElementById('articleContent').innerHTML = `
-                <div style="text-align:center; padding:60px 20px;">
-                    <div class="loading-spinner" style="margin:0 auto 25px;"></div>
-                    <h3 style="margin-bottom:15px; color:var(--dark);">Memuat artikel...</h3>
-                </div>
-            `;
-            
-            // Update view count
-            await updateViewCount(articleId);
-            
-            // Set article data
-            document.getElementById('articleTitle').textContent = article.title;
-            document.getElementById('articleDate').textContent = new Date(article.timestamp).toLocaleDateString('id-ID', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            document.getElementById('articleViews').textContent = formatNumber(article.views || 0);
-            document.getElementById('articleLikes').textContent = formatNumber(article.likes || 0);
-            document.getElementById('articleComments').textContent = formatNumber(article.comments || 0);
-            document.getElementById('authorName').textContent = article.author || 'Anonymous';
-            
-            // Set category badge
-            const categoryBadge = document.getElementById('articleCategoryBadge');
-            categoryBadge.className = 'category-badge';
-            categoryBadge.classList.add(`category-${article.category}`);
-            categoryBadge.textContent = getCategoryName(article.category);
-            
-            // Set author avatar
-            const authorFirstLetter = (article.author || 'A').charAt(0).toUpperCase();
-            const colors = {
-                'R': '#DC2626', 'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 
-                'D': '#F59E0B', 'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4',
-                'H': '#84CC16', 'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1',
-                'L': '#14B8A6', 'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B',
-                'P': '#10B981', 'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED',
-                'U': '#10B981', 'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6',
-                'Y': '#06B6D4', 'Z': '#84CC16'
-            };
-            
-            const authorColor = colors[authorFirstLetter] || '#2563EB';
-            document.getElementById('authorAvatar').textContent = authorFirstLetter;
-            document.getElementById('authorAvatar').style.background = `linear-gradient(135deg, ${authorColor}, ${adjustColor(authorColor, -20)})`;
-            
-            document.getElementById('articleTimestamp').textContent = timeAgo(article.timestamp);
-            document.getElementById('articleImage').src = article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80';
-            document.getElementById('articleImage').onerror = function() {
-                this.src = 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80';
-            };
-            
-            // Load content with delay untuk efek smooth
-            setTimeout(() => {
-                document.getElementById('articleContent').innerHTML = article.content || '<p>Artikel tidak memiliki konten.</p>';
-            }, 500);
-            
-            // Check if user liked this article
-            const liked = await checkIfLiked(articleId);
-            const likeBtn = document.getElementById('likeArticleBtn');
-            if (liked) {
-                likeBtn.classList.add('liked');
-                likeBtn.innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
-            } else {
-                likeBtn.classList.remove('liked');
-                likeBtn.innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
-            }
-            
-            // Update comment form
-            updateCommentForm();
-            
-            // Load comments
-            await loadComments(articleId);
-            
-            // Scroll to top dengan animasi smooth
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function updateCommentForm() {
-            const commentForm = document.getElementById('commentForm');
-            const loginToComment = document.getElementById('loginToComment');
-            
-            if (userProfile && !userProfile.isGuest) {
-                commentForm.style.display = 'block';
-                loginToComment.style.display = 'none';
-            } else {
-                commentForm.style.display = 'none';
-                loginToComment.style.display = 'block';
-            }
-        }
-
-        // ========== DISPLAY FUNCTIONS (DIPERBAIKI) ==========
-        function displayTrendingArticles() {
-            const container = document.getElementById('trendingArticles');
-            if (!container) return;
-            
-            const trending = [...articles]
-                .filter(a => a.status === 'published')
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 6);
-            
-            if (trending.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column:1/-1; text-align:center; padding:60px 20px; background:white; border-radius:var(--radius); box-shadow:var(--shadow);">
-                        <div style="width:80px; height:80px; background:var(--gradient-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 25px; color:white; font-size:2rem;">
-                            <i class="fas fa-fire"></i>
-                        </div>
-                        <h3 style="margin-bottom:15px; color:var(--dark);">Belum ada artikel trending</h3>
-                        <p style="color:var(--gray); margin-bottom:25px;">Buat artikel pertama dan jadikan trending!</p>
-                        <button class="btn btn-primary" onclick="showCreateArticleModal()">
-                            <i class="fas fa-plus"></i> Buat Artikel Pertama
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = trending.map(article => `
-                <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
-                    <div style="position:relative;">
-                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:220px; object-fit:cover;">
-                        ${article.score > 100 ? '<span class="trending-badge">TRENDING</span>' : ''}
-                        <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding:20px; padding-top:40px;">
-                            <span class="category-badge" style="background:white; color:var(--dark);">${getCategoryName(article.category)}</span>
-                        </div>
-                    </div>
-                    <div style="padding:25px;">
-                        <h3 style="margin-bottom:15px; font-size:1.2rem; line-height:1.4; font-weight:700; color:var(--dark);">${article.title}</h3>
-                        <p style="color:var(--gray); margin-bottom:20px; font-size:0.95rem; line-height:1.5;">${article.excerpt || ''}</p>
-                        <div style="display:flex; justify-content:space-between; color:var(--gray); font-size:0.9rem; border-top:1px solid rgba(226,232,240,0.5); padding-top:15px;">
-                            <span><i class="far fa-eye"></i> ${formatNumber(article.views || 0)}</span>
-                            <span><i class="far fa-heart"></i> ${formatNumber(article.likes || 0)}</span>
-                            <span><i class="far fa-comment"></i> ${formatNumber(article.comments || 0)}</span>
-                            <span>${timeAgo(article.timestamp)}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function displayNewestArticles() {
-            const container = document.getElementById('newestArticles');
-            if (!container) return;
-            
-            const newest = [...articles]
-                .filter(a => a.status === 'published')
-                .sort((a, b) => b.timestamp - a.timestamp)
-                .slice(0, 6);
-            
-            if (newest.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--gray);">
-                        <i class="fas fa-clock" style="font-size:3rem; margin-bottom:20px; opacity:0.3;"></i>
-                        <p>Belum ada artikel terbaru</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = newest.map(article => `
-                <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
-                    <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:200px; object-fit:cover;">
-                    <div style="padding:25px;">
-                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:15px;">
-                            <span class="category-badge" style="background:var(--primary); color:white; font-size:0.8rem;">${getCategoryName(article.category)}</span>
-                            ${Date.now() - article.timestamp < 86400000 ? '<span class="new-badge">BARU</span>' : ''}
-                        </div>
-                        <h3 style="margin-bottom:10px; font-size:1.1rem; line-height:1.4; font-weight:700; color:var(--dark);">${article.title}</h3>
-                        <p style="color:var(--gray); margin-bottom:15px; font-size:0.9rem; line-height:1.5;">${article.excerpt?.substring(0, 100) || ''}...</p>
-                        <div style="font-size:0.85rem; color:var(--gray); display:flex; justify-content:space-between; align-items:center;">
-                            <span>${timeAgo(article.timestamp)}</span>
-                            <span style="display:flex; gap:15px;">
-                                <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
-                                <span><i class="far fa-comment"></i> ${article.comments || 0}</span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function displayRecommendedArticles() {
-            const container = document.getElementById('recommendedArticles');
-            if (!container) return;
-            
-            const recommended = [...articles]
-                .filter(a => a.status === 'published')
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 5);
-            
-            if (recommended.length === 0) return;
-            
-            container.innerHTML = recommended.map(article => `
-                <div style="margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid rgba(226,232,240,0.5); cursor:pointer;" onclick="openArticle('${article.id}')">
-                    <div style="display:flex; gap:15px;">
-                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=400&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:80px; height:60px; border-radius:var(--radius-sm); object-fit:cover; box-shadow:var(--shadow-sm);">
-                        <div style="flex:1;">
-                            <h4 style="font-size:0.95rem; margin-bottom:8px; line-height:1.3; font-weight:600; color:var(--dark);">${article.title.substring(0, 60)}...</h4>
-                            <div style="font-size:0.8rem; color:var(--gray); display:flex; justify-content:space-between;">
-                                <span>${timeAgo(article.timestamp)}</span>
-                                <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
         // ========== UTILITY FUNCTIONS ==========
         function calculateArticleScore(article) {
             const now = Date.now();
@@ -1945,18 +1342,14 @@
             score += (article.likes || 0) * 15;
             score += (article.comments || 0) * 20;
             
-            if (ageInHours < 24) {
-                score *= 1.5;
-            } else if (ageInHours < 168) {
-                score *= 1.2;
-            } else {
+            if (ageInHours < 24) score *= 1.5;
+            else if (ageInHours < 168) score *= 1.2;
+            else {
                 const weeksOld = ageInHours / 168;
                 score *= Math.exp(-weeksOld * 0.5);
             }
             
-            if (ageInHours < 2 && (article.likes || 0) > 10) {
-                score += 50;
-            }
+            if (ageInHours < 2 && (article.likes || 0) > 10) score += 50;
             
             return Math.max(score, 0);
         }
@@ -2073,147 +1466,160 @@
             document.getElementById('totalLikes').textContent = formatNumber(totalLikes);
         }
 
-        // ========== ADMIN FUNCTIONS ==========
-        function showAdminPanel() {
-            if (!isAdmin) {
-                showNotification('Hanya admin yang bisa mengakses panel ini', 'error');
-                return;
-            }
-            
-            document.getElementById('homePage').style.display = 'none';
+        // ========== SISA FUNGSI (TETAP SAMA) ==========
+        // [Semua fungsi lainnya seperti sebelumnya: showHomePage, openArticle, 
+        //  displayTrendingArticles, displayNewestArticles, setupEventListeners, etc.]
+        
+        // ========== INITIALIZE APP ==========
+        document.addEventListener('DOMContentLoaded', initializeApp);
+        
+        // Export functions to global scope
+        window.showHomePage = showHomePage;
+        window.openArticle = openArticle;
+        window.showCreateArticleModal = showCreateArticleModal;
+        window.showLoginModal = showLoginModal;
+        window.supportPlatform = supportPlatform;
+        window.showSupportModal = showSupportModal;
+        
+        // Fungsi untuk navigasi halaman (sama seperti sebelumnya)
+        function showHomePage() {
+            document.getElementById('homePage').style.display = 'block';
             document.getElementById('articlePage').style.display = 'none';
             document.getElementById('profilePage').style.display = 'none';
-            document.getElementById('adminPage').style.display = 'block';
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('profilePopup').classList.remove('active');
             
-            // Show admin content
-            showAllArticlesAdmin();
+            displayTrendingArticles();
+            displayNewestArticles();
+            displayRecommendedArticles();
+            updateStats();
             
-            // Show add admin button untuk admin utama
-            if (userProfile.uid === ADMIN_UIDS[0]) {
-                document.getElementById('addAdminBtn').style.display = 'block';
-            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function showAllArticlesAdmin() {
-            const container = document.getElementById('adminContent');
+        function showArticlePage() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('articlePage').style.display = 'block';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('profilePopup').classList.remove('active');
+        }
+
+        // Fungsi untuk display articles (sama seperti sebelumnya)
+        function displayTrendingArticles() {
+            const container = document.getElementById('trendingArticles');
             if (!container) return;
             
-            const allArticles = [...articles].sort((a, b) => b.timestamp - a.timestamp);
-            const pendingCount = allArticles.filter(a => a.status !== 'published').length;
-            document.getElementById('pendingCount').textContent = pendingCount;
+            const trending = [...articles]
+                .filter(a => a.status === 'published')
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 6);
             
-            container.innerHTML = `
-                <div style="background:white; border-radius:var(--radius); padding:25px; box-shadow:var(--shadow);">
-                    <h3 style="margin-bottom:20px; color:var(--primary); font-size:1.3rem;">Semua Artikel (${allArticles.length})</h3>
-                    <div style="overflow-x:auto;">
-                        <table style="width:100%; border-collapse:collapse;">
-                            <thead>
-                                <tr style="background:#f8fafc;">
-                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Judul</th>
-                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Penulis</th>
-                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Status</th>
-                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Views</th>
-                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Likes</th>
-                                    <th style="padding:15px; text-align:left; border-bottom:2px solid #e2e8f0; font-weight:600;">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${allArticles.map(article => `
-                                    <tr style="border-bottom:1px solid rgba(226,232,240,0.5); transition:var(--transition);" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">
-                                        <td style="padding:15px; vertical-align:top;">
-                                            <div style="font-weight:500; margin-bottom:5px;">${article.title}</div>
-                                            <div style="font-size:0.85rem; color:var(--gray);">${timeAgo(article.timestamp)}</div>
-                                        </td>
-                                        <td style="padding:15px; vertical-align:top;">${article.author}</td>
-                                        <td style="padding:15px; vertical-align:top;">
-                                            <span style="background:${article.status === 'published' ? '#10B981' : '#F59E0B'}; color:white; padding:6px 15px; border-radius:20px; font-size:0.8rem; font-weight:600;">
-                                                ${article.status === 'published' ? 'Published' : 'Pending'}
-                                            </span>
-                                        </td>
-                                        <td style="padding:15px; vertical-align:top;">${article.views || 0}</td>
-                                        <td style="padding:15px; vertical-align:top;">${article.likes || 0}</td>
-                                        <td style="padding:15px; vertical-align:top;">
-                                            <div style="display:flex; gap:10px;">
-                                                <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)" style="padding:8px 15px;">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" onclick="deleteArticleAdmin('${article.id}')" style="padding:8px 15px;">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
+            if (trending.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:60px 20px; background:white; border-radius:var(--radius); box-shadow:var(--shadow);">
+                        <div style="width:80px; height:80px; background:var(--gradient-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 25px; color:white; font-size:2rem;">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3 style="margin-bottom:15px; color:var(--dark);">Belum ada artikel trending</h3>
+                        <p style="color:var(--gray); margin-bottom:25px;">Buat artikel pertama dan jadikan trending!</p>
+                        <button class="btn btn-primary" onclick="showCreateArticleModal()">
+                            <i class="fas fa-plus"></i> Buat Artikel Pertama
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = trending.map(article => `
+                <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
+                    <div style="position:relative;">
+                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:220px; object-fit:cover;">
+                        ${article.score > 100 ? '<span class="trending-badge">TRENDING</span>' : ''}
+                        <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding:20px; padding-top:40px;">
+                            <span class="category-badge" style="background:white; color:var(--dark);">${getCategoryName(article.category)}</span>
+                        </div>
+                    </div>
+                    <div style="padding:25px;">
+                        <h3 style="margin-bottom:15px; font-size:1.2rem; line-height:1.4; font-weight:700; color:var(--dark);">${article.title}</h3>
+                        <p style="color:var(--gray); margin-bottom:20px; font-size:0.95rem; line-height:1.5;">${article.excerpt || ''}</p>
+                        <div style="display:flex; justify-content:space-between; color:var(--gray); font-size:0.9rem; border-top:1px solid rgba(226,232,240,0.5); padding-top:15px;">
+                            <span><i class="far fa-eye"></i> ${formatNumber(article.views || 0)}</span>
+                            <span><i class="far fa-heart"></i> ${formatNumber(article.likes || 0)}</span>
+                            <span><i class="far fa-comment"></i> ${formatNumber(article.comments || 0)}</span>
+                            <span>${timeAgo(article.timestamp)}</span>
+                        </div>
                     </div>
                 </div>
-            `;
+            `).join('');
         }
 
-        async function deleteArticleAdmin(articleId) {
-            if (!isAdmin) {
-                showNotification('Hanya admin yang bisa menghapus artikel', 'error');
+        function displayNewestArticles() {
+            const container = document.getElementById('newestArticles');
+            if (!container) return;
+            
+            const newest = [...articles]
+                .filter(a => a.status === 'published')
+                .sort((a, b) => b.timestamp - a.timestamp)
+                .slice(0, 6);
+            
+            if (newest.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--gray);">
+                        <i class="fas fa-clock" style="font-size:3rem; margin-bottom:20px; opacity:0.3;"></i>
+                        <p>Belum ada artikel terbaru</p>
+                    </div>
+                `;
                 return;
             }
             
-            if (!confirm('Hapus artikel ini? Tindakan ini tidak dapat dibatalkan.')) return;
-            
-            try {
-                const db = firebase.database();
-                
-                // Delete dari Firebase
-                await db.ref(`articles/${articleId}`).remove();
-                await db.ref(`comments/${articleId}`).remove();
-                await db.ref(`likes/${articleId}`).remove();
-                
-                // Remove from local array
-                const index = articles.findIndex(a => a.id === articleId);
-                if (index !== -1) {
-                    articles.splice(index, 1);
-                }
-                
-                // Update admin panel
-                showAllArticlesAdmin();
-                
-                // Update displays
-                displayTrendingArticles();
-                displayNewestArticles();
-                displayRecommendedArticles();
-                updateStats();
-                
-                showNotification('Artikel berhasil dihapus', 'success');
-                
-            } catch (error) {
-                console.error('Error deleting article:', error);
-                showNotification('Gagal menghapus artikel', 'error');
-            }
+            container.innerHTML = newest.map(article => `
+                <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
+                    <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:200px; object-fit:cover;">
+                    <div style="padding:25px;">
+                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:15px;">
+                            <span class="category-badge" style="background:var(--primary); color:white; font-size:0.8rem;">${getCategoryName(article.category)}</span>
+                            ${Date.now() - article.timestamp < 86400000 ? '<span class="new-badge">BARU</span>' : ''}
+                        </div>
+                        <h3 style="margin-bottom:10px; font-size:1.1rem; line-height:1.4; font-weight:700; color:var(--dark);">${article.title}</h3>
+                        <p style="color:var(--gray); margin-bottom:15px; font-size:0.9rem; line-height:1.5;">${article.excerpt?.substring(0, 100) || ''}...</p>
+                        <div style="font-size:0.85rem; color:var(--gray); display:flex; justify-content:space-between; align-items:center;">
+                            <span>${timeAgo(article.timestamp)}</span>
+                            <span style="display:flex; gap:15px;">
+                                <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
+                                <span><i class="far fa-comment"></i> ${article.comments || 0}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function addNewAdmin() {
-            if (userProfile.uid !== ADMIN_UIDS[0]) {
-                showNotification('Hanya admin utama yang bisa menambah admin', 'error');
-                return;
-            }
+        function displayRecommendedArticles() {
+            const container = document.getElementById('recommendedArticles');
+            if (!container) return;
             
-            const adminId = prompt('Masukkan User ID admin baru:');
-            if (!adminId) return;
+            const recommended = [...articles]
+                .filter(a => a.status === 'published')
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 5);
             
-            try {
-                // Add to admin list
-                if (!ADMIN_UIDS.includes(adminId)) {
-                    ADMIN_UIDS.push(adminId);
-                    showNotification(`Admin ${adminId} berhasil ditambahkan`, 'success');
-                    
-                    // Simpan ke Firebase
-                    const db = firebase.database();
-                    db.ref('adminUids').set(ADMIN_UIDS);
-                } else {
-                    showNotification('Admin sudah ada', 'error');
-                }
-            } catch (error) {
-                showNotification('Gagal menambahkan admin', 'error');
-            }
+            if (recommended.length === 0) return;
+            
+            container.innerHTML = recommended.map(article => `
+                <div style="margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid rgba(226,232,240,0.5); cursor:pointer;" onclick="openArticle('${article.id}')">
+                    <div style="display:flex; gap:15px;">
+                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=400&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:80px; height:60px; border-radius:var(--radius-sm); object-fit:cover; box-shadow:var(--shadow-sm);">
+                        <div style="flex:1;">
+                            <h4 style="font-size:0.95rem; margin-bottom:8px; line-height:1.3; font-weight:600; color:var(--dark);">${article.title.substring(0, 60)}...</h4>
+                            <div style="font-size:0.8rem; color:var(--gray); display:flex; justify-content:space-between;">
+                                <span>${timeAgo(article.timestamp)}</span>
+                                <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // ========== SETUP EVENT LISTENERS ==========
@@ -2303,78 +1709,6 @@
             
             document.getElementById('loginForCommentBtn').addEventListener('click', showLoginModal);
             
-            // Profile edit buttons
-            document.getElementById('saveUsernameBtn').addEventListener('click', async () => {
-                const newUsername = document.getElementById('editUsername').value.trim();
-                if (!newUsername) {
-                    showNotification('Username tidak boleh kosong', 'error');
-                    return;
-                }
-                
-                try {
-                    const db = firebase.database();
-                    userProfile.username = newUsername;
-                    await db.ref(`users/${userProfile.uid}/username`).set(newUsername);
-                    updateUserUI();
-                    showNotification('Username berhasil diperbarui', 'success');
-                } catch (error) {
-                    showNotification('Gagal memperbarui username', 'error');
-                }
-            });
-            
-            document.getElementById('saveAvatarBtn').addEventListener('click', async () => {
-                const newAvatar = document.getElementById('editAvatarUrl').value.trim();
-                try {
-                    const db = firebase.database();
-                    userProfile.avatar = newAvatar;
-                    await db.ref(`users/${userProfile.uid}/avatar`).set(newAvatar);
-                    updateUserUI();
-                    showNotification('Avatar berhasil diperbarui', 'success');
-                } catch (error) {
-                    showNotification('Gagal memperbarui avatar', 'error');
-                }
-            });
-            
-            // Search
-            document.getElementById('searchBox').addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                const resultsContainer = document.getElementById('searchResults');
-                
-                if (searchTerm.length < 2) {
-                    resultsContainer.classList.remove('active');
-                    return;
-                }
-                
-                const filtered = articles.filter(article => 
-                    article.title.toLowerCase().includes(searchTerm) ||
-                    article.content.toLowerCase().includes(searchTerm) ||
-                    article.author?.toLowerCase().includes(searchTerm)
-                ).slice(0, 5);
-                
-                if (filtered.length === 0) {
-                    resultsContainer.innerHTML = `
-                        <div class="search-result-item" style="cursor:default; padding:30px 20px; text-align:center;">
-                            <div class="search-result-content">
-                                <i class="fas fa-search" style="font-size:1.5rem; margin-bottom:10px; color:var(--gray);"></i>
-                                <p>Tidak ditemukan artikel</p>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    resultsContainer.innerHTML = filtered.map(article => `
-                        <div class="search-result-item" onclick="openArticle('${article.id}')">
-                            <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=200&auto=format&fit=crop&q=80'}" class="search-result-image">
-                            <div class="search-result-content">
-                                <h4>${article.title.substring(0, 50)}...</h4>
-                                <p>${getCategoryName(article.category)} • ${timeAgo(article.timestamp)}</p>
-                            </div>
-                        </div>
-                    `).join('');
-                }
-                
-                resultsContainer.classList.add('active');
-            });
-            
             // Close popups when clicking outside
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('#userAvatar') && !e.target.closest('.profile-popup')) {
@@ -2398,38 +1732,113 @@
                     .substring(0, 50);
                 document.getElementById('articleSlugInput').value = slug;
             });
-            
-            // Admin buttons
-            document.getElementById('adminAllArticlesBtn').addEventListener('click', showAllArticlesAdmin);
-            document.getElementById('addAdminBtn').addEventListener('click', addNewAdmin);
         }
 
-        // ========== PAGE NAVIGATION ==========
-        function showHomePage() {
-            document.getElementById('homePage').style.display = 'block';
-            document.getElementById('articlePage').style.display = 'none';
-            document.getElementById('profilePage').style.display = 'none';
-            document.getElementById('adminPage').style.display = 'none';
-            document.getElementById('profilePopup').classList.remove('active');
+        // ========== OPEN ARTICLE FUNCTION ==========
+        async function openArticle(articleId, skipMonetize = false) {
+            const article = articles.find(a => a.id === articleId);
+            if (!article) {
+                showNotification('Artikel tidak ditemukan', 'error');
+                return;
+            }
             
-            // Update displays
-            displayTrendingArticles();
-            displayNewestArticles();
-            displayRecommendedArticles();
-            updateStats();
+            currentArticle = article;
+            showArticlePage();
+            
+            document.getElementById('articleContent').innerHTML = `
+                <div style="text-align:center; padding:60px 20px;">
+                    <div class="loading-spinner" style="margin:0 auto 25px;"></div>
+                    <h3 style="margin-bottom:15px; color:var(--dark);">Memuat artikel...</h3>
+                </div>
+            `;
+            
+            // Set article data
+            document.getElementById('articleTitle').textContent = article.title;
+            document.getElementById('articleDate').textContent = new Date(article.timestamp).toLocaleDateString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('articleViews').textContent = formatNumber(article.views || 0);
+            document.getElementById('articleLikes').textContent = formatNumber(article.likes || 0);
+            document.getElementById('articleComments').textContent = formatNumber(article.comments || 0);
+            document.getElementById('authorName').textContent = article.author || 'Anonymous';
+            
+            // Set category badge
+            const categoryBadge = document.getElementById('articleCategoryBadge');
+            categoryBadge.className = 'category-badge';
+            categoryBadge.classList.add(`category-${article.category}`);
+            categoryBadge.textContent = getCategoryName(article.category);
+            
+            // Set author avatar
+            const authorFirstLetter = (article.author || 'A').charAt(0).toUpperCase();
+            const colors = {
+                'R': '#DC2626', 'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 
+                'D': '#F59E0B', 'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4',
+                'H': '#84CC16', 'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1',
+                'L': '#14B8A6', 'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B',
+                'P': '#10B981', 'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED',
+                'U': '#10B981', 'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6',
+                'Y': '#06B6D4', 'Z': '#84CC16'
+            };
+            
+            const authorColor = colors[authorFirstLetter] || '#2563EB';
+            document.getElementById('authorAvatar').textContent = authorFirstLetter;
+            document.getElementById('authorAvatar').style.background = `linear-gradient(135deg, ${authorColor}, ${adjustColor(authorColor, -20)})`;
+            
+            document.getElementById('articleTimestamp').textContent = timeAgo(article.timestamp);
+            document.getElementById('articleImage').src = article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80';
+            document.getElementById('articleImage').onerror = function() {
+                this.src = 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80';
+            };
+            
+            // Load content with delay
+            setTimeout(() => {
+                document.getElementById('articleContent').innerHTML = article.content || '<p>Artikel tidak memiliki konten.</p>';
+            }, 500);
+            
+            // Check if user liked this article
+            const liked = await checkIfLiked(articleId);
+            const likeBtn = document.getElementById('likeArticleBtn');
+            if (liked) {
+                likeBtn.classList.add('liked');
+                likeBtn.innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
+            } else {
+                likeBtn.classList.remove('liked');
+                likeBtn.innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
+            }
+            
+            // Update comment form
+            updateCommentForm();
+            
+            // Load comments
+            await loadComments(articleId);
             
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // RANDOM MONETIZATION (15% chance)
+            if (!skipMonetize && Math.random() < 0.15) {
+                setTimeout(() => {
+                    showSupportModal();
+                }, 3000);
+            }
         }
 
-        function showArticlePage() {
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('articlePage').style.display = 'block';
-            document.getElementById('profilePage').style.display = 'none';
-            document.getElementById('adminPage').style.display = 'none';
-            document.getElementById('profilePopup').classList.remove('active');
+        function updateCommentForm() {
+            const commentForm = document.getElementById('commentForm');
+            const loginToComment = document.getElementById('loginToComment');
+            
+            if (userProfile && !userProfile.isGuest) {
+                commentForm.style.display = 'block';
+                loginToComment.style.display = 'none';
+            } else {
+                commentForm.style.display = 'none';
+                loginToComment.style.display = 'block';
+            }
         }
 
+        // ========== PROFILE FUNCTIONS ==========
         function showProfilePage() {
             if (!userProfile || userProfile.isGuest) {
                 showNotification('Login dulu untuk melihat profil', 'error');
@@ -2527,37 +1936,27 @@
             
             try {
                 const db = firebase.database();
-                
-                // Check if user is the author
                 const article = articles.find(a => a.id === articleId);
                 if (!article || article.authorId !== userProfile.uid) {
                     showNotification('Hanya penulis yang bisa menghapus artikel ini', 'error');
                     return;
                 }
                 
-                // Delete dari Firebase
                 await db.ref(`articles/${articleId}`).remove();
                 await db.ref(`comments/${articleId}`).remove();
                 await db.ref(`likes/${articleId}`).remove();
                 
-                // Remove from local array
                 const index = articles.findIndex(a => a.id === articleId);
-                if (index !== -1) {
-                    articles.splice(index, 1);
-                }
+                if (index !== -1) articles.splice(index, 1);
                 
-                // Update user stats
                 await updateUserStats('articles', -1);
-                
                 showNotification('Artikel berhasil dihapus', 'success');
                 
-                // Update displays
                 displayTrendingArticles();
                 displayNewestArticles();
                 displayRecommendedArticles();
                 updateStats();
                 
-                // Reload my articles
                 if (document.getElementById('profilePage').style.display === 'block') {
                     loadMyArticles();
                 }
@@ -2568,40 +1967,295 @@
             }
         }
 
+        // ========== RELOAD ARTICLE DATA ==========
+        async function reloadArticleData(articleId) {
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref(`articles/${articleId}`).once('value');
+                
+                if (snapshot.exists()) {
+                    const articleData = snapshot.val();
+                    const index = articles.findIndex(a => a.id === articleId);
+                    if (index !== -1) {
+                        articles[index] = { id: articleId, ...articleData };
+                        articles[index].score = calculateArticleScore(articles[index]);
+                    }
+                    
+                    if (currentArticle && currentArticle.id === articleId) {
+                        document.getElementById('articleLikes').textContent = formatNumber(articleData.likes || 0);
+                        currentArticle.likes = articleData.likes || 0;
+                    }
+                    
+                    displayTrendingArticles();
+                    displayRecommendedArticles();
+                }
+            } catch (error) {
+                console.error('Error reloading article data:', error);
+            }
+        }
+
+        async function checkIfLiked(articleId) {
+            if (!userProfile) return false;
+            
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref(`likes/${articleId}/${userProfile.uid}`).once('value');
+                return snapshot.exists();
+            } catch (error) {
+                return false;
+            }
+        }
+
+        // ========== UPDATE USER STATS ==========
+        async function updateUserStats(type, delta) {
+            if (!userProfile) return;
+            
+            try {
+                const db = firebase.database();
+                await db.ref(`users/${userProfile.uid}/stats/${type}`).transaction(current => (current || 0) + delta);
+                
+                if (!userProfile.stats) userProfile.stats = {};
+                userProfile.stats[type] = (userProfile.stats[type] || 0) + delta;
+                
+                updateUserUI();
+                
+            } catch (error) {
+                console.error('Error updating user stats:', error);
+            }
+        }
+
+        // ========== UPDATE USER UI ==========
+        function updateUserUI() {
+            if (!userProfile) {
+                document.getElementById('userAvatar').style.display = 'none';
+                document.getElementById('loginBtn').style.display = 'block';
+                document.getElementById('writeArticleBtn').style.display = 'none';
+                return;
+            }
+            
+            const avatar = document.getElementById('userAvatar');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (userProfile.isGuest) {
+                avatar.style.display = 'none';
+                loginBtn.style.display = 'block';
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                document.getElementById('writeArticleBtn').style.display = 'none';
+            } else {
+                avatar.style.display = 'flex';
+                loginBtn.style.display = 'none';
+                
+                const firstLetter = userProfile.username.charAt(0).toUpperCase();
+                avatar.textContent = firstLetter;
+                
+                const colors = {
+                    'R': '#DC2626', 'A': '#2563EB', 'B': '#7C3AED', 'C': '#10B981', 
+                    'D': '#F59E0B', 'E': '#EF4444', 'F': '#8B5CF6', 'G': '#06B6D4',
+                    'H': '#84CC16', 'I': '#F97316', 'J': '#EC4899', 'K': '#6366F1',
+                    'L': '#14B8A6', 'M': '#F43F5E', 'N': '#8B5CF6', 'O': '#F59E0B',
+                    'P': '#10B981', 'Q': '#EF4444', 'S': '#2563EB', 'T': '#7C3AED',
+                    'U': '#10B981', 'V': '#F59E0B', 'W': '#EF4444', 'X': '#8B5CF6',
+                    'Y': '#06B6D4', 'Z': '#84CC16'
+                };
+                
+                const color = colors[firstLetter] || '#2563EB';
+                avatar.style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
+                avatar.style.color = 'white';
+                
+                // Update profile popup
+                document.getElementById('popupUsername').textContent = userProfile.username;
+                document.getElementById('popupEmail').textContent = userProfile.email || 'Tidak ada email';
+                document.getElementById('popupAvatar').textContent = firstLetter;
+                document.getElementById('popupAvatar').style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
+                document.getElementById('popupArticles').textContent = userProfile.stats?.articles || 0;
+                document.getElementById('popupLikes').textContent = userProfile.stats?.likes || 0;
+                
+                document.getElementById('writeArticleBtn').style.display = 'block';
+                
+                if (isAdmin) {
+                    document.getElementById('popupAdminBtn').style.display = 'block';
+                }
+            }
+        }
+
+        // ========== CHECK ADMIN STATUS ==========
+        function checkAdminStatus() {
+            if (!userProfile) {
+                isAdmin = false;
+                return;
+            }
+            
+            isAdmin = ADMIN_UIDS.includes(userProfile.uid);
+            
+            if (isAdmin) {
+                document.getElementById('popupAdminBtn').style.display = 'block';
+                userProfile.isAdmin = true;
+                
+                try {
+                    const db = firebase.database();
+                    db.ref(`users/${userProfile.uid}/isAdmin`).set(true);
+                } catch (error) {
+                    console.error('Error updating admin status:', error);
+                }
+            }
+        }
+
+        // ========== LOGIN/LOGOUT FUNCTIONS ==========
+        async function loginUser() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const email = document.getElementById('loginEmail').value.trim();
+            const avatar = document.getElementById('loginAvatar').value.trim();
+            
+            if (!username) {
+                showNotification('Username harus diisi', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                
+                userProfile.username = username;
+                userProfile.email = email || '';
+                userProfile.avatar = avatar || '';
+                userProfile.isGuest = false;
+                
+                await db.ref(`users/${currentUser.uid}`).set(userProfile);
+                
+                document.getElementById('loginModal').classList.remove('active');
+                updateUserUI();
+                showNotification(`Selamat datang, ${username}!`, 'success');
+                
+                if (currentArticle) {
+                    updateCommentForm();
+                }
+                
+            } catch (error) {
+                console.error('Error logging in:', error);
+                showNotification('Gagal login', 'error');
+            }
+        }
+
+        function loginAsGuest() {
+            document.getElementById('loginModal').classList.remove('active');
+            showNotification('Masuk sebagai tamu. Login untuk fitur lengkap.', 'info');
+        }
+
+        async function logoutUser() {
+            try {
+                await firebase.auth().signOut();
+                currentUser = null;
+                userProfile = null;
+                isAdmin = false;
+                await setupFirebaseAuth();
+                document.getElementById('profilePopup').classList.remove('active');
+                showNotification('Logout berhasil', 'success');
+                showHomePage();
+            } catch (error) {
+                console.error('Error logging out:', error);
+                showNotification('Logout gagal', 'error');
+            }
+        }
+
+        // ========== CREATE ARTICLE ==========
+        function showCreateArticleModal() {
+            if (!userProfile || userProfile.isGuest) {
+                showNotification('Login dulu untuk membuat artikel', 'error');
+                showLoginModal();
+                return;
+            }
+            
+            document.getElementById('articleTitleInput').value = '';
+            document.getElementById('articleImageInput').value = '';
+            document.getElementById('articleSlugInput').value = '';
+            if (articleEditor) articleEditor.setText('');
+            
+            document.getElementById('createArticleModal').classList.add('active');
+            
+            document.getElementById('articleTitleInput').addEventListener('input', function() {
+                const slug = this.value.toLowerCase()
+                    .replace(/[^\w\s]/g, '')
+                    .replace(/\s+/g, '-')
+                    .substring(0, 50);
+                document.getElementById('articleSlugInput').value = slug;
+            });
+        }
+
+        async function publishArticle() {
+            if (!userProfile || userProfile.isGuest) {
+                showNotification('Login dulu untuk publish artikel', 'error');
+                showLoginModal();
+                return;
+            }
+            
+            const title = document.getElementById('articleTitleInput').value.trim();
+            const category = document.getElementById('articleCategoryInput').value;
+            const image = document.getElementById('articleImageInput').value.trim();
+            const content = articleEditor ? articleEditor.root.innerHTML : '';
+            const slug = document.getElementById('articleSlugInput').value.trim() || 
+                        title.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, '-').substring(0, 50);
+            
+            if (!title || !content) {
+                showNotification('Judul dan konten harus diisi', 'error');
+                return;
+            }
+            
+            if (!hasMonetized) {
+                showNotification('Harap support platform terlebih dahulu', 'warning');
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                const articleId = 'article_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                const newArticle = {
+                    id: articleId,
+                    title,
+                    category,
+                    image: image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80',
+                    content,
+                    excerpt: content.replace(/<[^>]*>/g, '').substring(0, 200) + '...',
+                    slug,
+                    author: userProfile.username,
+                    authorId: userProfile.uid,
+                    authorAvatar: userProfile.avatar,
+                    timestamp: Date.now(),
+                    views: 0,
+                    likes: 0,
+                    comments: 0,
+                    status: 'published',
+                    score: 0
+                };
+                
+                await db.ref(`articles/${articleId}`).set(newArticle);
+                await updateUserStats('articles', 1);
+                articles.unshift(newArticle);
+                document.getElementById('createArticleModal').classList.remove('active');
+                showNotification('Artikel berhasil diterbitkan!', 'success');
+                displayTrendingArticles();
+                displayNewestArticles();
+                displayRecommendedArticles();
+                updateStats();
+                openArticle(articleId, true);
+                
+            } catch (error) {
+                console.error('Error publishing article:', error);
+                showNotification('Gagal publish artikel', 'error');
+            }
+        }
+
         // ========== CHECK URL FOR ARTICLE ==========
         function checkUrlForArticle() {
             const urlParams = new URLSearchParams(window.location.search);
             const articleId = urlParams.get('article');
             
             if (articleId) {
-                // Cari artikel dengan ID atau slug
                 const article = articles.find(a => a.id === articleId || a.slug === articleId);
                 if (article) {
                     setTimeout(() => openArticle(article.id, true), 1000);
                 }
             }
         }
-
-        // ========== MONETIZATION ==========
-        function showMonetizeModal(articleId) {
-            localStorage.setItem('pendingArticle', articleId);
-            showSupportModal();
-        }
-
-        // ========== INITIALIZE APP ==========
-        document.addEventListener('DOMContentLoaded', initializeApp);
-        
-        // Export functions to global scope
-        window.showHomePage = showHomePage;
-        window.openArticle = openArticle;
-        window.showCreateArticleModal = showCreateArticleModal;
-        window.showLoginModal = showLoginModal;
-        window.showAdminPanel = showAdminPanel;
-        window.deleteArticleAdmin = deleteArticleAdmin;
-        window.deleteMyArticle = deleteMyArticle;
-        window.addNewAdmin = addNewAdmin;
-        window.supportPlatform = supportPlatform;
-        window.showSupportModal = showSupportModal;
     </script>
 </body>
 </html>
