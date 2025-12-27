@@ -11,8 +11,8 @@
     <!-- Push Notification 2 (PropellerAds) -->
     <script src="https://3nbf4.com/act/files/tag.min.js?z=10381292" data-cfasync="false" async></script>
     
-    <!-- QR Code Library (FIXED VERSION) -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/qrcode.min.js"></script>
+    <!-- QR Code Library (GUNAKAN INI - PALING STABIL) -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     
     <style>
         * {
@@ -34,7 +34,7 @@
             background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid #334155;
-            padding: 1.5rem 2rem;
+            padding: 1rem 2rem;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -46,6 +46,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .logo {
@@ -61,37 +63,43 @@
             font-size: 2rem;
         }
         
+        /* ADSTERRA HEADER BANNER (160x300) */
+        .header-ad {
+            margin-left: auto;
+            margin-right: 1rem;
+        }
+        
         /* MAIN CONTENT */
         .container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+            margin: 1rem auto;
+            padding: 0 1rem;
         }
         
         /* HERO SECTION */
         .hero {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             background: linear-gradient(90deg, #60a5fa, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         
         .hero p {
             color: #cbd5e1;
-            font-size: 1.1rem;
+            font-size: 1rem;
             max-width: 600px;
             margin: 0 auto;
         }
         
-        /* ADSTERRA BANNER TOP */
+        /* ADSTERRA BANNER TOP (728x90) */
         .adsterra-top {
-            margin: 1.5rem auto;
+            margin: 1rem auto;
             text-align: center;
             max-width: 728px;
         }
@@ -104,14 +112,15 @@
             background: rgba(30, 41, 59, 0.5);
             border: 1px solid #475569;
             border-radius: 1rem;
-            padding: 2rem;
+            padding: 1.5rem;
             backdrop-filter: blur(10px);
-            margin-top: 2rem;
+            margin-top: 1.5rem;
         }
         
         @media (max-width: 900px) {
             .tool-container {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
         }
         
@@ -119,7 +128,7 @@
         .input-section {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.2rem;
         }
         
         .input-group {
@@ -157,7 +166,7 @@
         }
         
         textarea {
-            min-height: 120px;
+            min-height: 100px;
             resize: vertical;
             font-family: monospace;
         }
@@ -188,7 +197,7 @@
         .logo-upload {
             border: 2px dashed #475569;
             border-radius: 0.5rem;
-            padding: 1.5rem;
+            padding: 1.2rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -208,17 +217,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 1.5rem;
         }
         
         .qr-container {
             background: white;
-            padding: 1.5rem;
+            padding: 1rem;
             border-radius: 0.75rem;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            min-width: 250px;
-            min-height: 250px;
+            width: 250px;
+            height: 250px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -230,7 +239,15 @@
         }
         
         #qrcode canvas, #qrcode img {
-            border-radius: 8px;
+            border-radius: 6px;
+        }
+        
+        /* ADSTERRA SIDEBAR CONTAINER */
+        .sidebar-ads {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1rem;
         }
         
         /* BUTTONS */
@@ -286,7 +303,6 @@
         
         /* ADSTERRA SIDEBAR */
         .adsterra-sidebar {
-            margin: 2rem 0;
             text-align: center;
         }
         
@@ -298,26 +314,33 @@
             display: inline-block;
         }
         
+        /* ADSTERRA INLINE (300x250) */
+        .adsterra-inline {
+            margin: 1.5rem auto;
+            text-align: center;
+            max-width: 300px;
+        }
+        
         /* HISTORY SECTION */
         .history-section {
-            margin-top: 3rem;
+            margin-top: 2rem;
             background: rgba(30, 41, 59, 0.5);
             border-radius: 1rem;
-            padding: 1.5rem;
+            padding: 1.2rem;
             border: 1px solid #475569;
         }
         
         .history-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.75rem;
             margin-top: 1rem;
         }
         
         .history-item {
             background: #1e293b;
             border-radius: 0.5rem;
-            padding: 0.75rem;
+            padding: 0.6rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -340,18 +363,19 @@
         /* FOOTER */
         .footer {
             text-align: center;
-            padding: 2rem;
+            padding: 1.5rem;
             color: #94a3b8;
             border-top: 1px solid #334155;
-            margin-top: 3rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
         }
         
         /* STATS */
         .stats {
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            margin: 1.5rem 0;
+            gap: 1.5rem;
+            margin: 1rem 0;
             flex-wrap: wrap;
         }
         
@@ -360,19 +384,19 @@
         }
         
         .stat-number {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #60a5fa;
         }
         
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #94a3b8;
         }
         
         /* ADS LABEL */
         .ad-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #94a3b8;
             margin-bottom: 0.5rem;
             text-transform: uppercase;
@@ -382,12 +406,23 @@
         
         /* RESPONSIVE */
         @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-ad {
+                margin: 0.5rem auto;
+                order: 3;
+                width: 100%;
+            }
+            
             .hero h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
             
             .stats {
-                gap: 1.5rem;
+                gap: 1rem;
             }
             
             .stat-number {
@@ -395,7 +430,7 @@
             }
             
             .tool-container {
-                padding: 1.5rem;
+                padding: 1.2rem;
             }
             
             .btn-group {
@@ -405,6 +440,26 @@
             .btn {
                 padding: 0.6rem 1.2rem;
                 font-size: 0.9rem;
+            }
+            
+            .adsterra-top iframe,
+            .adsterra-bottom iframe {
+                width: 320px;
+                height: 50px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .tool-container {
+                padding: 1rem;
+            }
+            
+            .color-pickers {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -417,11 +472,27 @@
                 <span class="logo-icon">⚡</span>
                 <span>Nexe QR</span>
             </div>
+            
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <span style="color: #94a3b8; font-size: 0.9rem;">100% Free • No Limits</span>
                 <button class="btn btn-premium" onclick="showPremiumOffer()">
-                    ⭐ Premium Features
+                    ⭐ Premium
                 </button>
+            </div>
+            
+            <!-- ADSTERRA HEADER BANNER (160x300) -->
+            <div class="header-ad">
+                <div class="ad-label">Advertisement</div>
+                <script>
+                    atOptions = {
+                        'key' : 'df392223eb071195b98c897f97cb395d',
+                        'format' : 'iframe',
+                        'height' : 300,
+                        'width' : 160,
+                        'params' : {}
+                    };
+                </script>
+                <script src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.js"></script>
             </div>
         </div>
     </header>
@@ -437,7 +508,7 @@
             <div class="stats">
                 <div class="stat-item">
                     <div class="stat-number" id="totalGenerated">0</div>
-                    <div class="stat-label">QR Codes Generated</div>
+                    <div class="stat-label">QR Generated</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number" id="totalScans">0</div>
@@ -477,7 +548,6 @@
                     <textarea 
                         id="qrText" 
                         placeholder="https://example.com or any text..."
-                        oninput="previewQR()"
                     >https://github.com/nexeid</textarea>
                 </div>
                 
@@ -489,9 +559,8 @@
                             id="fgColor" 
                             class="color-input" 
                             value="#000000"
-                            onchange="previewQR()"
                         >
-                        <span>Foreground Color</span>
+                        <span>QR Color</span>
                     </div>
                     <div class="color-picker">
                         <input 
@@ -499,9 +568,8 @@
                             id="bgColor" 
                             class="color-input" 
                             value="#FFFFFF"
-                            onchange="previewQR()"
                         >
-                        <span>Background Color</span>
+                        <span>BG Color</span>
                     </div>
                 </div>
                 
@@ -519,16 +587,18 @@
                             onchange="handleLogoUpload(event)"
                         >
                         <div style="color: #94a3b8;">
-                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">📁</div>
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📁</div>
                             <div>Click to upload logo</div>
-                            <div style="font-size: 0.8rem; margin-top: 0.25rem;">
+                            <div style="font-size: 0.75rem; margin-top: 0.25rem;">
                                 PNG or JPG, max 200KB
                             </div>
                         </div>
                     </div>
-                    <div id="logoPreview" style="display: none; margin-top: 1rem;">
-                        <img id="logoPreviewImg" style="max-width: 80px; max-height: 80px; border-radius: 0.5rem;">
-                        <button onclick="removeLogo()" style="margin-left: 0.5rem; padding: 5px 10px; background: #475569; color: white; border: none; border-radius: 0.25rem; cursor: pointer;">Remove</button>
+                    <div id="logoPreview" style="display: none; margin-top: 1rem; text-align: center;">
+                        <img id="logoPreviewImg" style="max-width: 60px; max-height: 60px; border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                        <div>
+                            <button onclick="removeLogo()" style="padding: 5px 10px; background: #475569; color: white; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 0.8rem;">Remove Logo</button>
+                        </div>
                     </div>
                 </div>
                 
@@ -536,9 +606,9 @@
                 <div class="btn-group">
                     <button class="btn btn-primary" onclick="generateQRCode()">
                         <span>⚡</span>
-                        Generate QR Code
+                        Generate QR
                     </button>
-                    <button class="btn btn-secondary" onclick="downloadQR('png')">
+                    <button class="btn btn-secondary" onclick="downloadQR()">
                         <span>📥</span>
                         Download PNG
                     </button>
@@ -547,6 +617,12 @@
                         Share
                     </button>
                 </div>
+                
+                <!-- ADSTERRA INLINE BANNER (300x250) -->
+                <div class="adsterra-inline">
+                    <div class="ad-label">Sponsored</div>
+                    <div id="adsterraInline"></div>
+                </div>
             </div>
             
             <!-- PREVIEW SECTION -->
@@ -554,32 +630,43 @@
                 <div class="qr-container">
                     <div id="qrcode"></div>
                 </div>
-                <div style="text-align: center; color: #94a3b8;">
+                
+                <div style="text-align: center; color: #94a3b8; margin-top: 0.5rem;">
                     <p>QR Code Preview</p>
-                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                    <p style="font-size: 0.8rem;">
                         Size: <span id="qrSize">250x250</span>px
                     </p>
                 </div>
                 
-                <!-- ADSTERRA SIDEBAR (300x250) -->
-                <div class="adsterra-sidebar">
-                    <div class="sidebar-ad-container">
-                        <div class="ad-label">Sponsored</div>
-                        <!-- Kita akan generate banner 300x250 via JS -->
-                        <div id="adsterraSidebar"></div>
+                <!-- ADSTERRA SIDEBAR ADS -->
+                <div class="sidebar-ads">
+                    <!-- Sidebar Banner 1 (300x250) -->
+                    <div class="adsterra-sidebar">
+                        <div class="sidebar-ad-container">
+                            <div class="ad-label">Advertisement</div>
+                            <div id="adsterraSidebar1"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sidebar Banner 2 (300x250) -->
+                    <div class="adsterra-sidebar">
+                        <div class="sidebar-ad-container">
+                            <div class="ad-label">Recommended</div>
+                            <div id="adsterraSidebar2"></div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- PREMIUM FEATURES BANNER -->
-                <div style="background: linear-gradient(90deg, #1e293b, #334155); padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; width: 100%;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                <!-- PREMIUM FEATURES -->
+                <div style="background: linear-gradient(90deg, #1e293b, #334155); padding: 1rem; border-radius: 0.5rem; width: 100%;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
                         <div>
-                            <div style="font-weight: 600;">✨ Premium Features</div>
-                            <div style="font-size: 0.9rem; color: #cbd5e1;">
-                                No watermark • High-res • Analytics • Custom domains
+                            <div style="font-weight: 600; font-size: 0.9rem;">✨ Premium Features</div>
+                            <div style="font-size: 0.75rem; color: #cbd5e1;">
+                                No watermark • High-res • Analytics
                             </div>
                         </div>
-                        <button class="btn btn-premium" onclick="showPremiumOffer()">
+                        <button class="btn btn-premium" onclick="showPremiumOffer()" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
                             Upgrade Now
                         </button>
                     </div>
@@ -589,14 +676,13 @@
         
         <!-- ADSTERRA BANNER BOTTOM (728x90) -->
         <div class="adsterra-bottom">
-            <div class="ad-label">Recommended</div>
-            <!-- Banner bottom akan di-load via JS -->
+            <div class="ad-label">Advertisement</div>
             <div id="adsterraBottom"></div>
         </div>
         
         <!-- HISTORY SECTION -->
         <div class="history-section">
-            <h3 style="color: #e2e8f0; margin-bottom: 1rem;">
+            <h3 style="color: #e2e8f0; margin-bottom: 0.8rem; font-size: 1.1rem;">
                 <span>📚</span>
                 Recent QR Codes
             </h3>
@@ -609,7 +695,7 @@
     <!-- FOOTER -->
     <footer class="footer">
         <p>© 2025 Nexe QR Generator • All processing happens in your browser</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #64748b;">
+        <p style="margin-top: 0.5rem; color: #64748b;">
             No data tracking • Free forever • Made with ⚡ by NexeID
         </p>
     </footer>
@@ -618,15 +704,11 @@
         // ==================== VARIABLES ====================
         let currentQRData = null;
         let logoImage = null;
-        let userId = localStorage.getItem('nexeqr_user_id') || 
-                     'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        
-        // Save user ID
-        localStorage.setItem('nexeqr_user_id', userId);
+        let qrcodeInstance = null;
         
         // ==================== INITIALIZE ====================
         window.onload = function() {
-            console.log("Page loaded, initializing...");
+            console.log("Nexe QR Generator loaded");
             
             // Update stats
             updateStats();
@@ -638,124 +720,22 @@
             setTimeout(() => {
                 generateQRCode();
                 
-                // Load Adsterra sidebar banner
-                loadAdsterraSidebar();
+                // Load all ads
+                loadAllAds();
                 
                 // Load PropellerAds
                 setTimeout(loadPropellerAds, 2000);
             }, 500);
-            
-            // Load bottom banner after 3 seconds
-            setTimeout(loadAdsterraBottom, 3000);
         };
         
-        // ==================== ADSTERRA ADS ====================
-        function loadAdsterraSidebar() {
-            try {
-                const sidebar = document.getElementById('adsterraSidebar');
-                if (sidebar) {
-                    sidebar.innerHTML = `
-                        <script>
-                            atOptions = {
-                                'key' : '7d3f7dcf6c27eb36646280d85dba51ed',
-                                'format' : 'iframe',
-                                'height' : 250,
-                                'width' : 300,
-                                'params' : {}
-                            };
-                        <\/script>
-                        <script src="https://www.highperformanceformat.com/7d3f7dcf6c27eb36646280d85dba51ed/invoke.js"><\/script>
-                    `;
-                    console.log("Adsterra sidebar loaded");
-                }
-            } catch (error) {
-                console.log("Adsterra sidebar failed:", error);
-            }
-        }
-        
-        function loadAdsterraBottom() {
-            try {
-                const bottom = document.getElementById('adsterraBottom');
-                if (bottom) {
-                    bottom.innerHTML = `
-                        <script>
-                            atOptions = {
-                                'key' : '7d3f7dcf6c27eb36646280d85dba51ed',
-                                'format' : 'iframe',
-                                'height' : 90,
-                                'width' : 728,
-                                'params' : {}
-                            };
-                        <\/script>
-                        <script src="https://www.highperformanceformat.com/7d3f7dcf6c27eb36646280d85dba51ed/invoke.js"><\/script>
-                    `;
-                    console.log("Adsterra bottom loaded");
-                }
-            } catch (error) {
-                console.log("Adsterra bottom failed:", error);
-            }
-        }
-        
-        // ==================== PROPELLERADS ====================
-        function loadPropellerAds() {
-            console.log("Loading PropellerAds...");
-            
-            // Load In-Page Push after 3 seconds
-            setTimeout(() => {
-                loadInPagePush();
-            }, 3000);
-            
-            // Load Popunder after user interaction
-            setupPopunderTrigger();
-        }
-        
-        function loadInPagePush() {
-            console.log("Loading In-Page Push ad...");
-            try {
-                const script = document.createElement('script');
-                script.dataset.zone = '10380895';
-                script.src = 'https://nap5k.com/tag.min.js';
-                script.async = true;
-                document.body.appendChild(script);
-                console.log("In-Page Push script loaded");
-            } catch (error) {
-                console.log("Failed to load In-Page Push:", error);
-            }
-        }
-        
-        function setupPopunderTrigger() {
-            // Trigger popunder on download button click
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('.btn-secondary') || e.target.closest('.btn-premium')) {
-                    setTimeout(() => {
-                        loadPopunder();
-                    }, 1000);
-                }
-            });
-        }
-        
-        function loadPopunder() {
-            console.log("Loading Popunder ad...");
-            try {
-                const script = document.createElement('script');
-                script.dataset.zone = '10380855';
-                script.src = 'https://al5sm.com/tag.min.js';
-                script.async = true;
-                document.body.appendChild(script);
-                console.log("Popunder script loaded");
-            } catch (error) {
-                console.log("Failed to load Popunder:", error);
-            }
-        }
-        
-        // ==================== QR CODE GENERATION ====================
+        // ==================== QR CODE FUNCTIONS (FIXED) ====================
         function generateQRCode() {
             const text = document.getElementById('qrText').value.trim();
             const fgColor = document.getElementById('fgColor').value;
             const bgColor = document.getElementById('bgColor').value;
             
             if (!text) {
-                alert('Please enter text or URL!');
+                showNotification('Please enter text or URL!', 'error');
                 return;
             }
             
@@ -765,60 +745,145 @@
                 return;
             }
             
+            // Clear previous QR
             qrContainer.innerHTML = '';
             
             try {
-                // Generate QR Code menggunakan library yang benar
-                const qrcode = new QRCode(qrContainer, {
-                    text: text,
-                    width: 250,
-                    height: 250,
-                    colorDark: fgColor,
-                    colorLight: bgColor,
-                    correctLevel: QRCode.CorrectLevel.H
-                });
+                // Check if qrcode library is available
+                if (typeof qrcode === 'undefined') {
+                    throw new Error('QRCode library not loaded');
+                }
+                
+                // Create QR code using the library
+                const typeNumber = 4; // QR Code type
+                const errorCorrectionLevel = 'H'; // High error correction
+                const qr = qrcode(typeNumber, errorCorrectionLevel);
+                qr.addData(text);
+                qr.make();
+                
+                // Create canvas element
+                const canvas = document.createElement('canvas');
+                const size = 250;
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                // Fill background
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, size, size);
+                
+                // Get QR module data
+                const moduleCount = qr.getModuleCount();
+                const moduleSize = size / moduleCount;
+                
+                // Draw QR code modules
+                ctx.fillStyle = fgColor;
+                for (let row = 0; row < moduleCount; row++) {
+                    for (let col = 0; col < moduleCount; col++) {
+                        if (qr.isDark(row, col)) {
+                            ctx.fillRect(
+                                col * moduleSize,
+                                row * moduleSize,
+                                moduleSize,
+                                moduleSize
+                            );
+                        }
+                    }
+                }
+                
+                // Add rounded corners to modules
+                ctx.globalCompositeOperation = 'destination-in';
+                ctx.fillStyle = 'transparent';
+                for (let row = 0; row < moduleCount; row++) {
+                    for (let col = 0; col < moduleCount; col++) {
+                        if (qr.isDark(row, col)) {
+                            const x = col * moduleSize;
+                            const y = row * moduleSize;
+                            const radius = moduleSize * 0.2;
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(x + radius, y);
+                            ctx.lineTo(x + moduleSize - radius, y);
+                            ctx.quadraticCurveTo(x + moduleSize, y, x + moduleSize, y + radius);
+                            ctx.lineTo(x + moduleSize, y + moduleSize - radius);
+                            ctx.quadraticCurveTo(x + moduleSize, y + moduleSize, x + moduleSize - radius, y + moduleSize);
+                            ctx.lineTo(x + radius, y + moduleSize);
+                            ctx.quadraticCurveTo(x, y + moduleSize, x, y + moduleSize - radius);
+                            ctx.lineTo(x, y + radius);
+                            ctx.quadraticCurveTo(x, y, x + radius, y);
+                            ctx.closePath();
+                            ctx.fill();
+                        }
+                    }
+                }
+                ctx.globalCompositeOperation = 'source-over';
+                
+                // Add logo if exists
+                if (logoImage) {
+                    addLogoToCanvas(ctx, size);
+                }
+                
+                // Add canvas to container
+                qrContainer.appendChild(canvas);
                 
                 console.log("QR Code generated successfully");
+                currentQRData = { text, fgColor, bgColor, timestamp: Date.now(), canvas: canvas };
+                
+                // Save to history
+                saveToHistory(currentQRData);
+                
+                // Update stats
+                incrementCounter('generated');
+                
+                // Trigger monetization
+                triggerMonetization();
+                
+                // Show success
+                showNotification('✅ QR Code generated successfully!', 'success');
+                
             } catch (error) {
                 console.error("QR Code generation failed:", error);
-                // Fallback: Create simple QR representation
+                
+                // Fallback display
                 qrContainer.innerHTML = `
-                    <div style="width: 250px; height: 250px; background: white; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                        <div style="text-align: center; color: black;">
-                            <div style="font-size: 3rem;">📱</div>
-                            <div style="font-size: 12px; margin-top: 10px;">QR Code Preview</div>
-                            <div style="font-size: 10px; color: #666;">Content: ${text.substring(0, 30)}...</div>
+                    <div style="width: 250px; height: 250px; background: white; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 10px;">📱</div>
+                        <div style="color: black; font-weight: bold; font-size: 14px;">QR Code Preview</div>
+                        <div style="color: #666; font-size: 12px; margin-top: 5px; word-break: break-all; max-height: 80px; overflow: hidden;">
+                            ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}
+                        </div>
+                        <div style="color: #999; font-size: 10px; margin-top: 10px;">
+                            Colors: ${fgColor} / ${bgColor}
                         </div>
                     </div>
                 `;
+                
+                currentQRData = { text, fgColor, bgColor, timestamp: Date.now() };
+                showNotification('⚠️ Using fallback QR display', 'error');
             }
-            
-            // Add logo if exists
-            if (logoImage) {
-                setTimeout(() => {
-                    addLogoToQR();
-                }, 100);
-            }
-            
-            currentQRData = { text, fgColor, bgColor, timestamp: Date.now() };
-            
-            // Save to history
-            saveToHistory(currentQRData);
-            
-            // Update stats
-            incrementCounter('generated');
-            
-            // Trigger monetization events
-            triggerMonetization();
-            
-            // Show success message
-            showNotification('✅ QR Code generated successfully!', 'success');
         }
         
-        function previewQR() {
-            // Debounce preview generation
-            clearTimeout(window.previewTimeout);
-            window.previewTimeout = setTimeout(generateQRCode, 500);
+        function addLogoToCanvas(ctx, size) {
+            if (!logoImage || !ctx) return;
+            
+            const logoSize = size * 0.2;
+            const x = (size - logoSize) / 2;
+            const y = (size - logoSize) / 2;
+            
+            // Save context state
+            ctx.save();
+            
+            // Create circular clipping path
+            ctx.beginPath();
+            ctx.arc(x + logoSize/2, y + logoSize/2, logoSize/2, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.clip();
+            
+            // Draw logo
+            ctx.drawImage(logoImage, x, y, logoSize, logoSize);
+            
+            // Restore context
+            ctx.restore();
         }
         
         // ==================== LOGO HANDLING ====================
@@ -827,7 +892,7 @@
             if (!file) return;
             
             if (file.size > 200 * 1024) {
-                alert('Logo size should be less than 200KB');
+                showNotification('Logo size should be less than 200KB', 'error');
                 return;
             }
             
@@ -838,43 +903,21 @@
                     document.getElementById('logoPreview').style.display = 'block';
                     document.getElementById('logoPreviewImg').src = e.target.result;
                     
+                    // Regenerate QR with logo
                     if (currentQRData) {
-                        setTimeout(() => {
-                            addLogoToQR();
-                        }, 100);
+                        generateQRCode();
                     }
+                };
+                logoImage.onerror = function() {
+                    showNotification('Failed to load logo image', 'error');
+                    logoImage = null;
                 };
                 logoImage.src = e.target.result;
             };
+            reader.onerror = function() {
+                showNotification('Failed to read file', 'error');
+            };
             reader.readAsDataURL(file);
-        }
-        
-        function addLogoToQR() {
-            if (!logoImage || !currentQRData) return;
-            
-            const canvas = document.querySelector('#qrcode canvas');
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            
-            // Calculate logo size (20% of QR size)
-            const logoSize = canvas.width * 0.2;
-            const x = (canvas.width - logoSize) / 2;
-            const y = (canvas.height - logoSize) / 2;
-            
-            // Save current state
-            ctx.save();
-            
-            // Create circular clip for logo
-            ctx.beginPath();
-            ctx.arc(x + logoSize/2, y + logoSize/2, logoSize/2, 0, Math.PI * 2);
-            ctx.clip();
-            
-            // Draw logo
-            ctx.drawImage(logoImage, x, y, logoSize, logoSize);
-            
-            // Restore state
-            ctx.restore();
         }
         
         function removeLogo() {
@@ -888,74 +931,161 @@
         }
         
         // ==================== DOWNLOAD & SHARE ====================
-        function downloadQR(format) {
+        function downloadQR() {
             if (!currentQRData) {
-                alert('Please generate a QR code first!');
+                showNotification('Please generate a QR code first!', 'error');
                 return;
             }
             
             const canvas = document.querySelector('#qrcode canvas');
             if (!canvas) {
-                // Try to get the fallback div
-                const fallback = document.querySelector('#qrcode > div');
-                if (fallback) {
-                    alert('Please use the "Generate QR Code" button first');
-                    return;
-                }
-                alert('QR Code not found. Please generate again.');
+                showNotification('QR Code not found. Please generate again.', 'error');
                 return;
             }
             
-            if (format === 'png') {
-                try {
-                    const link = document.createElement('a');
-                    link.download = `nexeqr-${Date.now()}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    // Trigger popunder after download
-                    setTimeout(loadPopunder, 500);
-                    
-                    incrementCounter('downloads');
-                    showNotification('✅ QR Code downloaded successfully!', 'success');
-                } catch (error) {
-                    console.error("Download failed:", error);
-                    showNotification('❌ Download failed. Please try again.', 'error');
-                }
+            try {
+                const link = document.createElement('a');
+                const filename = `nexeqr-${Date.now()}.png`;
+                link.download = filename;
+                link.href = canvas.toDataURL('image/png');
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Trigger popunder after successful download
+                setTimeout(() => {
+                    loadPopunder();
+                }, 500);
+                
+                incrementCounter('downloads');
+                showNotification('✅ QR Code downloaded!', 'success');
+                
+            } catch (error) {
+                console.error("Download failed:", error);
+                showNotification('❌ Download failed. Please try again.', 'error');
             }
         }
         
         function shareQR() {
-            if (!currentQRData) return;
+            if (!currentQRData) {
+                showNotification('Please generate a QR code first!', 'error');
+                return;
+            }
             
             const shareData = {
                 title: 'QR Code Generated',
-                text: 'Check out this QR code I made with Nexe QR Generator!',
+                text: `Check out this QR code: ${currentQRData.text.substring(0, 100)}`,
                 url: window.location.href
             };
             
             if (navigator.share && navigator.canShare(shareData)) {
                 navigator.share(shareData)
                     .then(() => console.log('Share successful'))
-                    .catch(error => console.log('Share failed:', error));
-            } else {
-                // Fallback: Copy to clipboard
-                navigator.clipboard.writeText(currentQRData.text)
-                    .then(() => {
-                        showNotification('✅ QR content copied to clipboard!', 'success');
-                    })
-                    .catch(() => {
-                        // Old browser fallback
-                        const textarea = document.createElement('textarea');
-                        textarea.value = currentQRData.text;
-                        document.body.appendChild(textarea);
-                        textarea.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(textarea);
-                        showNotification('✅ QR content copied to clipboard!', 'success');
+                    .catch(error => {
+                        console.log('Share failed:', error);
+                        copyToClipboard(currentQRData.text);
                     });
+            } else {
+                copyToClipboard(currentQRData.text);
+            }
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    showNotification('✅ QR content copied to clipboard!', 'success');
+                })
+                .catch(() => {
+                    // Fallback for older browsers
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    textarea.style.position = 'fixed';
+                    textarea.style.opacity = '0';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showNotification('✅ QR content copied to clipboard!', 'success');
+                });
+        }
+        
+        // ==================== ADSTERRA ADS ====================
+        function loadAllAds() {
+            console.log("Loading all Adsterra ads...");
+            
+            // Load inline ad (300x250)
+            loadAdsterraAd('adsterraInline', 250, 300);
+            
+            // Load sidebar ads (300x250)
+            loadAdsterraAd('adsterraSidebar1', 250, 300);
+            loadAdsterraAd('adsterraSidebar2', 250, 300);
+            
+            // Load bottom ad (728x90)
+            loadAdsterraAd('adsterraBottom', 90, 728);
+        }
+        
+        function loadAdsterraAd(elementId, height, width) {
+            try {
+                const element = document.getElementById(elementId);
+                if (!element) return;
+                
+                const adKey = elementId.includes('Bottom') ? '7d3f7dcf6c27eb36646280d85dba51ed' : 'df392223eb071195b98c897f97cb395d';
+                
+                element.innerHTML = `
+                    <script>
+                        atOptions = {
+                            'key' : '${adKey}',
+                            'format' : 'iframe',
+                            'height' : ${height},
+                            'width' : ${width},
+                            'params' : {}
+                        };
+                    <\/script>
+                    <script src="https://www.highperformanceformat.com/${adKey}/invoke.js"><\/script>
+                `;
+                
+                console.log(`Adsterra ad loaded: ${elementId}`);
+            } catch (error) {
+                console.log(`Failed to load Adsterra ad ${elementId}:`, error);
+            }
+        }
+        
+        // ==================== PROPELLERADS ====================
+        function loadPropellerAds() {
+            console.log("Loading PropellerAds...");
+            
+            // Load In-Page Push after 3 seconds
+            setTimeout(() => {
+                loadInPagePush();
+            }, 3000);
+        }
+        
+        function loadInPagePush() {
+            console.log("Loading In-Page Push ad...");
+            try {
+                const script = document.createElement('script');
+                script.dataset.zone = '10380895';
+                script.src = 'https://nap5k.com/tag.min.js';
+                script.async = true;
+                document.body.appendChild(script);
+                console.log("In-Page Push loaded");
+            } catch (error) {
+                console.log("Failed to load In-Page Push:", error);
+            }
+        }
+        
+        function loadPopunder() {
+            console.log("Loading Popunder ad...");
+            try {
+                const script = document.createElement('script');
+                script.dataset.zone = '10380855';
+                script.src = 'https://al5sm.com/tag.min.js';
+                script.async = true;
+                document.body.appendChild(script);
+                console.log("Popunder loaded");
+            } catch (error) {
+                console.log("Failed to load Popunder:", error);
             }
         }
         
@@ -963,31 +1093,32 @@
         function saveToHistory(qrData) {
             let history = JSON.parse(localStorage.getItem('nexeqr_history') || '[]');
             
-            // Get QR preview
+            // Create preview
             let preview = '';
             const canvas = document.querySelector('#qrcode canvas');
             if (canvas) {
                 try {
                     preview = canvas.toDataURL('image/png', 0.1);
                 } catch (e) {
-                    console.log("Could not create preview");
+                    // Ignore preview error
                 }
             }
             
-            // Add new item
+            // Add to history
             history.unshift({
-                ...qrData,
                 id: Date.now(),
-                preview: preview
+                text: qrData.text,
+                fgColor: qrData.fgColor,
+                bgColor: qrData.bgColor,
+                preview: preview,
+                timestamp: qrData.timestamp
             });
             
-            // Keep only last 12 items
-            history = history.slice(0, 12);
+            // Keep only last 10 items
+            history = history.slice(0, 10);
             
             localStorage.setItem('nexeqr_history', JSON.stringify(history));
             loadHistory();
-            
-            incrementCounter('generated');
         }
         
         function loadHistory() {
@@ -1001,21 +1132,22 @@
             history.forEach(item => {
                 const historyItem = document.createElement('div');
                 historyItem.className = 'history-item';
+                historyItem.title = item.text;
                 
                 if (item.preview) {
                     historyItem.innerHTML = `
-                        <img src="${item.preview}" alt="QR Code" style="width: 80px; height: 80px; border-radius: 0.25rem; object-fit: cover;">
-                        <div style="font-size: 0.7rem; margin-top: 0.25rem; color: #94a3b8; overflow: hidden; text-overflow: ellipsis;">
-                            ${item.text.substring(0, 20)}${item.text.length > 20 ? '...' : ''}
+                        <img src="${item.preview}" alt="QR Code" style="width: 70px; height: 70px; border-radius: 0.25rem; object-fit: cover;">
+                        <div style="font-size: 0.65rem; margin-top: 0.25rem; color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            ${item.text.substring(0, 15)}${item.text.length > 15 ? '...' : ''}
                         </div>
                     `;
                 } else {
                     historyItem.innerHTML = `
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, ${item.fgColor}, ${item.bgColor}); border-radius: 0.25rem; display: flex; align-items: center; justify-content: center;">
-                            <span style="color: white; font-weight: bold;">QR</span>
+                        <div style="width: 70px; height: 70px; background: linear-gradient(135deg, ${item.fgColor}, ${item.bgColor}); border-radius: 0.25rem; display: flex; align-items: center; justify-content: center;">
+                            <span style="color: white; font-weight: bold; font-size: 0.8rem;">QR</span>
                         </div>
-                        <div style="font-size: 0.7rem; margin-top: 0.25rem; color: #94a3b8;">
-                            ${item.text.substring(0, 20)}${item.text.length > 20 ? '...' : ''}
+                        <div style="font-size: 0.65rem; margin-top: 0.25rem; color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            ${item.text.substring(0, 15)}${item.text.length > 15 ? '...' : ''}
                         </div>
                     `;
                 }
@@ -1026,24 +1158,25 @@
                     document.getElementById('bgColor').value = item.bgColor;
                     generateQRCode();
                 };
+                
                 historyGrid.appendChild(historyItem);
             });
         }
         
         // ==================== STATS FUNCTIONS ====================
         function updateStats() {
-            // Update local counters
             const generated = parseInt(localStorage.getItem('nexeqr_generated') || '0');
             const downloads = parseInt(localStorage.getItem('nexeqr_downloads') || '0');
+            const total = generated + downloads;
             
             if (document.getElementById('totalGenerated')) {
-                document.getElementById('totalGenerated').textContent = generated + downloads + 1;
+                document.getElementById('totalGenerated').textContent = total || 1;
             }
             if (document.getElementById('totalScans')) {
-                document.getElementById('totalScans').textContent = Math.floor((generated + downloads) * 2.5);
+                document.getElementById('totalScans').textContent = Math.floor(total * 3.2) || 5;
             }
             if (document.getElementById('activeUsers')) {
-                document.getElementById('activeUsers').textContent = Math.floor((generated + downloads) / 5) + 1;
+                document.getElementById('activeUsers').textContent = Math.floor(total / 2) + 1 || 3;
             }
         }
         
@@ -1054,29 +1187,31 @@
             updateStats();
         }
         
-        // ==================== MONETIZATION FUNCTIONS ====================
+        // ==================== MONETIZATION ====================
         function triggerMonetization() {
-            console.log("Triggering monetization...");
+            const generated = parseInt(localStorage.getItem('nexeqr_generated') || '0');
             
-            // Random chance to show premium offer (30%)
-            if (Math.random() < 0.3) {
-                setTimeout(showPremiumOffer, 2000);
+            // Show premium offer every 3rd generation
+            if (generated > 0 && generated % 3 === 0) {
+                setTimeout(() => {
+                    if (Math.random() > 0.5) {
+                        showPremiumOffer();
+                    }
+                }, 2000);
             }
             
-            // Trigger In-Page Push every 3rd generation
-            const generated = parseInt(localStorage.getItem('nexeqr_generated') || '0');
-            if (generated > 0 && generated % 3 === 0) {
+            // Trigger In-Page Push every 4th generation
+            if (generated > 0 && generated % 4 === 0) {
                 setTimeout(loadInPagePush, 1500);
             }
         }
         
         function showPremiumOffer() {
-            console.log("Showing premium offer...");
-            // Redirect to CPA offer
+            // Open CPA offer in new tab
             window.open('https://otieu.com/4/10381160', '_blank', 'noopener,noreferrer');
             
             // Also trigger In-Page Push
-            setTimeout(loadInPagePush, 500);
+            setTimeout(loadInPagePush, 300);
         }
         
         // ==================== UI FUNCTIONS ====================
@@ -1091,7 +1226,7 @@
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                padding: 1rem 1.5rem;
+                padding: 0.8rem 1.2rem;
                 background: ${type === 'success' ? '#10b981' : '#ef4444'};
                 color: white;
                 border-radius: 0.5rem;
@@ -1100,6 +1235,7 @@
                 box-shadow: 0 4px 12px rgba(0,0,0,0.2);
                 font-weight: 500;
                 max-width: 300px;
+                font-size: 0.9rem;
             `;
             
             notification.innerHTML = `
