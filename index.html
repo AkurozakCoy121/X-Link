@@ -15,6 +15,12 @@
     <!-- FAVICON -->
     <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/841/841364.png">
     
+    <!-- ADS SCRIPTS YANG BENER -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8227633300969971" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        (function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://inklinkor.com/tag.min.js',10380895,document.body||document.documentElement);
+    </script>
+    
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         :root {
@@ -98,8 +104,8 @@
         .ad-banner.medium { height:250px; width:300px; }
         .ad-label { position:absolute; top:8px; right:8px; background:var(--primary); color:white; padding:3px 10px; border-radius:20px; font-size:0.7rem; z-index:1; }
         
-        /* ADS IFRAME STYLE */
-        .ad-iframe { border:none; width:100%; height:100%; }
+        /* ADS CONTENT */
+        .ad-content { width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--gray); font-style:italic; }
         
         /* MAIN CONTENT */
         .main-content { display:flex; margin-top:20px; gap:20px; }
@@ -354,11 +360,17 @@
         <aside class="sidebar-left">
             <div class="ad-banner vertical">
                 <span class="ad-label">IKLAN</span>
-                <div id="leftSidebarAd">
-                    <iframe src="https://www.highperformanceformat.com/5e0812e16f5b229c05c8d853fc6f9253/invoke.html" 
-                            class="ad-iframe" 
-                            scrolling="no"
-                            title="Advertisement"></iframe>
+                <div class="ad-content" id="leftSidebarAd">
+                    <!-- Google Adsense -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-8227633300969971"
+                         data-ad-slot="1234567890"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
                 </div>
             </div>
         </aside>
@@ -370,11 +382,9 @@
                 <!-- TOP ADS -->
                 <div class="ad-banner horizontal">
                     <span class="ad-label">IKLAN</span>
-                    <div id="topAd">
-                        <iframe src="https://www.highperformanceformat.com/7d3f7dcf6c27eb36646280d85dba51ed/invoke.html" 
-                                class="ad-iframe" 
-                                scrolling="no"
-                                title="Advertisement"></iframe>
+                    <div class="ad-content" id="topAd">
+                        <!-- In-Page Push Ads -->
+                        <div id="ad-container-10380895"></div>
                     </div>
                 </div>
                 
@@ -430,11 +440,15 @@
                     <div class="inline-ad">
                         <div class="ad-banner medium" style="margin:0 auto;">
                             <span class="ad-label">IKLAN</span>
-                            <div id="inlineAd">
-                                <iframe src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.html" 
-                                        class="ad-iframe" 
-                                        scrolling="no"
-                                        title="Advertisement"></iframe>
+                            <div class="ad-content" id="inlineAd">
+                                <!-- Google Adsense -->
+                                <ins class="adsbygoogle"
+                                     style="display:inline-block;width:300px;height:250px"
+                                     data-ad-client="ca-pub-8227633300969971"
+                                     data-ad-slot="9876543210"></ins>
+                                <script>
+                                    (adsbygoogle = window.adsbygoogle || []).push({});
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -586,11 +600,15 @@
             <!-- ADS -->
             <div class="ad-banner medium" style="margin-bottom:25px;">
                 <span class="ad-label">IKLAN</span>
-                <div id="rightSidebarAd">
-                    <iframe src="https://www.highperformanceformat.com/df392223eb071195b98c897f97cb395d/invoke.html" 
-                            class="ad-iframe" 
-                            scrolling="no"
-                            title="Advertisement"></iframe>
+                <div class="ad-content" id="rightSidebarAd">
+                    <!-- Google Adsense -->
+                    <ins class="adsbygoogle"
+                         style="display:inline-block;width:300px;height:250px"
+                         data-ad-client="ca-pub-8227633300969971"
+                         data-ad-slot="9876543210"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
                 </div>
             </div>
             
@@ -680,9 +698,44 @@
                 // Check URL untuk article
                 checkUrlForArticle();
                 
+                // Load ads setelah beberapa detik
+                setTimeout(loadAds, 2000);
+                
             } catch (error) {
                 console.error('Initialization error:', error);
                 showNotification('Error loading application', 'error');
+            }
+        }
+
+        // ========== LOAD ADS ==========
+        function loadAds() {
+            try {
+                // In-Page Push Ads
+                if (typeof window._ipushTag !== 'undefined') {
+                    window._ipushTag.init();
+                }
+                
+                // Google Adsense
+                if (typeof adsbygoogle !== 'undefined') {
+                    adsbygoogle = window.adsbygoogle || [];
+                    adsbygoogle.push({});
+                }
+                
+                // Show ads content
+                document.querySelectorAll('.ad-content').forEach(ad => {
+                    ad.innerHTML = `
+                        <div style="padding:20px; text-align:center;">
+                            <h4 style="color:var(--primary); margin-bottom:10px;">IKLAN SPONSOR</h4>
+                            <p style="color:var(--gray); margin-bottom:15px;">Support NexeNews dengan klik iklan</p>
+                            <a href="https://otieu.com/4/10381160" target="_blank" class="btn btn-warning btn-sm">
+                                <i class="fas fa-external-link-alt"></i> Support Sekarang
+                            </a>
+                        </div>
+                    `;
+                });
+                
+            } catch (error) {
+                console.log('Error loading ads:', error);
             }
         }
 
@@ -836,6 +889,23 @@
                     comments: 0,
                     status: 'published',
                     score: 350
+                },
+                {
+                    id: 'sample2_' + Date.now(),
+                    title: 'Fakta Unik: Indonesia Punya 17.000 Pulau',
+                    category: 'fakta',
+                    image: 'https://images.unsplash.com/photo-1551632811-561732d1e306',
+                    content: '<h2>Keunikan Indonesia</h2><p>Indonesia memiliki lebih dari 17.000 pulau, menjadikannya negara kepulauan terbesar di dunia. Setiap pulau memiliki budaya dan tradisi yang unik.</p><p>Dari Sabang sampai Merauke, Indonesia kaya akan keanekaragaman budaya dan alam.</p>',
+                    excerpt: 'Fakta menarik tentang Indonesia yang mungkin belum kamu tahu',
+                    author: 'Penjelajah',
+                    authorId: 'user2',
+                    authorAvatar: '',
+                    timestamp: Date.now() - 7200000,
+                    views: 89,
+                    likes: 12,
+                    comments: 3,
+                    status: 'published',
+                    score: 120
                 }
             ];
             
@@ -844,12 +914,9 @@
             // Save ke Firebase
             try {
                 const db = firebase.database();
-                await db.ref('articles').set(
-                    sampleArticles.reduce((acc, article) => {
-                        acc[article.id] = article;
-                        return acc;
-                    }, {})
-                );
+                for (const article of sampleArticles) {
+                    await db.ref(`articles/${article.id}`).set(article);
+                }
             } catch (error) {
                 console.error('Error saving sample articles to Firebase:', error);
                 // Save ke localStorage
@@ -1687,6 +1754,139 @@
             setTimeout(() => notification.classList.remove('active'), 3000);
         }
 
+        // ========== ADMIN FUNCTIONS ==========
+        function showAdminPanel() {
+            if (!isAdmin) {
+                showNotification('Hanya admin yang bisa mengakses panel ini', 'error');
+                return;
+            }
+            
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('articlePage').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'block';
+            
+            // Show admin content
+            showAllArticlesAdmin();
+            
+            // Show add admin button untuk admin utama
+            if (userProfile.uid === ADMIN_UIDS[0]) {
+                document.getElementById('addAdminBtn').style.display = 'block';
+            }
+        }
+
+        function showAllArticlesAdmin() {
+            const container = document.getElementById('adminContent');
+            if (!container) return;
+            
+            const allArticles = [...articles].sort((a, b) => b.timestamp - a.timestamp);
+            
+            container.innerHTML = `
+                <h3 style="margin-bottom:20px; color:var(--primary);">Semua Artikel (${allArticles.length})</h3>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr style="background:#f8fafc;">
+                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Judul</th>
+                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Penulis</th>
+                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Status</th>
+                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Views</th>
+                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Likes</th>
+                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${allArticles.map(article => `
+                                <tr style="border-bottom:1px solid #e2e8f0;">
+                                    <td style="padding:12px;">${article.title}</td>
+                                    <td style="padding:12px;">${article.author}</td>
+                                    <td style="padding:12px;">
+                                        <span style="background:${article.status === 'published' ? '#10B981' : '#F59E0B'}; color:white; padding:4px 12px; border-radius:20px; font-size:0.8rem;">
+                                            ${article.status === 'published' ? 'Published' : 'Pending'}
+                                        </span>
+                                    </td>
+                                    <td style="padding:12px;">${article.views || 0}</td>
+                                    <td style="padding:12px;">${article.likes || 0}</td>
+                                    <td style="padding:12px;">
+                                        <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)" style="margin-right:5px;">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteArticleAdmin('${article.id}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        async function deleteArticleAdmin(articleId) {
+            if (!isAdmin) {
+                showNotification('Hanya admin yang bisa menghapus artikel', 'error');
+                return;
+            }
+            
+            if (!confirm('Hapus artikel ini? Tindakan ini tidak dapat dibatalkan.')) return;
+            
+            try {
+                const db = firebase.database();
+                
+                // Delete dari Firebase
+                await db.ref(`articles/${articleId}`).remove();
+                await db.ref(`comments/${articleId}`).remove();
+                await db.ref(`likes/${articleId}`).remove();
+                
+                // Remove from local array
+                const index = articles.findIndex(a => a.id === articleId);
+                if (index !== -1) {
+                    articles.splice(index, 1);
+                }
+                
+                // Update admin panel
+                showAllArticlesAdmin();
+                
+                // Update displays
+                displayTrendingArticles();
+                displayNewestArticles();
+                displayRecommendedArticles();
+                
+                showNotification('Artikel berhasil dihapus', 'success');
+                
+            } catch (error) {
+                console.error('Error deleting article:', error);
+                showNotification('Gagal menghapus artikel', 'error');
+            }
+        }
+
+        function addNewAdmin() {
+            if (userProfile.uid !== ADMIN_UIDS[0]) {
+                showNotification('Hanya admin utama yang bisa menambah admin', 'error');
+                return;
+            }
+            
+            const adminId = prompt('Masukkan User ID admin baru:');
+            if (!adminId) return;
+            
+            try {
+                // Add to admin list
+                if (!ADMIN_UIDS.includes(adminId)) {
+                    ADMIN_UIDS.push(adminId);
+                    showNotification(`Admin ${adminId} berhasil ditambahkan`, 'success');
+                    
+                    // Simpan ke Firebase
+                    const db = firebase.database();
+                    db.ref('adminUids').set(ADMIN_UIDS);
+                } else {
+                    showNotification('Admin sudah ada', 'error');
+                }
+            } catch (error) {
+                showNotification('Gagal menambahkan admin', 'error');
+            }
+        }
+
         // ========== SETUP EVENT LISTENERS ==========
         function setupEventListeners() {
             // Login button
@@ -1866,137 +2066,10 @@
                     .substring(0, 50);
                 document.getElementById('articleSlugInput').value = slug;
             });
-        }
-
-        // ========== ADMIN FUNCTIONS ==========
-        function showAdminPanel() {
-            if (!isAdmin) {
-                showNotification('Hanya admin yang bisa mengakses panel ini', 'error');
-                return;
-            }
             
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('articlePage').style.display = 'none';
-            document.getElementById('profilePage').style.display = 'none';
-            document.getElementById('adminPage').style.display = 'block';
-            
-            // Show admin content
-            showAllArticlesAdmin();
-            
-            // Show add admin button untuk admin utama
-            if (userProfile.uid === ADMIN_UIDS[0]) {
-                document.getElementById('addAdminBtn').style.display = 'block';
-            }
-        }
-
-        function showAllArticlesAdmin() {
-            const container = document.getElementById('adminContent');
-            if (!container) return;
-            
-            const allArticles = [...articles].sort((a, b) => b.timestamp - a.timestamp);
-            
-            container.innerHTML = `
-                <h3 style="margin-bottom:20px; color:var(--primary);">Semua Artikel (${allArticles.length})</h3>
-                <div style="overflow-x:auto;">
-                    <table style="width:100%; border-collapse:collapse;">
-                        <thead>
-                            <tr style="background:#f8fafc;">
-                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Judul</th>
-                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Penulis</th>
-                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Status</th>
-                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Views</th>
-                                <th style="padding:12px; text-align:left; border-bottom:2px solid #e2e8f0;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${allArticles.map(article => `
-                                <tr style="border-bottom:1px solid #e2e8f0;">
-                                    <td style="padding:12px;">${article.title}</td>
-                                    <td style="padding:12px;">${article.author}</td>
-                                    <td style="padding:12px;">
-                                        <span style="background:${article.status === 'published' ? '#10B981' : '#F59E0B'}; color:white; padding:4px 12px; border-radius:20px; font-size:0.8rem;">
-                                            ${article.status === 'published' ? 'Published' : 'Pending'}
-                                        </span>
-                                    </td>
-                                    <td style="padding:12px;">${article.views || 0}</td>
-                                    <td style="padding:12px;">
-                                        <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)" style="margin-right:5px;">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" onclick="deleteArticleAdmin('${article.id}')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        async function deleteArticleAdmin(articleId) {
-            if (!isAdmin) {
-                showNotification('Hanya admin yang bisa menghapus artikel', 'error');
-                return;
-            }
-            
-            if (!confirm('Hapus artikel ini? Tindakan ini tidak dapat dibatalkan.')) return;
-            
-            try {
-                const db = firebase.database();
-                
-                // Delete dari Firebase
-                await db.ref(`articles/${articleId}`).remove();
-                await db.ref(`comments/${articleId}`).remove();
-                await db.ref(`likes/${articleId}`).remove();
-                
-                // Remove from local array
-                const index = articles.findIndex(a => a.id === articleId);
-                if (index !== -1) {
-                    articles.splice(index, 1);
-                }
-                
-                // Update admin panel
-                showAllArticlesAdmin();
-                
-                // Update displays
-                displayTrendingArticles();
-                displayNewestArticles();
-                displayRecommendedArticles();
-                
-                showNotification('Artikel berhasil dihapus', 'success');
-                
-            } catch (error) {
-                console.error('Error deleting article:', error);
-                showNotification('Gagal menghapus artikel', 'error');
-            }
-        }
-
-        function addNewAdmin() {
-            if (userProfile.uid !== ADMIN_UIDS[0]) {
-                showNotification('Hanya admin utama yang bisa menambah admin', 'error');
-                return;
-            }
-            
-            const adminId = prompt('Masukkan User ID admin baru:');
-            if (!adminId) return;
-            
-            try {
-                // Add to admin list
-                if (!ADMIN_UIDS.includes(adminId)) {
-                    ADMIN_UIDS.push(adminId);
-                    showNotification(`Admin ${adminId} berhasil ditambahkan`, 'success');
-                    
-                    // Simpan ke Firebase
-                    const db = firebase.database();
-                    db.ref('adminUids').set(ADMIN_UIDS);
-                } else {
-                    showNotification('Admin sudah ada', 'error');
-                }
-            } catch (error) {
-                showNotification('Gagal menambahkan admin', 'error');
-            }
+            // Admin buttons
+            document.getElementById('adminAllArticlesBtn').addEventListener('click', showAllArticlesAdmin);
+            document.getElementById('addAdminBtn').addEventListener('click', addNewAdmin);
         }
 
         // ========== PAGE NAVIGATION ==========
