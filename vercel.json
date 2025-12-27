@@ -1,6 +1,12 @@
 {
   "rewrites": [
-    { "source": "/:shortCode", "destination": "/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { 
+      "source": "/:code([a-zA-Z0-9]{6})", 
+      "destination": "/index.html" 
+    },
+    { 
+      "source": "/(.*)", 
+      "destination": "/index.html" 
+    }
   ]
 }
