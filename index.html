@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NexeID - Free URL Shortener</title>
     
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
+    <!-- Firebase SDK v8 (SUDAH FIX) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
     <script>
-      // Firebase configuration
+      // Firebase configuration - TAMBAH databaseURL!
       const firebaseConfig = {
         apiKey: "AIzaSyAP7lzXcSwmkOk88rXIx77j8s4gsfUs6k0",
         authDomain: "unews-4db42.firebaseapp.com",
+        databaseURL: "https://unews-4db42-default-rtdb.firebaseio.com", // INI HARUS ADA!
         projectId: "unews-4db42",
         storageBucket: "unews-4db42.firebasestorage.app",
         messagingSenderId: "382914552995",
@@ -68,6 +69,11 @@
         .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #1a5fb4; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
+        /* DIRECT LINK ADS */
+        .direct-ad { margin: 20px 0; padding: 15px; background: linear-gradient(135deg, #1a5fb4, #0d4a9c); color: white; border-radius: 8px; text-align: center; }
+        .direct-ad a { color: white; text-decoration: none; font-weight: bold; }
+        .direct-ad a:hover { text-decoration: underline; }
+        
         footer { margin-top: 40px; text-align: center; color: #999; font-size: 13px; }
         
         @media (max-width: 640px) {
@@ -81,6 +87,12 @@
         <div class="logo">🔗</div>
         <h1>NexeID</h1>
         <p class="tagline">Free URL shortener with random short codes</p>
+        
+        <!-- DIRECT LINK ADS -->
+        <div class="direct-ad">
+            <p>🔥 <strong>Limited Offer:</strong> Get premium features!</p>
+            <p><a href="https://otieu.com/4/10381160" target="_blank" onclick="trackDirectClick()">👉 Click here for exclusive deals 👈</a></p>
+        </div>
         
         <!-- FORM -->
         <div class="form-group">
@@ -133,6 +145,20 @@
                 code += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             return code;
+        }
+        
+        // DIRECT LINK CLICK TRACKING
+        function trackDirectClick() {
+            // Simpan klik di localStorage untuk analytics
+            let clicks = parseInt(localStorage.getItem('direct_ad_clicks') || '0');
+            clicks++;
+            localStorage.setItem('direct_ad_clicks', clicks.toString());
+            
+            // Bisa juga kirim ke Firebase kalo mau
+            // database.ref('ads/clicks').set(clicks);
+            
+            console.log('Direct ad clicked:', clicks);
+            // Link akan terbuka di tab baru (target="_blank")
         }
         
         // CHECK CURRENT PATH (short code request?)
