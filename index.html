@@ -5,13 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NexeID - Developer Tools Collection</title>
     
-    <!-- ADS SCRIPT -->
-    <script>
-        self.options = { domain: '3nbf4.com', zoneId: 10380831 };
-    </script>
-    <script src="https://3nbf4.com/act/files/service-worker.min.js?r=sw"></script>
-    <script>(function(s){s.dataset.zone='10380855',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-    <script>(function(s){s.dataset.zone='10380895',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <!-- PUSH NOTIFICATION ADS (NEW) -->
+    <script src="https://3nbf4.com/act/files/tag.min.js?z=10381259" data-cfasync="false" async></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
@@ -34,7 +29,7 @@
         
         /* TOOL GRID */
         .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
-        .tool-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 25px; transition: all 0.3s; }
+        .tool-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 25px; transition: all 0.3s; cursor: pointer; }
         .tool-card:hover { transform: translateY(-5px); border-color: #58a6ff; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
         .tool-icon { font-size: 30px; margin-bottom: 15px; }
         .tool-card h3 { color: #f0f0f0; margin-bottom: 10px; }
@@ -138,8 +133,8 @@
                 </div>
                 <div class="tool-card" onclick="showTool('encoder')">
                     <div class="tool-icon">🔣</div>
-                    <h3>Base64 Encoder</h3>
-                    <p>Encode/decode Base64, URL encoding, HTML entities, and more.</p>
+                    <h3>Encoder/Decoder</h3>
+                    <p>Base64, URL encoding, HTML entities, and character conversion.</p>
                 </div>
                 <div class="tool-card" onclick="showTool('generator')">
                     <div class="tool-icon">🎲</div>
@@ -245,17 +240,6 @@
                 </div>
                 
                 <div id="jsonOutput" class="output-box"></div>
-                
-                <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div>
-                        <h3 style="color: #f0f0f0; margin-bottom: 10px;">JSON to CSV</h3>
-                        <button onclick="jsonToCSV()">Convert to CSV</button>
-                    </div>
-                    <div>
-                        <h3 style="color: #f0f0f0; margin-bottom: 10px;">JSON Schema</h3>
-                        <button onclick="generateJSONSchema()">Generate Schema</button>
-                    </div>
-                </div>
             `;
             document.getElementById('toolContent').innerHTML = content;
         }
@@ -290,6 +274,18 @@
             }
         }
         
+        function escapeJSON() {
+            const input = document.getElementById('jsonInput').value;
+            const escaped = input.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
+            document.getElementById('jsonOutput').innerHTML = 
+                `<pre>${escaped}</pre>`;
+        }
+        
+        function clearJSON() {
+            document.getElementById('jsonInput').value = '';
+            document.getElementById('jsonOutput').innerHTML = '';
+        }
+        
         // ==================== ENCODER TOOL ====================
         function loadEncoderTool() {
             const content = `
@@ -320,7 +316,7 @@
         
         function encodeBase64() {
             const input = document.getElementById('base64Input').value;
-            const encoded = btoa(input);
+            const encoded = btoa(unescape(encodeURIComponent(input)));
             document.getElementById('encoderOutput').innerHTML = 
                 `<pre>${encoded}</pre>`;
         }
@@ -328,12 +324,31 @@
         function decodeBase64() {
             try {
                 const input = document.getElementById('base64Input').value;
-                const decoded = atob(input);
+                const decoded = decodeURIComponent(escape(atob(input)));
                 document.getElementById('encoderOutput').innerHTML = 
                     `<pre>${decoded}</pre>`;
             } catch {
                 document.getElementById('encoderOutput').innerHTML = 
                     `<div style="color:#da3633;">❌ Invalid Base64</div>`;
+            }
+        }
+        
+        function encodeURL() {
+            const input = document.getElementById('urlInput').value;
+            const encoded = encodeURIComponent(input);
+            document.getElementById('encoderOutput').innerHTML = 
+                `<pre>${encoded}</pre>`;
+        }
+        
+        function decodeURL() {
+            try {
+                const input = document.getElementById('urlInput').value;
+                const decoded = decodeURIComponent(input);
+                document.getElementById('encoderOutput').innerHTML = 
+                    `<pre>${decoded}</pre>`;
+            } catch {
+                document.getElementById('encoderOutput').innerHTML = 
+                    `<div style="color:#da3633;">❌ Invalid URL encoding</div>`;
             }
         }
         
@@ -382,7 +397,7 @@
         }
         
         function generatePassword() {
-            const length = document.getElementById('passLength').value || 12;
+            const length = parseInt(document.getElementById('passLength').value) || 12;
             const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
             let password = "";
             for (let i = 0; i < length; i++) {
@@ -392,24 +407,51 @@
                 `<pre>${password}</pre><button onclick="copyToClipboard('${password}')" class="secondary" style="margin-top: 10px;">Copy</button>`;
         }
         
+        function generateFakeName() {
+            const names = ["Ahmad", "Budi", "Citra", "Dewi", "Eko", "Fajar", "Gita", "Hadi", "Indra", "Joko"];
+            const surnames = ["Santoso", "Wijaya", "Purnama", "Kusuma", "Nugroho", "Pratama", "Saputra", "Hidayat", "Setiawan", "Ramadan"];
+            const name = names[Math.floor(Math.random() * names.length)] + " " + surnames[Math.floor(Math.random() * surnames.length)];
+            document.getElementById('generatorOutput').innerHTML = 
+                `<pre>${name}</pre><button onclick="copyToClipboard('${name}')" class="secondary" style="margin-top: 10px;">Copy</button>`;
+        }
+        
+        function generateFakeEmail() {
+            const domains = ["gmail.com", "yahoo.com", "outlook.com", "protonmail.com", "nexeid.my.id"];
+            const name = Math.random().toString(36).substring(2, 10);
+            const domain = domains[Math.floor(Math.random() * domains.length)];
+            const email = `${name}@${domain}`;
+            document.getElementById('generatorOutput').innerHTML = 
+                `<pre>${email}</pre><button onclick="copyToClipboard('${email}')" class="secondary" style="margin-top: 10px;">Copy</button>`;
+        }
+        
+        function generateFakeAddress() {
+            const streets = ["Jl. Sudirman", "Jl. Thamrin", "Jl. Gatot Subroto", "Jl. MH Thamrin", "Jl. Panglima Polim"];
+            const cities = ["Jakarta", "Bandung", "Surabaya", "Medan", "Makassar"];
+            const street = streets[Math.floor(Math.random() * streets.length)] + " No. " + (Math.floor(Math.random() * 100) + 1);
+            const city = cities[Math.floor(Math.random() * cities.length)];
+            const address = `${street}, ${city}`;
+            document.getElementById('generatorOutput').innerHTML = 
+                `<pre>${address}</pre><button onclick="copyToClipboard('${address}')" class="secondary" style="margin-top: 10px;">Copy</button>`;
+        }
+        
         // ==================== UTILITY FUNCTIONS ====================
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 alert('Copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Copied to clipboard!');
             });
         }
         
-        function clearJSON() {
-            document.getElementById('jsonInput').value = '';
-            document.getElementById('jsonOutput').innerHTML = '';
-        }
-        
-        // ==================== MORE TOOLS CAN BE ADDED HERE ====================
-        // (Color Tools, Text Tools, Web Tools, etc.)
-        
-        // Initialize
+        // ==================== INITIALIZE ====================
         window.onload = function() {
-            // Show homepage by default
             document.getElementById('toolsOverview').style.display = 'block';
         };
     </script>
