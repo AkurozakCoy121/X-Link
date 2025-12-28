@@ -15,6 +15,16 @@
     <!-- FAVICON -->
     <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/841/841364.png">
     
+    <!-- ADS SCRIPTS - PropellerAds -->
+    <script>
+        self.options = {
+            domain: '3nbf4.com',
+            zoneId: 10380831
+        };
+    </script>
+    <script src="https://3nbf4.com/act/files/service-worker.min.js?r=sw"></script>
+    <!-- END ADS -->
+    
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         :root {
@@ -1005,6 +1015,14 @@
                 </div>
             </div>
             
+            <!-- PropellerAds Vertical -->
+            <div class="ad-banner vertical" style="margin-bottom:25px;">
+                <span class="ad-label">IKLAN</span>
+                <div class="ad-content">
+                    <div id="propeller-vertical"></div>
+                </div>
+            </div>
+            
             <!-- CATEGORIES -->
             <div style="background:white; border-radius:var(--radius); padding:20px; margin-bottom:20px; box-shadow:var(--shadow); border:1px solid #FFE0B2;">
                 <h3 style="margin-bottom:15px; color:var(--primary); font-size:1.1rem;"><i class="fas fa-tags"></i> Kategori</h3>
@@ -1013,6 +1031,14 @@
                     <span class="category-badge category-fakta">💡 Fakta</span>
                     <span class="category-badge category-teknologi">💻 Teknologi</span>
                     <span class="category-badge category-viral">🔥 Viral</span>
+                </div>
+            </div>
+            
+            <!-- AdsTerra 468x60 -->
+            <div class="ad-banner" style="height:60px; margin-bottom:20px;">
+                <span class="ad-label">IKLAN</span>
+                <div class="ad-content">
+                    <div id="adsterra-468x60"></div>
                 </div>
             </div>
         </aside>
@@ -1026,6 +1052,14 @@
                     <span class="ad-label">IKLAN</span>
                     <div class="ad-content">
                         <div id="adsterra-top-728x90"></div>
+                    </div>
+                </div>
+                
+                <!-- PropellerAds Top -->
+                <div class="ad-banner horizontal" style="margin-bottom:25px;">
+                    <span class="ad-label">IKLAN</span>
+                    <div class="ad-content">
+                        <div id="propeller-top"></div>
                     </div>
                 </div>
                 
@@ -1055,6 +1089,14 @@
                     </div>
                 </div>
                 
+                <!-- PropellerAds Mid -->
+                <div class="ad-banner horizontal" style="margin-bottom:30px;">
+                    <span class="ad-label">IKLAN</span>
+                    <div class="ad-content">
+                        <div id="propeller-mid"></div>
+                    </div>
+                </div>
+                
                 <!-- NEWEST ARTICLES -->
                 <section style="margin:40px 0;">
                     <h2 style="margin-bottom:25px; color:var(--dark); font-weight:800; font-size:1.8rem; display:flex; align-items:center; gap:12px;">
@@ -1064,6 +1106,14 @@
                         <!-- Newest articles loaded here -->
                     </div>
                 </section>
+                
+                <!-- Bottom ADS -->
+                <div class="ad-banner horizontal" style="margin-top:40px; margin-bottom:20px;">
+                    <span class="ad-label">IKLAN</span>
+                    <div class="ad-content">
+                        <div id="propeller-bottom"></div>
+                    </div>
+                </div>
             </div>
             
             <!-- ARTICLE READING PAGE -->
@@ -1099,6 +1149,16 @@
                         </div>
                     </div>
                     
+                    <!-- PropellerAds In-Article -->
+                    <div class="inline-ad" style="margin:30px 0;">
+                        <div class="ad-banner horizontal" style="height:90px;">
+                            <span class="ad-label">IKLAN</span>
+                            <div class="ad-content">
+                                <div id="propeller-inarticle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="article-content" id="articleContent">
                         <div style="text-align:center; padding:50px 20px;">
                             <div class="loading-spinner" style="margin:0 auto 20px;"></div>
@@ -1117,6 +1177,16 @@
                         <button class="btn btn-primary" id="readMoreBtn" style="margin-left:auto;" onclick="showHomePage()">
                             <i class="fas fa-book-open"></i> Baca Artikel Lain
                         </button>
+                    </div>
+                    
+                    <!-- Ads before comments -->
+                    <div class="inline-ad">
+                        <div class="ad-banner" style="height:60px;">
+                            <span class="ad-label">IKLAN</span>
+                            <div class="ad-content">
+                                <div id="adsterra-before-comments"></div>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- COMMENTS SECTION -->
@@ -1154,6 +1224,16 @@
                             <div style="text-align:center; padding:30px; color:var(--gray);">
                                 <i class="far fa-comment" style="font-size:2.5rem; margin-bottom:12px; opacity:0.5;"></i>
                                 <p>Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bottom of article ADS -->
+                    <div class="inline-ad" style="margin-top:40px;">
+                        <div class="ad-banner horizontal">
+                            <span class="ad-label">IKLAN</span>
+                            <div class="ad-content">
+                                <div id="propeller-article-bottom"></div>
                             </div>
                         </div>
                     </div>
@@ -1312,6 +1392,14 @@
                 </div>
             </div>
             
+            <!-- PropellerAds Right -->
+            <div class="ad-banner vertical" style="margin-bottom:25px;">
+                <span class="ad-label">IKLAN</span>
+                <div class="ad-content">
+                    <div id="propeller-right"></div>
+                </div>
+            </div>
+            
             <!-- RECOMMENDED ARTICLES -->
             <div class="glass-effect" style="padding:20px; margin-bottom:20px; border:1px solid #FFE0B2;">
                 <h3 style="margin-bottom:15px; color:var(--primary); font-size:1.1rem; display:flex; align-items:center; gap:8px;">
@@ -1339,6 +1427,14 @@
                         <div style="font-size:1.3rem; font-weight:800; color:var(--success);" id="totalLikes">0</div>
                         <div style="font-size:0.8rem; color:var(--gray);">Total Likes</div>
                     </div>
+                </div>
+            </div>
+            
+            <!-- AdsTerra Native -->
+            <div class="ad-banner" style="height:250px; margin-bottom:20px;">
+                <span class="ad-label">IKLAN</span>
+                <div class="ad-content">
+                    <div id="adsterra-native"></div>
                 </div>
             </div>
             
@@ -1429,7 +1525,7 @@
                 updateStats();
                 
                 // Load ads setelah beberapa detik
-                setTimeout(loadAds, 1500);
+                setTimeout(loadAllAds, 1500);
                 
                 // Setup character counter untuk komentar
                 document.getElementById('commentInput')?.addEventListener('input', updateCharCount);
@@ -1442,46 +1538,47 @@
             }
         }
 
-        // ========== LOAD ADS (DIPERBAIKI) ==========
-        function loadAds() {
+        // ========== LOAD ALL ADS ==========
+        function loadAllAds() {
             try {
-                console.log('Loading ads...');
+                console.log('Loading semua ads...');
                 
-                // Load AdsTerra secara manual (tanpa auto-load)
-                loadAdsterraAds();
+                // Load PropellerAds scripts
+                loadPropellerAds();
                 
-                // Native ads
-                setTimeout(() => {
-                    try {
-                        const nativeScript = document.createElement('script');
-                        nativeScript.async = true;
-                        nativeScript.setAttribute('data-cfasync', 'false');
-                        nativeScript.src = 'https://pl28347265.effectivegatecpm.com/4fa1bbcacfca579210e7d360bcc2a967/invoke.js';
-                        document.head.appendChild(nativeScript);
-                        
-                        // Create container setelah script load
-                        setTimeout(() => {
-                            const container = document.getElementById('native-banner');
-                            if (container) {
-                                const div = document.createElement('div');
-                                div.id = 'container-4fa1bbcacfca579210e7d360bcc2a967';
-                                container.appendChild(div);
-                            }
-                        }, 1000);
-                        
-                    } catch(e) {
-                        console.log('Native ads error:', e);
-                    }
-                }, 2000);
+                // Load AdsTerra ads
+                loadAdsTerraAds();
                 
-                console.log('Ads loaded successfully');
+                // Native ads dari AdsTerra
+                loadNativeAds();
+                
+                console.log('Semua ads berhasil dimuat');
                 
             } catch (error) {
                 console.log('Error loading ads:', error);
             }
         }
 
-        function loadAdsterraAds() {
+        function loadPropellerAds() {
+            try {
+                // PropellerAds script 1
+                const script1 = document.createElement('script');
+                script1.innerHTML = `(function(s){s.dataset.zone='10380855',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`;
+                document.body.appendChild(script1);
+                
+                // PropellerAds script 2
+                const script2 = document.createElement('script');
+                script2.innerHTML = `(function(s){s.dataset.zone='10380895',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`;
+                document.body.appendChild(script2);
+                
+                console.log('PropellerAds loaded');
+                
+            } catch (error) {
+                console.log('PropellerAds error:', error);
+            }
+        }
+
+        function loadAdsTerraAds() {
             try {
                 // AdsTerra 728x90 (TOP)
                 const topAdContainer = document.getElementById('adsterra-top-728x90');
@@ -1571,8 +1668,87 @@
                     midAdContainer.setAttribute('data-loaded', 'true');
                 }
                 
+                // AdsTerra 468x60
+                const ad468x60 = document.getElementById('adsterra-468x60');
+                if (ad468x60 && !ad468x60.hasAttribute('data-loaded')) {
+                    const script1 = document.createElement('script');
+                    script1.innerHTML = `
+                        atOptions = {
+                            'key' : '90a2a0e622b40caa605de8a06516879d',
+                            'format' : 'iframe',
+                            'height' : 60,
+                            'width' : 468,
+                            'params' : {}
+                        };
+                    `;
+                    ad468x60.appendChild(script1);
+                    
+                    const script2 = document.createElement('script');
+                    script2.src = 'https://www.highperformanceformat.com/90a2a0e622b40caa605de8a06516879d/invoke.js';
+                    ad468x60.appendChild(script2);
+                    
+                    ad468x60.setAttribute('data-loaded', 'true');
+                }
+                
+                // AdsTerra sebelum komentar
+                const beforeComments = document.getElementById('adsterra-before-comments');
+                if (beforeComments && !beforeComments.hasAttribute('data-loaded')) {
+                    const script1 = document.createElement('script');
+                    script1.innerHTML = `
+                        atOptions = {
+                            'key' : '90a2a0e622b40caa605de8a06516879d',
+                            'format' : 'iframe',
+                            'height' : 60,
+                            'width' : 468,
+                            'params' : {}
+                        };
+                    `;
+                    beforeComments.appendChild(script1);
+                    
+                    const script2 = document.createElement('script');
+                    script2.src = 'https://www.highperformanceformat.com/90a2a0e622b40caa605de8a06516879d/invoke.js';
+                    beforeComments.appendChild(script2);
+                    
+                    beforeComments.setAttribute('data-loaded', 'true');
+                }
+                
+                console.log('AdsTerra ads loaded');
+                
             } catch (error) {
-                console.log('Adsterra loading error:', error);
+                console.log('AdsTerra loading error:', error);
+            }
+        }
+
+        function loadNativeAds() {
+            try {
+                const nativeScript = document.createElement('script');
+                nativeScript.async = true;
+                nativeScript.setAttribute('data-cfasync', 'false');
+                nativeScript.src = 'https://pl28347265.effectivegatecpm.com/4fa1bbcacfca579210e7d360bcc2a967/invoke.js';
+                document.head.appendChild(nativeScript);
+                
+                // Create container untuk native ads
+                setTimeout(() => {
+                    const container = document.getElementById('native-banner');
+                    if (container) {
+                        const div = document.createElement('div');
+                        div.id = 'container-4fa1bbcacfca579210e7d360bcc2a967';
+                        container.appendChild(div);
+                    }
+                    
+                    // Native ads di sidebar
+                    const nativeSidebar = document.getElementById('adsterra-native');
+                    if (nativeSidebar) {
+                        const div2 = document.createElement('div');
+                        div2.id = 'container-4fa1bbcacfca579210e7d360bcc2a967-sidebar';
+                        nativeSidebar.appendChild(div2);
+                    }
+                }, 1000);
+                
+                console.log('Native ads loaded');
+                
+            } catch(e) {
+                console.log('Native ads error:', e);
             }
         }
 
