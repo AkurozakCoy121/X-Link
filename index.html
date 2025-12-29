@@ -1811,14 +1811,14 @@
                     });
                 }
                 
-                // Setup anonymous login
+                // Setup Firebase auth dengan error handling
                 await setupFirebaseAuth();
-                
-                // Load data dari Firebase
-                await loadArticlesFromFirebase();
                 
                 // Setup event listeners
                 setupEventListeners();
+                
+                // Load data dari Firebase
+                await loadArticlesFromFirebase();
                 
                 // Check URL untuk article
                 checkUrlForArticle();
@@ -1893,57 +1893,29 @@
             try {
                 // Cek apakah ada user di localStorage
                 const savedUser = localStorage.getItem('nexenews_user');
+                
                 if (savedUser) {
-                    const userData = JSON.parse(savedUser);
-                    currentUser = { uid: userData.uid };
-                    userProfile = userData;
-                    
-                    // Cek di Firebase apakah user masih valid
                     try {
+                        const userData = JSON.parse(savedUser);
+                        currentUser = { uid: userData.uid };
+                        userProfile = userData;
+                        
+                        // Cek di Firebase apakah user masih valid
                         const db = firebase.database();
                         const snapshot = await db.ref(`users/${userData.uid}`).once('value');
+                        
                         if (snapshot.exists()) {
                             userProfile = { ...userData, ...snapshot.val() };
+                        } else {
+                            // Buat user baru di Firebase
+                            await db.ref(`users/${userData.uid}`).set(userData);
                         }
                     } catch (error) {
-                        console.log('Using cached user data');
+                        console.log('Error loading saved user, creating new guest...');
+                        createGuestUser();
                     }
                 } else {
-                    // Login anonymous dengan user ID yang konsisten
-                    const guestId = 'guest_' + localStorage.getItem('nexenews_guest_id') || 
-                                   'guest_' + Math.random().toString(36).substr(2, 9);
-                    
-                    if (!localStorage.getItem('nexenews_guest_id')) {
-                        localStorage.setItem('nexenews_guest_id', guestId);
-                    }
-                    
-                    currentUser = { uid: guestId };
-                    
-                    // Cek di Firebase
-                    const db = firebase.database();
-                    const snapshot = await db.ref(`users/${guestId}`).once('value');
-                    
-                    if (snapshot.exists()) {
-                        userProfile = snapshot.val();
-                    } else {
-                        userProfile = {
-                            uid: guestId,
-                            username: 'Pengguna_' + Math.floor(Math.random() * 10000),
-                            email: '',
-                            avatar: '',
-                            isGuest: true,
-                            joinDate: Date.now(),
-                            stats: {
-                                articles: 0,
-                                likes: 0,
-                                views: 0
-                            }
-                        };
-                        
-                        await db.ref(`users/${guestId}`).set(userProfile);
-                    }
-                    
-                    localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+                    createGuestUser();
                 }
                 
                 // Check admin status
@@ -1955,32 +1927,44 @@
             } catch (error) {
                 console.error('Firebase auth error:', error);
                 // Fallback ke localStorage
-                setupLocalStorageAuth();
+                createGuestUser();
             }
         }
 
-        function setupLocalStorageAuth() {
-            const savedUser = localStorage.getItem('nexenews_user');
-            if (savedUser) {
-                userProfile = JSON.parse(savedUser);
-                currentUser = { uid: userProfile.uid };
-            } else {
-                const guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
-                userProfile = {
-                    uid: guestId,
-                    username: 'Pengguna',
-                    email: '',
-                    avatar: '',
-                    isGuest: true,
-                    joinDate: Date.now(),
-                    stats: {
-                        articles: 0,
-                        likes: 0,
-                        views: 0
-                    }
-                };
-                currentUser = { uid: guestId };
-                localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+        function createGuestUser() {
+            // Generate guest ID yang konsisten
+            let guestId = localStorage.getItem('nexenews_guest_id');
+            if (!guestId) {
+                guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+                localStorage.setItem('nexenews_guest_id', guestId);
+            }
+            
+            currentUser = { uid: guestId };
+            
+            userProfile = {
+                uid: guestId,
+                username: 'Pengguna_' + Math.floor(Math.random() * 10000),
+                email: '',
+                avatar: '',
+                isGuest: true,
+                joinDate: Date.now(),
+                stats: {
+                    articles: 0,
+                    likes: 0,
+                    views: 0
+                }
+            };
+            
+            localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+            
+            // Coba simpan ke Firebase jika bisa
+            try {
+                const db = firebase.database();
+                db.ref(`users/${guestId}`).set(userProfile).catch(() => {
+                    console.log('Failed to save guest to Firebase, using localStorage only');
+                });
+            } catch (error) {
+                console.log('Firebase not available, using localStorage');
             }
             
             updateUserUI();
@@ -2448,40 +2432,7 @@
         async function logoutUser() {
             try {
                 // Reset ke guest
-                const guestId = 'guest_' + localStorage.getItem('nexenews_guest_id') || 
-                               'guest_' + Math.random().toString(36).substr(2, 9);
-                
-                if (!localStorage.getItem('nexenews_guest_id')) {
-                    localStorage.setItem('nexenews_guest_id', guestId);
-                }
-                
-                currentUser = { uid: guestId };
-                
-                // Load guest profile
-                const db = firebase.database();
-                const snapshot = await db.ref(`users/${guestId}`).once('value');
-                
-                if (snapshot.exists()) {
-                    userProfile = snapshot.val();
-                } else {
-                    userProfile = {
-                        uid: guestId,
-                        username: 'Pengguna_' + Math.floor(Math.random() * 10000),
-                        email: '',
-                        avatar: '',
-                        isGuest: true,
-                        joinDate: Date.now(),
-                        stats: {
-                            articles: 0,
-                            likes: 0,
-                            views: 0
-                        }
-                    };
-                    
-                    await db.ref(`users/${guestId}`).set(userProfile);
-                }
-                
-                localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+                createGuestUser();
                 
                 isAdmin = false;
                 
@@ -3726,6 +3677,55 @@
                 const article = articles.find(a => a.id === articleId || a.slug === articleId);
                 if (article) {
                     setTimeout(() => openArticle(article.id, true), 1000);
+                }
+            }
+        }
+
+        // ========== UPDATE USER UI ==========
+        function updateUserUI() {
+            if (!userProfile) {
+                document.getElementById('userAvatar').style.display = 'none';
+                document.getElementById('loginBtn').style.display = 'block';
+                return;
+            }
+            
+            const avatar = document.getElementById('userAvatar');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (userProfile.isGuest) {
+                avatar.style.display = 'none';
+                loginBtn.style.display = 'block';
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+            } else {
+                avatar.style.display = 'flex';
+                loginBtn.style.display = 'none';
+                
+                const firstLetter = userProfile.username.charAt(0).toUpperCase();
+                avatar.textContent = firstLetter;
+                
+                const colors = {
+                    'R': '#F44336', 'A': '#FF5722', 'B': '#FF9800', 'C': '#4CAF50', 
+                    'D': '#FFC107', 'E': '#FF9800', 'F': '#2196F3', 'G': '#00BCD4',
+                    'H': '#8BC34A', 'I': '#FF5722', 'J': '#E91E63', 'K': '#3F51B5',
+                    'L': '#009688', 'M': '#F44336', 'N': '#FF9800', 'O': '#FF5722',
+                    'P': '#4CAF50', 'Q': '#FF9800', 'S': '#FF5722', 'T': '#FF9800',
+                    'U': '#4CAF50', 'V': '#FFC107', 'W': '#FF9800', 'X': '#2196F3',
+                    'Y': '#00BCD4', 'Z': '#8BC34A'
+                };
+                
+                const color = colors[firstLetter] || '#FF5722';
+                avatar.style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
+                avatar.style.color = 'white';
+                
+                document.getElementById('popupUsername').textContent = userProfile.username;
+                document.getElementById('popupEmail').textContent = userProfile.email || 'Tidak ada email';
+                document.getElementById('popupAvatar').textContent = firstLetter;
+                document.getElementById('popupAvatar').style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
+                document.getElementById('popupArticles').textContent = userProfile.stats?.articles || 0;
+                document.getElementById('popupLikes').textContent = userProfile.stats?.likes || 0;
+                
+                if (isAdmin) {
+                    document.getElementById('popupAdminBtn').style.display = 'block';
                 }
             }
         }
