@@ -3,77 +3,3754 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>NexeNews - Platform Berita Viral Indonesia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.5/dist/quill.snow.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.5/dist/quill.js"></script>
+    
+    <!-- FAVICON -->
+    <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/841/841364.png">
+    
+    <!-- ADS SCRIPTS - PropellerAds -->
+    <script>
+        self.options = {
+            domain: '3nbf4.com',
+            zoneId: 10380831
+        };
+    </script>
+    <script src="https://3nbf4.com/act/files/service-worker.min.js?r=sw"></script>
+    
+    <!-- Adsterra Popunder -->
+    <script src="https://pl28354765.effectivegatecpm.com/4e/ae/a3/4eaea3d589b3192c4d7c30b94bad1c4e.js"></script>
+    <!-- END ADS -->
+    
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f8f9fa; /* Abu-abu sangat muda, bersih */
-            color: #333;
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --primary:#FF5722; --secondary:#FF9800; --accent:#FFC107; 
+            --white:#fff; --dark:#333333; --gray:#757575; --light:#FFF8F0;
+            --success:#4CAF50; --danger:#F44336; --warning:#FF9800; --info:#2196F3;
+            --radius:12px; --radius-sm:6px; --radius-lg:16px;
+            --shadow:0 4px 12px rgba(255, 87, 34, 0.1); 
+            --shadow-lg:0 12px 32px rgba(0,0,0,0.12);
+            --shadow-sm:0 2px 8px rgba(0,0,0,0.05);
+            --transition:all 0.3s ease;
+            --gradient-primary:linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
+            --gradient-warning:linear-gradient(135deg, #FF9800 0%, #FFC107 100%);
+            --gradient-success:linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            --gradient-orange:linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
+            --gradient-light:linear-gradient(135deg, #FFF8F0 0%, #FFF3E0 100%);
+            --sidebar-width:240px; --header-height:70px;
         }
-
-        .container {
-            text-align: center;
-            max-width: 600px;
-            padding: 20px;
+        body { 
+            font-family:'Poppins',sans-serif; 
+            color:var(--dark); 
+            background:#FFF8F0; 
+            line-height:1.6; 
         }
-
-        .icon-box {
+        .container { max-width:1400px; margin:0 auto; padding:0 20px; }
+        
+        /* GLASS MORPHISM EFFECT */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow);
+        }
+        
+        /* BUTTONS */
+        .btn { 
+            border:none; 
+            border-radius:var(--radius); 
+            padding:12px 24px; 
+            font-weight:600; 
+            cursor:pointer; 
+            transition:var(--transition); 
+            display:inline-flex; 
+            align-items:center; 
+            gap:8px; 
+            font-size:0.95rem; 
+            position:relative; 
+            overflow:hidden; 
+            font-family:'Poppins',sans-serif;
+        }
+        .btn-primary { 
+            background:var(--gradient-primary); 
+            color:var(--white); 
+            box-shadow:0 4px 12px rgba(255, 87, 34, 0.25); 
+        }
+        .btn-primary:hover { 
+            transform:translateY(-2px); 
+            box-shadow:0 6px 20px rgba(255, 87, 34, 0.35); 
+        }
+        .btn-secondary { 
+            background:transparent; 
+            color:var(--primary); 
+            border:2px solid var(--primary); 
+        }
+        .btn-secondary:hover { 
+            background:var(--primary); 
+            color:white; 
+            transform:translateY(-2px); 
+        }
+        .btn-success { 
+            background:var(--gradient-success); 
+            color:white; 
+            box-shadow:0 4px 12px rgba(76, 175, 80, 0.25); 
+        }
+        .btn-danger { 
+            background:var(--gradient-warning); 
+            color:white; 
+            box-shadow:0 4px 12px rgba(255, 152, 0, 0.25); 
+        }
+        .btn-warning { 
+            background:var(--gradient-warning); 
+            color:var(--dark); 
+            box-shadow:0 4px 12px rgba(255, 152, 0, 0.25); 
+        }
+        .btn-sm { padding:8px 16px; font-size:0.85rem; }
+        .btn-lg { padding:14px 28px; font-size:1rem; }
+        .btn-icon { width:40px; height:40px; padding:0; justify-content:center; border-radius:50%; }
+        
+        /* MODAL */
+        .modal { 
+            position:fixed; 
+            top:0; left:0; 
+            width:100%; 
+            height:100%; 
+            background:rgba(0,0,0,0.7); 
+            display:none; 
+            align-items:center; 
+            justify-content:center; 
+            z-index:2000; 
+            backdrop-filter:blur(5px); 
+        }
+        .modal.active { 
+            display:flex; 
+            animation:modalBgFade 0.3s ease; 
+        }
+        @keyframes modalBgFade { 
+            from { background:rgba(0,0,0,0); backdrop-filter:blur(0); } 
+            to { background:rgba(0,0,0,0.7); backdrop-filter:blur(5px); } 
+        }
+        .modal-content { 
+            background:white; 
+            border-radius:var(--radius-lg); 
+            max-width:90%; 
+            max-height:90vh; 
+            overflow-y:auto; 
+            animation:modalSlideUp 0.4s ease; 
+            box-shadow:0 20px 60px rgba(0,0,0,0.3); 
+            border:none;
+        }
+        @keyframes modalSlideUp { 
+            from { opacity:0; transform:translateY(40px) scale(0.95); } 
+            to { opacity:1; transform:translateY(0) scale(1); } 
+        }
+        .modal-header { 
+            padding:20px 25px; 
+            border-bottom:1px solid #FFE0B2; 
+            display:flex; 
+            justify-content:space-between; 
+            align-items:center; 
+            background:var(--gradient-primary); 
+            color:white; 
+            border-radius:var(--radius-lg) var(--radius-lg) 0 0; 
+        }
+        .modal-close { 
+            background:none; 
+            border:none; 
+            font-size:1.5rem; 
+            cursor:pointer; 
+            color:rgba(255,255,255,0.9); 
+            transition:var(--transition); 
+            width:36px; height:36px; 
+            border-radius:50%; 
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+        }
+        .modal-close:hover { 
+            background:rgba(255,255,255,0.2); 
+            color:white; 
+            transform:rotate(90deg); 
+        }
+        .modal-body { padding:25px; }
+        
+        /* NOTIFICATION */
+        .notification { 
+            position:fixed; 
+            top:20px; 
+            right:20px; 
+            padding:15px 25px; 
+            border-radius:var(--radius); 
+            color:white; 
+            z-index:3000; 
+            display:none; 
+            animation:slideInRight 0.3s ease; 
+            box-shadow:var(--shadow-lg); 
+            backdrop-filter:blur(10px); 
+            border:1px solid rgba(255,255,255,0.2); 
+            min-width:280px; 
+            max-width:400px;
+        }
+        .notification.active { 
+            display:flex; 
+            align-items:center; 
+            gap:12px; 
+        }
+        @keyframes slideInRight { 
+            from { transform:translateX(100px); opacity:0; } 
+            to { transform:translateX(0); opacity:1; } 
+        }
+        .notification-icon { font-size:1.3rem; }
+        
+        /* SEARCH RESULTS */
+        .search-result-item { 
+            padding:15px; 
+            border-bottom:1px solid #FFE0B2; 
+            display:flex; 
+            gap:12px; 
+            align-items:center; 
+            cursor:pointer; 
+            transition:var(--transition); 
+            background:#FFF8F0;
+        }
+        .search-result-item:hover { 
+            background:#FFECB3; 
+            transform:translateX(5px); 
+        }
+        .search-result-image { 
+            width:70px; 
+            height:50px; 
+            border-radius:var(--radius-sm); 
+            object-fit:cover; 
+            box-shadow:var(--shadow-sm); 
+        }
+        .search-result-content h4 { 
+            margin-bottom:5px; 
+            font-size:0.9rem; 
+            font-weight:600; 
+            color:var(--dark);
+        }
+        .search-result-content p { 
+            font-size:0.8rem; 
+            color:var(--gray); 
+        }
+        
+        /* HEADER */
+        .header { 
+            background:var(--white); 
+            box-shadow:0 4px 20px rgba(255, 87, 34, 0.15); 
+            position:sticky; 
+            top:0; 
+            z-index:1000; 
+            height:var(--header-height); 
+            backdrop-filter:blur(10px); 
+            background:rgba(255, 255, 255, 0.95); 
+            border-bottom:1px solid #FFE0B2;
+        }
+        .header-container { 
+            display:flex; 
+            align-items:center; 
+            padding:0 25px; 
+            height:100%; 
+            max-width:1400px; 
+            margin:0 auto; 
+            gap:25px; 
+        }
+        .logo { 
+            display:flex; 
+            align-items:center; 
+            gap:12px; 
+            font-size:1.8rem; 
+            font-weight:900; 
+            color:var(--dark); 
+            text-decoration:none; 
+        }
+        .logo-icon { 
+            width:45px; 
+            height:45px; 
+            background:var(--gradient-primary); 
+            border-radius:12px; 
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            color:white; 
+            box-shadow:0 6px 15px rgba(255, 87, 34, 0.3); 
+        }
+        .logo-text { 
+            background:var(--gradient-primary); 
+            -webkit-background-clip:text; 
+            -webkit-text-fill-color:transparent; 
+        }
+        
+        .search-container { flex:1; max-width:600px; position:relative; }
+        .search-box { 
+            width:100%; 
+            padding:14px 50px 14px 20px; 
+            border:2px solid #FFE0B2; 
+            border-radius:30px; 
+            font-size:0.95rem; 
+            transition:var(--transition); 
+            background:#FFF8F0; 
+            font-family:'Poppins',sans-serif; 
+            color:var(--dark);
+        }
+        .search-box:focus { 
+            border-color:var(--primary); 
+            outline:none; 
+            box-shadow:0 0 0 3px rgba(255, 87, 34, 0.2); 
+            background:white; 
+        }
+        .search-icon { 
+            position:absolute; 
+            right:20px; 
+            top:50%; 
+            transform:translateY(-50%); 
+            color:var(--primary); 
+            font-size:1.1rem; 
+        }
+        .search-results { 
+            position:absolute; 
+            top:calc(100% + 8px); 
+            left:0; 
+            right:0; 
+            background:white; 
+            border-radius:var(--radius); 
+            box-shadow:var(--shadow-lg); 
+            margin-top:8px; 
+            display:none; 
+            max-height:400px; 
+            overflow-y:auto; 
+            z-index:1000; 
+            border:1px solid #FFE0B2;
+        }
+        .search-results.active { 
+            display:block; 
+            animation:fadeInUp 0.3s ease; 
+        }
+        @keyframes fadeInUp { 
+            from { opacity:0; transform:translateY(10px); } 
+            to { opacity:1; transform:translateY(0); } 
+        }
+        
+        .nav-actions { display:flex; align-items:center; gap:15px; }
+        .user-avatar { 
+            width:45px; 
+            height:45px; 
+            border-radius:50%; 
+            background:var(--gradient-primary); 
+            color:white; 
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            font-weight:700; 
+            cursor:pointer; 
+            border:2px solid rgba(255,255,255,0.8); 
+            transition:var(--transition); 
+            box-shadow:0 4px 12px rgba(255, 87, 34, 0.3); 
+        }
+        .user-avatar:hover { 
+            border-color:var(--primary); 
+            transform:scale(1.05) rotate(5deg); 
+            box-shadow:0 8px 20px rgba(255, 87, 34, 0.4); 
+        }
+        
+        /* POPUP PROFILE */
+        .profile-popup { 
+            position:fixed; 
+            top:80px; 
+            right:20px; 
+            width:300px; 
+            background:white; 
+            border-radius:var(--radius); 
+            box-shadow:var(--shadow-lg); 
+            z-index:1000; 
+            display:none; 
+            animation:slideDown 0.3s ease; 
+            border:1px solid #FFE0B2;
+        }
+        @keyframes slideDown { 
+            from { transform:translateY(-20px) scale(0.95); opacity:0; } 
+            to { transform:translateY(0) scale(1); opacity:1; } 
+        }
+        .profile-popup.active { display:block; }
+        .profile-popup-header { 
+            padding:25px; 
+            background:var(--gradient-primary); 
+            color:white; 
+            border-radius:var(--radius) var(--radius) 0 0; 
+            text-align:center; 
+        }
+        .profile-popup-avatar { 
+            width:80px; 
+            height:80px; 
+            border-radius:50%; 
+            border:3px solid rgba(255,255,255,0.3); 
+            background:white; 
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            font-size:2.2rem; 
+            color:var(--primary); 
+            margin:0 auto 12px; 
+            box-shadow:0 10px 25px rgba(0,0,0,0.1); 
+            transition:var(--transition); 
+        }
+        .profile-popup-body { padding:20px; }
+        .profile-popup-info { text-align:center; margin-bottom:20px; }
+        .profile-popup-actions { display:flex; flex-direction:column; gap:10px; }
+        .profile-popup-btn { 
+            padding:14px; 
+            border:none; 
+            border-radius:var(--radius-sm); 
+            background:#FFF8F0; 
+            color:var(--dark); 
+            cursor:pointer; 
+            display:flex; 
+            align-items:center; 
+            gap:10px; 
+            transition:var(--transition); 
+            font-weight:500; 
+            font-size:0.9rem; 
+        }
+        .profile-popup-btn:hover { 
+            background:var(--primary); 
+            color:white; 
+            transform:translateX(5px); 
+        }
+        
+        /* ADS */
+        .ad-banner { 
+            background:#FFF8F0; 
+            border:2px dashed #FFCC80; 
+            border-radius:var(--radius); 
+            margin:15px 0; 
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            overflow:hidden; 
+            position:relative; 
+            min-height:80px; 
+            transition:var(--transition); 
+        }
+        .ad-banner:hover { 
+            border-color:var(--primary); 
+            transform:translateY(-3px); 
+            box-shadow:var(--shadow); 
+        }
+        .ad-banner.horizontal { height:100px; }
+        .ad-banner.vertical { height:500px; width:200px; }
+        .ad-banner.medium { height:250px; width:280px; }
+        .ad-label { 
+            position:absolute; 
+            top:8px; 
+            right:8px; 
+            background:var(--primary); 
+            color:white; 
+            padding:4px 12px; 
+            border-radius:15px; 
+            font-size:0.65rem; 
+            font-weight:600; 
+            z-index:1; 
+        }
+        
+        /* ADS CONTENT */
+        .ad-content { 
+            width:100%; 
+            height:100%; 
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            color:var(--gray); 
+            font-style:italic; 
+        }
+        
+        /* MAIN CONTENT */
+        .main-content { 
+            display:flex; 
+            margin-top:25px; 
+            gap:25px; 
+            padding:0 15px; 
+        }
+        .content-area { flex:1; min-width:0; }
+        .sidebar-left { width:200px; flex-shrink:0; }
+        .sidebar-right { width:280px; flex-shrink:0; }
+        
+        /* ARTICLE */
+        .article-header { margin-bottom:30px; position:relative; }
+        .article-meta { 
+            display:flex; 
+            gap:15px; 
+            color:var(--gray); 
+            margin-bottom:15px; 
+            flex-wrap:wrap; 
+            font-size:0.9rem;
+        }
+        .article-title { 
+            font-size:2.5rem; 
+            line-height:1.2; 
+            margin-bottom:20px; 
+            font-weight:800; 
+            color:var(--dark);
+        }
+        .article-image { 
+            width:100%; 
+            height:400px; 
+            object-fit:cover; 
+            border-radius:var(--radius-lg); 
+            margin:25px 0; 
+            box-shadow:var(--shadow-lg); 
+            transition:var(--transition); 
+        }
+        .article-image:hover { transform:scale(1.005); }
+        .article-content { 
+            font-size:1.1rem; 
+            line-height:1.7; 
+            position:relative; 
+            background:white; 
+            padding:30px; 
+            border-radius:var(--radius); 
+            box-shadow:var(--shadow); 
+        }
+        .article-content p { margin-bottom:20px; }
+        .article-content img { 
+            max-width:100%; 
+            height:auto; 
+            border-radius:var(--radius); 
+            margin:25px auto; 
+            display:block; 
+            box-shadow:var(--shadow); 
+        }
+        
+        /* INLINE ADS */
+        .inline-ad { margin:30px 0; text-align:center; }
+        
+        /* ACTION BUTTONS */
+        .article-actions { 
+            display:flex; 
+            gap:12px; 
+            margin:30px 0; 
+            flex-wrap:wrap; 
+        }
+        .action-btn { 
+            display:flex; 
+            align-items:center; 
+            gap:10px; 
+            padding:12px 20px; 
+            background:white; 
+            border:none; 
+            border-radius:var(--radius); 
+            cursor:pointer; 
+            transition:var(--transition); 
+            font-weight:600; 
+            box-shadow:var(--shadow-sm); 
+            border:1px solid #FFE0B2; 
+        }
+        .action-btn:hover { 
+            background:#FFF8F0; 
+            transform:translateY(-2px); 
+            box-shadow:var(--shadow); 
+        }
+        .action-btn.liked { color:#F44336; background:rgba(244,67,54,0.1); }
+        
+        /* COMMENTS */
+        .comments-section { margin-top:40px; }
+        .comment-form { 
+            background:white; 
+            padding:25px; 
+            border-radius:var(--radius); 
+            margin-bottom:30px; 
+            box-shadow:var(--shadow); 
+        }
+        .comment-input { 
+            width:100%; 
+            padding:15px; 
+            border:2px solid #FFE0B2; 
+            border-radius:var(--radius); 
+            margin-bottom:15px; 
+            resize:vertical; 
+            min-height:100px; 
+            font-family:'Poppins',sans-serif; 
+            font-size:0.95rem; 
+            transition:var(--transition); 
+            background:#FFF8F0;
+        }
+        .comment-input:focus { 
+            border-color:var(--primary); 
+            outline:none; 
+            box-shadow:0 0 0 3px rgba(255, 87, 34, 0.1); 
+            background:white;
+        }
+        .comment-list { margin-top:25px; }
+        .comment-item { 
+            background:white; 
+            padding:20px; 
+            border-radius:var(--radius); 
+            margin-bottom:15px; 
+            border:1px solid #FFE0B2; 
+            transition:var(--transition); 
+            position:relative; 
+            overflow:hidden; 
+        }
+        .comment-item:hover { 
+            transform:translateY(-3px); 
+            box-shadow:var(--shadow); 
+        }
+        .comment-item:before { 
+            content:''; 
+            position:absolute; 
+            top:0; 
+            left:0; 
+            width:4px; 
+            height:100%; 
+            background:var(--gradient-primary); 
+        }
+        .comment-header { 
+            display:flex; 
+            justify-content:space-between; 
+            margin-bottom:12px; 
+            align-items:center; 
+        }
+        .comment-author { 
+            font-weight:600; 
+            display:flex; 
+            align-items:center; 
+            gap:10px; 
+        }
+        .comment-author-avatar { 
+            width:36px; 
+            height:36px; 
+            border-radius:50%; 
+            background:var(--gradient-primary); 
+            color:white; 
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            font-size:1rem; 
+            font-weight:700; 
+            box-shadow:0 4px 10px rgba(255, 87, 34, 0.3); 
+        }
+        .comment-time { font-size:0.8rem; color:var(--gray); }
+        .comment-actions { margin-top:15px; display:flex; gap:12px; }
+        .comment-reply { margin-left:40px; margin-top:15px; padding-left:20px; border-left:2px solid #FFE0B2; }
+        
+        /* BADGES */
+        .trending-badge { 
+            background:var(--gradient-warning); 
+            color:white; 
+            padding:6px 15px; 
+            border-radius:20px; 
+            font-size:0.8rem; 
+            font-weight:700; 
+            display:inline-block; 
+            margin-left:12px; 
+            box-shadow:0 4px 10px rgba(255, 152, 0, 0.3); 
+        }
+        .new-badge { 
+            background:var(--gradient-success); 
+            color:white; 
+            padding:6px 15px; 
+            border-radius:20px; 
+            font-size:0.8rem; 
+            font-weight:700; 
+            display:inline-block; 
+            margin-left:12px; 
+            box-shadow:0 4px 10px rgba(76, 175, 80, 0.3); 
+        }
+        
+        /* ARTICLE CARD */
+        .article-card { 
+            background:white; 
+            border-radius:var(--radius); 
+            overflow:hidden; 
+            box-shadow:var(--shadow); 
+            transition:var(--transition); 
+            cursor:pointer; 
+            position:relative; 
+        }
+        .article-card:hover { 
+            transform:translateY(-8px); 
+            box-shadow:var(--shadow-lg); 
+        }
+        .article-card:before { 
+            content:''; 
+            position:absolute; 
+            top:0; 
+            left:0; 
+            width:100%; 
+            height:4px; 
+            background:var(--gradient-primary); 
+        }
+        
+        /* CATEGORY BADGES */
+        .category-badge { 
+            display:inline-block; 
+            padding:6px 15px; 
+            border-radius:20px; 
+            font-size:0.8rem; 
+            font-weight:600; 
+            margin-right:8px; 
+            margin-bottom:8px; 
+        }
+        .category-misteri { background:linear-gradient(135deg, #FF9800, #FF5722); color:white; }
+        .category-fakta { background:linear-gradient(135deg, #4CAF50, #388E3C); color:white; }
+        .category-teknologi { background:linear-gradient(135deg, #2196F3, #1976D2); color:white; }
+        .category-viral { background:linear-gradient(135deg, #F44336, #D32F2F); color:white; }
+        .category-sejarah { background:linear-gradient(135deg, #795548, #5D4037); color:white; }
+        .category-hiburan { background:linear-gradient(135deg, #9C27B0, #7B1FA2); color:white; }
+        .category-olahraga { background:linear-gradient(135deg, #009688, #00796B); color:white; }
+        
+        /* NEW CATEGORIES */
+        .category-kesehatan { background:linear-gradient(135deg, #00BCD4, #0097A7); color:white; }
+        .category-bisnis { background:linear-gradient(135deg, #607D8B, #455A64); color:white; }
+        .category-pendidikan { background:linear-gradient(135deg, #FFEB3B, #FBC02D); color:white; }
+        .category-politik { background:linear-gradient(135deg, #9C27B0, #7B1FA2); color:white; }
+        .category-lifestyle { background:linear-gradient(135deg, #FF4081, #F50057); color:white; }
+        .category-travel { background:linear-gradient(135deg, #4CAF50, #388E3C); color:white; }
+        .category-food { background:linear-gradient(135deg, #FF9800, #F57C00); color:white; }
+        .category-otomotif { background:linear-gradient(135deg, #795548, #5D4037); color:white; }
+        .category-game { background:linear-gradient(135deg, #673AB7, #512DA8); color:white; }
+        .category-musik { background:linear-gradient(135deg, #F44336, #D32F2F); color:white; }
+        
+        /* STATS CARDS */
+        .stats-card { 
+            background:white; 
+            padding:20px; 
+            border-radius:var(--radius); 
+            box-shadow:var(--shadow); 
+            text-align:center; 
+            transition:var(--transition); 
+        }
+        .stats-card:hover { 
+            transform:translateY(-3px); 
+            box-shadow:var(--shadow-lg); 
+        }
+        .stats-card-value { 
+            font-size:2rem; 
+            font-weight:800; 
+            margin-bottom:8px; 
+        }
+        .stats-card-label { color:var(--gray); font-size:0.85rem; }
+        
+        /* HERO BANNER */
+        .hero-banner {
+            position: relative;
+            height: 400px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
             margin-bottom: 30px;
-            color: #555;
+            box-shadow: var(--shadow-lg);
         }
-
-        .icon-main {
-            font-size: 80px;
-            margin-bottom: 10px;
+        .hero-banner-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
         }
-
-        h1 {
+        .hero-banner:hover .hero-banner-image {
+            transform: scale(1.05);
+        }
+        .hero-banner-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            color: white;
+        }
+        .hero-banner-title {
             font-size: 2rem;
+            font-weight: 800;
             margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        .hero-banner-excerpt {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        .hero-banner-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* SIDEBAR TOGGLE */
+        .sidebar-toggle {
+            display: none;
+            padding: 10px 15px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
             font-weight: 600;
-            letter-spacing: -0.5px;
-            color: #222;
+            margin-bottom: 15px;
+            width: 100%;
         }
-
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: #666;
-            margin: 0;
+        .sidebar-left {
+            transition: all 0.3s ease;
         }
-
-        .divider {
+        .sidebar-left.collapsed {
+            display: none;
+        }
+        
+        /* SUPPORT MODAL */
+        .support-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .support-option {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 2px solid #FFE0B2;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .support-option:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+        .support-option i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        .support-option h4 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        .support-option p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .saweria-btn {
+            background: linear-gradient(135deg, #FF6B6B, #EE5A24);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            display: inline-block;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        .saweria-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(238, 90, 36, 0.3);
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .sidebar-left { 
+                position: fixed;
+                left: -250px;
+                top: 0;
+                bottom: 0;
+                background: white;
+                z-index: 1100;
+                padding: 20px;
+                overflow-y: auto;
+                box-shadow: var(--shadow-lg);
+                transition: left 0.3s ease;
+                width: 250px;
+            }
+            .sidebar-left.active {
+                left: 0;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .sidebar-right { width:250px; }
+        }
+        @media (max-width: 992px) {
+            .sidebar-right { display:none; }
+            .search-container { display:none; }
+        }
+        @media (max-width: 768px) {
+            .header-container { padding:0 15px; gap:15px; }
+            .logo-text { font-size:1.4rem; }
+            .logo-icon { width:35px; height:35px; }
+            .article-title { font-size:1.8rem; }
+            .article-image { height:250px; }
+            .profile-popup { width:280px; right:10px; }
+            .article-content { padding:20px; }
+            .main-content { padding:0 10px; gap:15px; }
+            .article-meta { font-size:0.8rem; }
+            .btn { padding:10px 18px; font-size:0.9rem; }
+            .support-options {
+                grid-template-columns: 1fr;
+            }
+            .hero-banner {
+                height: 300px;
+            }
+            .hero-banner-title {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* LOADING ANIMATION */
+        .loading-spinner { 
+            display:inline-block; 
+            width:40px; 
+            height:40px; 
+            border:4px solid rgba(255, 87, 34, 0.1); 
+            border-radius:50%; 
+            border-top-color:var(--primary); 
+            animation:spin 1s ease-in-out infinite; 
+        }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        
+        /* CARD HOVER EFFECTS */
+        .hover-lift { transition:var(--transition); }
+        .hover-lift:hover { transform:translateY(-3px); }
+        
+        /* FIX ADS IFRAME ISSUE */
+        .ad-banner iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            overflow: hidden !important;
+        }
+        
+        /* ORANGE THEME OVERRIDES */
+        ::selection {
+            background: rgba(255, 152, 0, 0.3);
+            color: var(--dark);
+        }
+        
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+        
+        input, textarea, select {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #FFF8F0;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+        
+        /* LEADERBOARD PAGE */
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .leaderboard-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow);
+        }
+        .leaderboard-rank {
             width: 40px;
-            height: 3px;
-            background-color: #ddd;
-            margin: 25px auto;
+            height: 40px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
-
-        /* Animasi halus untuk gear agar tidak kaku */
-        .fa-spin-slow {
-            animation: fa-spin 3s infinite linear;
+        .leaderboard-content {
+            flex: 1;
+        }
+        .leaderboard-stats {
+            display: flex;
+            gap: 15px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* ADMIN APPROVAL */
+        .approval-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .status-pending {
+            background: var(--warning);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .status-approved {
+            background: var(--success);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .status-rejected {
+            background: var(--danger);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <div class="icon-box">
-            <i class="fas fa-cog fa-spin-slow icon-main"></i>
+    <!-- ==================== HEADER ==================== -->
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo" onclick="showHomePage(); return false;">
+                <div class="logo-icon">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <span class="logo-text">NexeNews</span>
+            </a>
+            
+            <div class="search-container">
+                <input type="text" class="search-box" id="searchBox" placeholder="Cari artikel viral...">
+                <i class="fas fa-search search-icon"></i>
+                <div class="search-results" id="searchResults"></div>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="btn btn-secondary" id="leaderboardBtn">
+                    <i class="fas fa-trophy"></i> Leaderboard
+                </button>
+                <button class="btn btn-primary" id="supportBtn">
+                    <i class="fas fa-heart"></i> Support
+                </button>
+                <button class="btn btn-secondary" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Masuk
+                </button>
+                <div class="user-avatar" id="userAvatar" style="display:none;">?</div>
+            </div>
         </div>
-        
-        <h1>Sedang Maintenance</h1>
-        <div class="divider"></div>
-        <p>Kami sedang melakukan pembaruan sistem untuk pengalaman yang lebih baik.</p>
-        <p>Mohon kembali beberapa saat lagi.</p>
+    </header>
+    
+    <!-- ==================== POPUP PROFILE ==================== -->
+    <div class="profile-popup" id="profilePopup">
+        <div class="profile-popup-header">
+            <div class="profile-popup-avatar" id="popupAvatar">U</div>
+            <h3 id="popupUsername" style="font-size:1.2rem; margin-bottom:5px;">Username</h3>
+            <p id="popupEmail" style="opacity:0.9; font-size:0.85rem;">user@email.com</p>
+        </div>
+        <div class="profile-popup-body">
+            <div class="profile-popup-info">
+                <div style="display:flex; gap:20px; justify-content:center; margin-bottom:20px;">
+                    <div class="stats-card" style="padding:12px; min-width:70px;">
+                        <div style="font-size:1.5rem; font-weight:800;" id="popupArticles">0</div>
+                        <div style="font-size:0.75rem; color:var(--gray);">Artikel</div>
+                    </div>
+                    <div class="stats-card" style="padding:12px; min-width:70px;">
+                        <div style="font-size:1.5rem; font-weight:800;" id="popupLikes">0</div>
+                        <div style="font-size:0.75rem; color:var(--gray);">Likes</div>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-popup-actions">
+                <button class="profile-popup-btn" id="popupProfileBtn">
+                    <i class="fas fa-user-circle"></i> Profil Saya
+                </button>
+                <button class="profile-popup-btn" id="popupMyArticlesBtn">
+                    <i class="fas fa-newspaper"></i> Artikel Saya
+                </button>
+                <button class="profile-popup-btn" id="popupAdminBtn" style="display:none;">
+                    <i class="fas fa-crown"></i> Admin Panel
+                </button>
+                <button class="profile-popup-btn" id="popupLogoutBtn" style="color:var(--danger);">
+                    <i class="fas fa-sign-out-alt"></i> Keluar
+                </button>
+            </div>
+        </div>
     </div>
+    
+    <!-- ==================== MODALS ==================== -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content" style="max-width:450px;">
+            <div class="modal-header">
+                <h2 style="font-size:1.5rem;"><i class="fas fa-user-circle"></i> Masuk / Daftar</h2>
+                <button class="modal-close" id="closeLoginModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align:center; margin-bottom:25px;">
+                    <div style="width:70px; height:70px; background:var(--gradient-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 15px; color:white; font-size:2rem;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 style="margin-bottom:8px; font-size:1.3rem;">Selamat Datang di NexeNews</h3>
+                    <p style="color:var(--gray); font-size:0.9rem;">Buat artikel, like, dan komentari berita viral</p>
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <div style="margin-bottom:15px;">
+                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--dark); font-size:0.9rem;">Nama Pengguna</label>
+                        <input type="text" id="loginUsername" placeholder="Masukkan username" style="width:100%; padding:12px; border:2px solid #FFE0B2; border-radius:var(--radius); font-family:'Poppins',sans-serif; font-size:0.95rem; background:#FFF8F0;">
+                    </div>
+                    
+                    <div style="margin-bottom:15px;">
+                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--dark); font-size:0.9rem;">Email (Opsional)</label>
+                        <input type="email" id="loginEmail" placeholder="email@example.com" style="width:100%; padding:12px; border:2px solid #FFE0B2; border-radius:var(--radius); font-family:'Poppins',sans-serif; font-size:0.95rem; background:#FFF8F0;">
+                    </div>
+                    
+                    <div style="margin-bottom:20px;">
+                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--dark); font-size:0.9rem;">Avatar URL (Opsional)</label>
+                        <input type="text" id="loginAvatar" placeholder="https://example.com/avatar.jpg" style="width:100%; padding:12px; border:2px solid #FFE0B2; border-radius:var(--radius); font-family:'Poppins',sans-serif; font-size:0.95rem; background:#FFF8F0;">
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary btn-lg" id="submitLoginBtn" style="width:100%; margin-bottom:12px; font-size:1rem;">
+                    <i class="fas fa-user-plus"></i> Masuk / Daftar
+                </button>
+                
+                <button class="btn btn-secondary" id="continueAsGuestBtn" style="width:100%;">
+                    <i class="fas fa-user"></i> Lanjut sebagai Tamu
+                </button>
+                
+                <div style="text-align:center; margin-top:20px; padding-top:20px; border-top:1px solid #FFE0B2;">
+                    <p style="color:var(--gray); font-size:0.85rem;">Dengan masuk, kamu bisa buat artikel, like, dan komentar</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="supportModal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header" style="background:var(--gradient-warning);">
+                <h2 style="font-size:1.5rem;"><i class="fas fa-hand-holding-heart"></i> Dukung NexeNews!</h2>
+                <button class="modal-close" id="closeSupportModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align:center; margin-bottom:25px;">
+                    <div style="width:80px; height:80px; background:var(--gradient-warning); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:white; font-size:2.5rem;">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 style="margin-bottom:12px; font-size:1.3rem;">Support Platform Ini!</h3>
+                    <p style="margin:15px 0; line-height:1.6; font-size:0.95rem;">Pilih salah satu cara untuk mendukung NexeNews tetap gratis untuk semua orang!</p>
+                </div>
+                
+                <div class="support-options">
+                    <div class="support-option" onclick="supportWithDirectLink()">
+                        <i class="fas fa-external-link-alt"></i>
+                        <h4>Direct Link</h4>
+                        <p>Klik link untuk support kami melalui affiliate</p>
+                        <span class="btn btn-warning">Support Sekarang</span>
+                    </div>
+                    
+                    <div class="support-option" onclick="supportWithSaweria()">
+                        <i class="fas fa-donate"></i>
+                        <h4>Saweria</h4>
+                        <p>Support langsung ke saweria kami</p>
+                        <a href="https://saweria.co/omedonation" target="_blank" class="saweria-btn">
+                            <i class="fas fa-heart"></i> Saweria
+                        </a>
+                    </div>
+                </div>
+                
+                <div style="background:#FFF8F0; padding:15px; border-radius:var(--radius); margin-top:20px; border:1px solid #FFE0B2;">
+                    <h4 style="margin-bottom:10px; color:var(--dark); font-size:1rem; display:flex; align-items:center; gap:8px;">
+                        <i class="fas fa-info-circle"></i> Perbedaan
+                    </h4>
+                    <ul style="font-size:0.9rem; color:var(--gray); padding-left:20px;">
+                        <li><strong>Direct Link:</strong> Gratis untuk kamu, kami dapat komisi</li>
+                        <li><strong>Saweria:</strong> Kamu berdonasi langsung ke kami</li>
+                    </ul>
+                </div>
+                
+                <button class="btn btn-secondary" id="closeSupportBtn" style="width:100%; margin-top:20px;">
+                    <i class="fas fa-times"></i> Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="createArticleModal">
+        <div class="modal-content" style="max-width:700px;">
+            <div class="modal-header">
+                <h2 style="font-size:1.5rem;"><i class="fas fa-edit"></i> Buat Artikel Baru</h2>
+                <button class="modal-close" id="closeCreateModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--dark); font-size:0.9rem;">Judul Artikel</label>
+                    <input type="text" id="articleTitleInput" placeholder="Judul yang menarik..." style="width:100%; padding:12px; border:2px solid #FFE0B2; border-radius:var(--radius); font-family:'Poppins',sans-serif; font-size:1rem; background:#FFF8F0;">
+                </div>
+                
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--dark); font-size:0.9rem;">Kategori</label>
+                    <select id="articleCategoryInput" style="width:100%; padding:12px; border:2px solid #FFE0B2; border-radius:var(--radius); font-family:'Poppins',sans-serif; background:white; font-size:0.95rem;">
+                        <option value="misteri">🔮 Misteri & Horor</option>
+                        <option value="fakta">💡 Fakta Unik</option>
+                        <option value="sejarah">🏛️ Sejarah</option>
+                        <option value="teknologi">💻 Teknologi</option>
+                        <option value="viral">🔥 Viral</option>
+                        <option value="hiburan">🎬 Hiburan</option>
+                        <option value="olahraga">⚽ Olahraga</option>
+                        <option value="kesehatan">🏥 Kesehatan</option>
+                        <option value="bisnis">💼 Bisnis</option>
+                        <option value="pendidikan">📚 Pendidikan</option>
+                        <option value="politik">🏛️ Politik</option>
+                        <option value="lifestyle">🌟 Lifestyle</option>
+                        <option value="travel">✈️ Travel</option>
+                        <option value="food">🍕 Food</option>
+                        <option value="otomotif">🚗 Otomotif</option>
+                        <option value="game">🎮 Game</option>
+                        <option value="musik">🎵 Musik</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--dark); font-size:0.9rem;">Gambar Utama (URL)</label>
+                    <input type="text" id="articleImageInput" placeholder="https://example.com/gambar.jpg" style="width:100%; padding:12px; border:2px solid #FFE0B2; border-radius:var(--radius); font-family:'Poppins',sans-serif; font-size:0.95rem; background:#FFF8F0;">
+                    <p style="font-size:0.8rem; color:var(--gray); margin-top:5px;">Gunakan link gambar dari Unsplash, Imgur, atau upload sendiri</p>
+                </div>
+                
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--dark); font-size:0.9rem;">Konten Artikel</label>
+                    <div id="articleEditor" style="height:300px; border-radius:var(--radius); overflow:hidden; border:2px solid #FFE0B2;"></div>
+                    <p style="font-size:0.8rem; color:var(--gray); margin-top:5px;">Gunakan toolbar untuk format teks, tambah link, gambar, dll</p>
+                </div>
+                
+                <div class="form-group" style="margin-bottom:25px;">
+                    <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--dark); font-size:0.9rem;">Slug URL (otomatis dari judul)</label>
+                    <input type="text" id="articleSlugInput" readonly style="width:100%; padding:12px; background:#FFF8F0; border:2px solid #FFE0B2; border-radius:var(--radius); color:var(--gray); font-family:'Poppins',sans-serif; font-size:0.95rem;">
+                </div>
+                
+                <button class="btn btn-success btn-lg" id="publishArticleBtn" style="width:100%;">
+                    <i class="fas fa-paper-plane"></i> Kirim untuk Review
+                </button>
+                
+                <div style="text-align:center; margin-top:20px; padding-top:20px; border-top:1px solid #FFE0B2;">
+                    <p style="color:var(--gray); font-size:0.85rem;">Artikel akan direview oleh admin sebelum dipublikasikan</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <div class="container main-content">
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar-left" id="sidebarLeft">
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i> Kategori
+            </button>
+            
+            <!-- CATEGORIES -->
+            <div style="background:white; border-radius:var(--radius); padding:20px; margin-bottom:20px; box-shadow:var(--shadow); border:1px solid #FFE0B2;">
+                <h3 style="margin-bottom:15px; color:var(--primary); font-size:1.1rem;"><i class="fas fa-tags"></i> Semua Kategori</h3>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <span class="category-badge category-misteri" onclick="filterByCategory('misteri')" style="cursor:pointer;">🔮 Misteri</span>
+                    <span class="category-badge category-fakta" onclick="filterByCategory('fakta')" style="cursor:pointer;">💡 Fakta</span>
+                    <span class="category-badge category-teknologi" onclick="filterByCategory('teknologi')" style="cursor:pointer;">💻 Teknologi</span>
+                    <span class="category-badge category-viral" onclick="filterByCategory('viral')" style="cursor:pointer;">🔥 Viral</span>
+                    <span class="category-badge category-sejarah" onclick="filterByCategory('sejarah')" style="cursor:pointer;">🏛️ Sejarah</span>
+                    <span class="category-badge category-hiburan" onclick="filterByCategory('hiburan')" style="cursor:pointer;">🎬 Hiburan</span>
+                    <span class="category-badge category-olahraga" onclick="filterByCategory('olahraga')" style="cursor:pointer;">⚽ Olahraga</span>
+                    <span class="category-badge category-kesehatan" onclick="filterByCategory('kesehatan')" style="cursor:pointer;">🏥 Kesehatan</span>
+                    <span class="category-badge category-bisnis" onclick="filterByCategory('bisnis')" style="cursor:pointer;">💼 Bisnis</span>
+                    <span class="category-badge category-pendidikan" onclick="filterByCategory('pendidikan')" style="cursor:pointer;">📚 Pendidikan</span>
+                    <span class="category-badge category-politik" onclick="filterByCategory('politik')" style="cursor:pointer;">🏛️ Politik</span>
+                    <span class="category-badge category-lifestyle" onclick="filterByCategory('lifestyle')" style="cursor:pointer;">🌟 Lifestyle</span>
+                    <span class="category-badge category-travel" onclick="filterByCategory('travel')" style="cursor:pointer;">✈️ Travel</span>
+                    <span class="category-badge category-food" onclick="filterByCategory('food')" style="cursor:pointer;">🍕 Food</span>
+                    <span class="category-badge category-otomotif" onclick="filterByCategory('otomotif')" style="cursor:pointer;">🚗 Otomotif</span>
+                    <span class="category-badge category-game" onclick="filterByCategory('game')" style="cursor:pointer;">🎮 Game</span>
+                    <span class="category-badge category-musik" onclick="filterByCategory('musik')" style="cursor:pointer;">🎵 Musik</span>
+                </div>
+            </div>
+            
+            <!-- PropellerAds Vertical -->
+            <div class="ad-banner vertical" style="margin-bottom:25px;">
+                <span class="ad-label">IKLAN</span>
+                <div class="ad-content">
+                    <div data-zone="10380855"></div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- MAIN CONTENT AREA -->
+        <main class="content-area">
+            <!-- HOME PAGE -->
+            <div id="homePage">
+                <!-- HERO BANNER -->
+                <div class="hero-banner" id="heroBanner" style="display:none;">
+                    <img class="hero-banner-image" id="heroBannerImage" src="" alt="Hero Banner">
+                    <div class="hero-banner-content">
+                        <h2 class="hero-banner-title" id="heroBannerTitle"></h2>
+                        <p class="hero-banner-excerpt" id="heroBannerExcerpt"></p>
+                        <div class="hero-banner-meta">
+                            <span><i class="far fa-eye"></i> <span id="heroBannerViews">0</span> views</span>
+                            <span><i class="far fa-heart"></i> <span id="heroBannerLikes">0</span> likes</span>
+                            <span><i class="far fa-clock"></i> <span id="heroBannerTime">-</span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PropellerAds Top -->
+                <div class="ad-banner horizontal" style="margin-bottom:25px;">
+                    <span class="ad-label">IKLAN</span>
+                    <div class="ad-content">
+                        <div data-zone="10380831"></div>
+                    </div>
+                </div>
+                
+                <!-- TRENDING ARTICLES -->
+                <section style="margin:30px 0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+                        <h2 style="color:var(--dark); font-weight:800; font-size:1.8rem; display:flex; align-items:center; gap:12px;">
+                            <i class="fas fa-fire" style="color:#F44336;"></i> Trending Viral
+                        </h2>
+                        <span style="font-size:0.85rem; color:var(--gray); font-weight:500;">Algoritma: Views + Likes + Comments</span>
+                    </div>
+                    <div id="trendingArticles" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:25px;">
+                        <!-- Trending articles loaded here -->
+                        <div style="grid-column:1/-1; text-align:center; padding:50px 20px; background:white; border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid #FFE0B2;">
+                            <div class="loading-spinner" style="margin:0 auto 20px;"></div>
+                            <h3 style="margin-bottom:12px; color:var(--dark); font-size:1.2rem;">Memuat artikel trending...</h3>
+                            <p style="color:var(--gray); font-size:0.9rem;">Sedang mengambil data terbaru</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- PropellerAds Mid -->
+                <div class="ad-banner horizontal" style="margin:30px 0;">
+                    <span class="ad-label">IKLAN</span>
+                    <div class="ad-content">
+                        <div data-zone="10380895"></div>
+                    </div>
+                </div>
+                
+                <!-- NEWEST ARTICLES -->
+                <section style="margin:40px 0;">
+                    <h2 style="margin-bottom:25px; color:var(--dark); font-weight:800; font-size:1.8rem; display:flex; align-items:center; gap:12px;">
+                        <i class="fas fa-clock" style="color:var(--primary);"></i> Terbaru
+                    </h2>
+                    <div id="newestArticles" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:25px;">
+                        <!-- Newest articles loaded here -->
+                    </div>
+                </section>
+                
+                <!-- Bottom ADS -->
+                <div class="ad-banner horizontal" style="margin-top:40px; margin-bottom:20px;">
+                    <span class="ad-label">IKLAN</span>
+                    <div class="ad-content">
+                        <div data-zone="10380855"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ARTICLE READING PAGE -->
+            <div id="articlePage" style="display:none;">
+                <article>
+                    <div class="article-header">
+                        <div class="article-meta">
+                            <span><i class="far fa-calendar"></i> <span id="articleDate">-</span></span>
+                            <span><i class="far fa-eye"></i> <span id="articleViews">0</span> views</span>
+                            <span><i class="fas fa-heart"></i> <span id="articleLikes">0</span> likes</span>
+                            <span><i class="fas fa-comment"></i> <span id="articleComments">0</span> komentar</span>
+                        </div>
+                        <h1 class="article-title" id="articleTitle"></h1>
+                        <div style="display:flex; align-items:center; gap:15px; margin-top:15px; padding:15px; background:white; border-radius:var(--radius); box-shadow:var(--shadow-sm); border:1px solid #FFE0B2;">
+                            <div id="authorAvatar" style="width:50px; height:50px; border-radius:50%; background:var(--gradient-primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.3rem; box-shadow:0 4px 12px rgba(255, 87, 34, 0.3);"></div>
+                            <div style="flex:1;">
+                                <div style="font-weight:700; font-size:1rem;" id="authorName"></div>
+                                <div style="font-size:0.85rem; color:var(--gray);" id="articleTimestamp"></div>
+                            </div>
+                            <span class="category-badge" id="articleCategoryBadge" style="margin:0;"></span>
+                        </div>
+                    </div>
+                    
+                    <img id="articleImage" class="article-image" alt="Article Image">
+                    
+                    <!-- PropellerAds In-Article -->
+                    <div class="inline-ad" style="margin:30px 0;">
+                        <div class="ad-banner horizontal" style="height:90px;">
+                            <span class="ad-label">IKLAN</span>
+                            <div class="ad-content">
+                                <div data-zone="10380895"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="article-content" id="articleContent">
+                        <div style="text-align:center; padding:50px 20px;">
+                            <div class="loading-spinner" style="margin:0 auto 20px;"></div>
+                            <h3 style="margin-bottom:12px; color:var(--dark); font-size:1.2rem;">Memuat konten artikel...</h3>
+                        </div>
+                    </div>
+                    
+                    <!-- ACTION BUTTONS -->
+                    <div class="article-actions">
+                        <button class="action-btn" id="likeArticleBtn">
+                            <i class="far fa-heart"></i> <span id="likeText">Suka</span>
+                        </button>
+                        <button class="action-btn" id="shareArticleBtn">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                        <button class="btn btn-primary" id="readMoreBtn" style="margin-left:auto;" onclick="showHomePage()">
+                            <i class="fas fa-book-open"></i> Baca Artikel Lain
+                        </button>
+                    </div>
+                    
+                    <!-- COMMENTS SECTION -->
+                    <div class="comments-section">
+                        <h3 style="margin-bottom:20px; color:var(--dark); font-size:1.3rem; font-weight:700; display:flex; align-items:center; gap:8px;">
+                            <i class="fas fa-comments"></i> Komentar (<span id="commentCount">0</span>)
+                        </h3>
+                        
+                        <!-- COMMENT FORM -->
+                        <div class="comment-form" id="commentForm" style="display:none;">
+                            <h4 style="margin-bottom:15px; color:var(--dark); font-size:1.1rem;">Tambah Komentar</h4>
+                            <textarea class="comment-input" id="commentInput" placeholder="Bagaimana pendapatmu tentang artikel ini?"></textarea>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <button class="btn btn-primary" id="submitCommentBtn">
+                                    <i class="fas fa-paper-plane"></i> Kirim Komentar
+                                </button>
+                                <div>
+                                    <span id="charCount" style="font-size:0.8rem; color:var(--gray);">0/500</span>
+                                    <span style="font-size:0.8rem; color:var(--gray); margin-left:12px;">Max 500 karakter</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="loginToComment" style="text-align:center; padding:30px; background:white; border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid #FFE0B2;">
+                            <div style="width:70px; height:70px; background:var(--gradient-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 15px; color:white; font-size:1.8rem;">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <p style="margin-bottom:15px; font-size:1rem;">Login untuk menambahkan komentar</p>
+                            <button class="btn btn-primary" id="loginForCommentBtn">
+                                <i class="fas fa-sign-in-alt"></i> Login Sekarang
+                            </button>
+                        </div>
+                        
+                        <!-- COMMENTS LIST -->
+                        <div class="comment-list" id="commentList">
+                            <div style="text-align:center; padding:30px; color:var(--gray);">
+                                <i class="far fa-comment" style="font-size:2.5rem; margin-bottom:12px; opacity:0.5;"></i>
+                                <p>Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bottom of article ADS -->
+                    <div class="inline-ad" style="margin-top:40px;">
+                        <div class="ad-banner horizontal">
+                            <span class="ad-label">IKLAN</span>
+                            <div class="ad-content">
+                                <div data-zone="10380831"></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <!-- PROFILE PAGE -->
+            <div id="profilePage" style="display:none;">
+                <div style="max-width:800px; margin:0 auto;">
+                    <!-- PROFILE HEADER -->
+                    <div style="background:var(--gradient-primary); color:white; padding:40px; border-radius:var(--radius-lg); margin-bottom:30px; position:relative; overflow:hidden; box-shadow:var(--shadow-lg);">
+                        <div style="position:absolute; top:-80px; right:-80px; width:250px; height:250px; background:rgba(255,255,255,0.1); border-radius:50%;"></div>
+                        <div style="position:absolute; bottom:-40px; left:-40px; width:150px; height:150px; background:rgba(255,255,255,0.05); border-radius:50%;"></div>
+                        
+                        <div style="display:flex; align-items:center; gap:30px; flex-wrap:wrap; position:relative; z-index:1;">
+                            <div id="profileBigAvatar" style="width:120px; height:120px; border-radius:50%; border:4px solid rgba(255,255,255,0.3); background:white; display:flex; align-items:center; justify-content:center; font-size:3rem; color:var(--primary); box-shadow:0 15px 30px rgba(0,0,0,0.2);"></div>
+                            <div style="flex:1;">
+                                <h1 id="profileBigUsername" style="font-size:2.2rem; margin-bottom:12px; font-weight:900;"></h1>
+                                <p id="profileBigEmail" style="opacity:0.9; margin-bottom:25px; font-size:1rem;"></p>
+                                <div style="display:flex; gap:30px;">
+                                    <div class="stats-card" style="background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); color:white; min-width:100px; padding:15px;">
+                                        <div style="font-size:2rem; font-weight:800;" id="profileBigArticles">0</div>
+                                        <div>Artikel</div>
+                                    </div>
+                                    <div class="stats-card" style="background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); color:white; min-width:100px; padding:15px;">
+                                        <div style="font-size:2rem; font-weight:800;" id="profileBigLikes">0</div>
+                                        <div>Likes</div>
+                                    </div>
+                                    <div class="stats-card" style="background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); color:white; min-width:100px; padding:15px;">
+                                        <div style="font-size:2rem; font-weight:800;" id="profileBigViews">0</div>
+                                        <div>Views</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- EDIT PROFILE -->
+                    <div class="glass-effect" style="padding:30px; border-radius:var(--radius); margin-bottom:30px; border:1px solid #FFE0B2;">
+                        <h3 style="margin-bottom:25px; color:var(--primary); font-size:1.3rem; display:flex; align-items:center; gap:12px;">
+                            <i class="fas fa-user-edit"></i> Edit Profil
+                        </h3>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:25px; margin-bottom:25px;">
+                            <div>
+                                <label style="display:block; margin-bottom:10px; font-weight:600; color:var(--dark); font-size:0.9rem;">Username</label>
+                                <div style="display:flex; gap:12px;">
+                                    <input type="text" id="editUsername" style="flex:1; padding:12px; border:2px solid #FFE0B2; border-radius:var(--radius); font-family:'Poppins',sans-serif; font-size:0.95rem; background:#FFF8F0;">
+                                    <button class="btn btn-primary btn-icon" id="saveUsernameBtn">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label style="display:block; margin-bottom:10px; font-weight:600; color:var(--dark); font-size:0.9rem;">Avatar URL</label>
+                                <div style="display:flex; gap:12px;">
+                                    <input type="text" id="editAvatarUrl" placeholder="https://example.com/avatar.jpg" style="flex:1; padding:12px; border:2px solid #FFE0B2; border-radius:var(--radius); font-family:'Poppins',sans-serif; font-size:0.95rem; background:#FFF8F0;">
+                                    <button class="btn btn-primary btn-icon" id="saveAvatarBtn">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="background:#FFF8F0; padding:20px; border-radius:var(--radius); border:1px solid #FFE0B2;">
+                            <h4 style="margin-bottom:12px; color:var(--dark); font-size:1rem; display:flex; align-items:center; gap:8px;">
+                                <i class="fas fa-info-circle"></i> Informasi Akun
+                            </h4>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                                <div>
+                                    <p style="margin-bottom:6px; color:var(--gray); font-size:0.85rem;">User ID</p>
+                                    <p id="profileUserId" style="font-family:monospace; background:#FFE0B2; padding:8px 12px; border-radius:var(--radius-sm); word-break:break-all; font-size:0.85rem;"></p>
+                                </div>
+                                <div>
+                                    <p style="margin-bottom:6px; color:var(--gray); font-size:0.85rem;">Bergabung</p>
+                                    <p id="profileJoinDate" style="font-weight:600; font-size:0.95rem;"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- MY ARTICLES -->
+                    <div class="glass-effect" style="padding:30px; border-radius:var(--radius); border:1px solid #FFE0B2;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+                            <h3 style="color:var(--primary); font-size:1.3rem; display:flex; align-items:center; gap:12px;">
+                                <i class="fas fa-newspaper"></i> Artikel Saya
+                            </h3>
+                            <div style="display:flex; gap:12px;">
+                                <button class="btn btn-primary" onclick="showCreateArticleModal()">
+                                    <i class="fas fa-plus"></i> Buat Artikel
+                                </button>
+                                <button class="btn btn-secondary btn-icon" id="refreshMyArticlesBtn">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="myArticlesList">
+                            <div style="text-align:center; padding:50px 20px; color:var(--gray);">
+                                <i class="fas fa-newspaper" style="font-size:3rem; margin-bottom:15px; opacity:0.3;"></i>
+                                <p style="font-size:1rem; margin-bottom:15px;">Belum ada artikel</p>
+                                <button class="btn btn-primary" onclick="showCreateArticleModal()">
+                                    <i class="fas fa-plus"></i> Buat Artikel Pertama
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- LEADERBOARD PAGE -->
+            <div id="leaderboardPage" style="display:none;">
+                <div style="background:white; border-radius:var(--radius-lg); overflow:hidden; margin-bottom:30px; box-shadow:var(--shadow-lg); border:1px solid #FFE0B2;">
+                    <div style="background:var(--gradient-primary); color:white; padding:30px;">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <div style="width:60px; height:60px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem;">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div>
+                                <h1 style="font-size:2rem; margin-bottom:8px; font-weight:900;">Leaderboard</h1>
+                                <p style="opacity:0.9; font-size:0.9rem;">Artikel terpopuler berdasarkan skor trending</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding:25px;">
+                        <div style="display:flex; gap:12px; margin-bottom:25px; flex-wrap:wrap;">
+                            <button class="btn btn-primary" id="lbAllBtn" onclick="loadLeaderboard('all')">
+                                <i class="fas fa-list"></i> Semua
+                            </button>
+                            <button class="btn btn-secondary" id="lbTodayBtn" onclick="loadLeaderboard('today')">
+                                <i class="fas fa-calendar-day"></i> Hari Ini
+                            </button>
+                            <button class="btn btn-warning" id="lbWeekBtn" onclick="loadLeaderboard('week')">
+                                <i class="fas fa-calendar-week"></i> Minggu Ini
+                            </button>
+                            <button class="btn btn-success" id="lbMonthBtn" onclick="loadLeaderboard('month')">
+                                <i class="fas fa-calendar-alt"></i> Bulan Ini
+                            </button>
+                        </div>
+                        <div id="leaderboardContent">
+                            <div style="text-align:center; padding:50px 20px; color:var(--gray);">
+                                <div class="loading-spinner" style="margin:0 auto 20px;"></div>
+                                <p>Memuat leaderboard...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ADMIN PANEL -->
+            <div id="adminPage" style="display:none;">
+                <div style="background:white; border-radius:var(--radius-lg); overflow:hidden; margin-bottom:30px; box-shadow:var(--shadow-lg); border:1px solid #FFE0B2;">
+                    <div style="background:var(--gradient-primary); color:white; padding:30px;">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <div style="width:60px; height:60px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem;">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div>
+                                <h1 style="font-size:2rem; margin-bottom:8px; font-weight:900;">Admin Panel</h1>
+                                <p style="opacity:0.9; font-size:0.9rem;">Kelola semua konten dan pengguna</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding:25px;">
+                        <div style="display:flex; gap:12px; margin-bottom:25px; flex-wrap:wrap;">
+                            <button class="btn btn-primary" id="adminAllArticlesBtn">
+                                <i class="fas fa-list"></i> Semua Artikel
+                            </button>
+                            <button class="btn btn-warning" id="adminPendingBtn">
+                                <i class="fas fa-clock"></i> Menunggu Approval (<span id="pendingCount">0</span>)
+                            </button>
+                            <button class="btn btn-secondary" id="adminApprovalBtn">
+                                <i class="fas fa-check-circle"></i> Approval System
+                            </button>
+                            <button class="btn btn-danger" id="adminUsersBtn">
+                                <i class="fas fa-users"></i> Pengguna
+                            </button>
+                            <button class="btn btn-success" id="addAdminBtn" style="display:none;">
+                                <i class="fas fa-user-plus"></i> Tambah Admin
+                            </button>
+                        </div>
+                        <div id="adminContent">
+                            <div style="text-align:center; padding:50px 20px; color:var(--gray);">
+                                <div class="loading-spinner" style="margin:0 auto 20px;"></div>
+                                <p>Memuat panel admin...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- RIGHT SIDEBAR -->
+        <aside class="sidebar-right">
+            <!-- PropellerAds Right -->
+            <div class="ad-banner vertical" style="margin-bottom:25px;">
+                <span class="ad-label">IKLAN</span>
+                <div class="ad-content">
+                    <div data-zone="10380895"></div>
+                </div>
+            </div>
+            
+            <!-- RECOMMENDED ARTICLES -->
+            <div class="glass-effect" style="padding:20px; margin-bottom:20px; border:1px solid #FFE0B2;">
+                <h3 style="margin-bottom:15px; color:var(--primary); font-size:1.1rem; display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-star" style="color:var(--warning);"></i> Rekomendasi
+                </h3>
+                <div id="recommendedArticles">
+                    <div style="text-align:center; padding:25px 0; color:var(--gray);">
+                        <div class="loading-spinner" style="width:25px; height:25px; margin:0 auto 12px;"></div>
+                        <p style="font-size:0.85rem;">Memuat rekomendasi...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- QUICK STATS -->
+            <div class="glass-effect" style="padding:20px; margin-bottom:20px; border:1px solid #FFE0B2;">
+                <h3 style="margin-bottom:15px; color:var(--primary); font-size:1.1rem; display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-chart-line"></i> Statistik
+                </h3>
+                <div style="display:grid; gap:12px;">
+                    <div class="stats-card" style="padding:12px;">
+                        <div style="font-size:1.3rem; font-weight:800; color:var(--primary);" id="totalArticles">0</div>
+                        <div style="font-size:0.8rem; color:var(--gray);">Total Artikel</div>
+                    </div>
+                    <div class="stats-card" style="padding:12px;">
+                        <div style="font-size:1.3rem; font-weight:800; color:var(--success);" id="totalLikes">0</div>
+                        <div style="font-size:0.8rem; color:var(--gray);">Total Likes</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PropellerAds Horizontal di sidebar -->
+            <div class="ad-banner horizontal" style="height:100px; margin-bottom:20px;">
+                <span class="ad-label">IKLAN</span>
+                <div class="ad-content">
+                    <div data-zone="10380831"></div>
+                </div>
+            </div>
+            
+            <!-- DIRECT LINK -->
+            <div style="text-align:center; padding:20px; background:var(--gradient-primary); border-radius:var(--radius); color:white;">
+                <p style="margin-bottom:12px; font-size:0.9rem;">Support kami untuk perkembangan platform</p>
+                <button class="btn btn-warning" onclick="showSupportModal()" style="width:100%;">
+                    <i class="fas fa-heart"></i> Support NexeNews
+                </button>
+            </div>
+        </aside>
+    </div>
+    
+    <!-- ==================== NOTIFICATION ==================== -->
+    <div class="notification" id="notification">
+        <div class="notification-icon" id="notificationIcon"></div>
+        <span id="notificationText"></span>
+    </div>
+    
+    <!-- ==================== SCRIPT ==================== -->
+    <script>
+        // ========== FIREBASE CONFIG ==========
+        const firebaseConfig = {
+            apiKey: "AIzaSyAP7lzXcSwmkOk88rXIx77j8s4gsfUs6k0",
+            authDomain: "unews-4db42.firebaseapp.com",
+            databaseURL: "https://unews-4db42-default-rtdb.firebaseio.com",
+            projectId: "unews-4db42",
+            storageBucket: "unews-4db42.firebasestorage.app",
+            messagingSenderId: "382914552995",
+            appId: "1:382914552995:web:ca6f2c0f6a250c39fc4b16",
+            measurementId: "G-38CHL8F98F"
+        };
 
+        // ========== GLOBAL VARIABLES ==========
+        let currentUser = null;
+        let articles = [];
+        let currentArticle = null;
+        let comments = [];
+        let userProfile = null;
+        let articleEditor = null;
+        let isAdmin = false;
+        let lastArticleClickTime = 0;
+        const ADMIN_UIDS = [
+            "giv9y5uCw6XkES0QDqKu03SHdO72",
+            "user_1766850109401_5fdho9608"
+        ];
+
+        // ========== INITIALIZE ==========
+        async function initializeApp() {
+            try {
+                // Initialize Firebase
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                // Initialize Quill Editor dengan toolbar lengkap
+                if (document.getElementById('articleEditor')) {
+                    articleEditor = new Quill('#articleEditor', {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: [
+                                [{ 'font': [] }],
+                                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                                ['bold', 'italic', 'underline', 'strike'],
+                                [{ 'color': [] }, { 'background': [] }],
+                                [{ 'script': 'sub'}, { 'script': 'super' }],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+                                [{ 'direction': 'rtl' }],
+                                [{ 'align': [] }],
+                                ['blockquote', 'code-block'],
+                                ['link', 'image', 'video', 'formula'],
+                                ['clean']
+                            ]
+                        }
+                    });
+                    
+                    // Enable link tooltip
+                    articleEditor.getModule('toolbar').addHandler('link', function(value) {
+                        if (value) {
+                            const range = articleEditor.getSelection();
+                            if (range) {
+                                const url = prompt('Masukkan URL:');
+                                if (url) {
+                                    const title = prompt('Masukkan title link (opsional):');
+                                    articleEditor.formatText(range.index, range.length, 'link', url);
+                                    if (title) {
+                                        // Add title attribute
+                                        const link = articleEditor.getLeaf(range.index)[0].domNode;
+                                        if (link && link.tagName === 'A') {
+                                            link.title = title;
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            articleEditor.format('link', false);
+                        }
+                    });
+                }
+                
+                // Setup anonymous login
+                await setupFirebaseAuth();
+                
+                // Load data dari Firebase
+                await loadArticlesFromFirebase();
+                
+                // Setup event listeners
+                setupEventListeners();
+                
+                // Check URL untuk article
+                checkUrlForArticle();
+                
+                // Update stats
+                updateStats();
+                
+                // Load PropellerAds
+                loadPropellerAds();
+                
+                // Setup character counter untuk komentar
+                document.getElementById('commentInput')?.addEventListener('input', updateCharCount);
+                
+                // Setup sidebar toggle
+                document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
+                
+                showNotification('NexeNews siap! Selamat membaca berita viral', 'success');
+                
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showNotification('Error loading application', 'error');
+            }
+        }
+
+        // ========== LOAD PROPELLERADS ==========
+        function loadPropellerAds() {
+            try {
+                console.log('Loading PropellerAds...');
+                
+                // Script pertama dari kode yang diberikan
+                const script1 = document.createElement('script');
+                script1.innerHTML = `(function(s){s.dataset.zone='10380855',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`;
+                document.body.appendChild(script1);
+                
+                // Script kedua dari kode yang diberikan
+                const script2 = document.createElement('script');
+                script2.innerHTML = `(function(s){s.dataset.zone='10380895',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`;
+                document.body.appendChild(script2);
+                
+                console.log('PropellerAds loaded successfully');
+                
+            } catch (error) {
+                console.log('PropellerAds error:', error);
+            }
+        }
+
+        // ========== SUPPORT FUNCTIONS ==========
+        function showSupportModal() {
+            document.getElementById('supportModal').classList.add('active');
+        }
+
+        function supportWithDirectLink() {
+            const affiliateLinks = [
+                'https://example.com/affiliate1',
+                'https://example.com/affiliate2',
+                'https://example.com/donation'
+            ];
+            
+            const randomLink = affiliateLinks[Math.floor(Math.random() * affiliateLinks.length)];
+            window.open(randomLink, '_blank');
+            
+            showNotification('Terima kasih atas support melalui direct link!', 'success');
+        }
+
+        function supportWithSaweria() {
+            window.open('https://saweria.co/omedonation', '_blank');
+            showNotification('Terima kasih atas support melalui Saweria!', 'success');
+        }
+
+        // ========== FIREBASE AUTHENTICATION ==========
+        async function setupFirebaseAuth() {
+            try {
+                // Cek apakah ada user di localStorage
+                const savedUser = localStorage.getItem('nexenews_user');
+                if (savedUser) {
+                    const userData = JSON.parse(savedUser);
+                    currentUser = { uid: userData.uid };
+                    userProfile = userData;
+                    
+                    // Cek di Firebase apakah user masih valid
+                    try {
+                        const db = firebase.database();
+                        const snapshot = await db.ref(`users/${userData.uid}`).once('value');
+                        if (snapshot.exists()) {
+                            userProfile = { ...userData, ...snapshot.val() };
+                        }
+                    } catch (error) {
+                        console.log('Using cached user data');
+                    }
+                } else {
+                    // Login anonymous dengan user ID yang konsisten
+                    const guestId = 'guest_' + localStorage.getItem('nexenews_guest_id') || 
+                                   'guest_' + Math.random().toString(36).substr(2, 9);
+                    
+                    if (!localStorage.getItem('nexenews_guest_id')) {
+                        localStorage.setItem('nexenews_guest_id', guestId);
+                    }
+                    
+                    currentUser = { uid: guestId };
+                    
+                    // Cek di Firebase
+                    const db = firebase.database();
+                    const snapshot = await db.ref(`users/${guestId}`).once('value');
+                    
+                    if (snapshot.exists()) {
+                        userProfile = snapshot.val();
+                    } else {
+                        userProfile = {
+                            uid: guestId,
+                            username: 'Pengguna_' + Math.floor(Math.random() * 10000),
+                            email: '',
+                            avatar: '',
+                            isGuest: true,
+                            joinDate: Date.now(),
+                            stats: {
+                                articles: 0,
+                                likes: 0,
+                                views: 0
+                            }
+                        };
+                        
+                        await db.ref(`users/${guestId}`).set(userProfile);
+                    }
+                    
+                    localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+                }
+                
+                // Check admin status
+                checkAdminStatus();
+                
+                // Update UI
+                updateUserUI();
+                
+            } catch (error) {
+                console.error('Firebase auth error:', error);
+                // Fallback ke localStorage
+                setupLocalStorageAuth();
+            }
+        }
+
+        function setupLocalStorageAuth() {
+            const savedUser = localStorage.getItem('nexenews_user');
+            if (savedUser) {
+                userProfile = JSON.parse(savedUser);
+                currentUser = { uid: userProfile.uid };
+            } else {
+                const guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
+                userProfile = {
+                    uid: guestId,
+                    username: 'Pengguna',
+                    email: '',
+                    avatar: '',
+                    isGuest: true,
+                    joinDate: Date.now(),
+                    stats: {
+                        articles: 0,
+                        likes: 0,
+                        views: 0
+                    }
+                };
+                currentUser = { uid: guestId };
+                localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+            }
+            
+            updateUserUI();
+        }
+
+        // ========== FIREBASE ARTICLES ==========
+        async function loadArticlesFromFirebase() {
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref('articles').once('value');
+                
+                if (snapshot.exists()) {
+                    const articlesData = snapshot.val();
+                    articles = Object.entries(articlesData).map(([id, data]) => ({
+                        id,
+                        ...data
+                    }));
+                    
+                    articles.forEach(article => {
+                        article.score = calculateArticleScore(article);
+                    });
+                    
+                    displayTrendingArticles();
+                    displayNewestArticles();
+                    displayRecommendedArticles();
+                    updateHeroBanner();
+                    updatePendingCount();
+                    
+                } else {
+                    await createSampleArticles();
+                }
+                
+            } catch (error) {
+                console.error('Error loading articles from Firebase:', error);
+                loadArticlesFromLocalStorage();
+            }
+        }
+
+        async function loadArticlesFromLocalStorage() {
+            const storedArticles = localStorage.getItem('nexenews_articles');
+            if (storedArticles) {
+                articles = JSON.parse(storedArticles);
+                articles.forEach(article => {
+                    article.score = calculateArticleScore(article);
+                });
+                displayTrendingArticles();
+                displayNewestArticles();
+                displayRecommendedArticles();
+                updateHeroBanner();
+            } else {
+                await createSampleArticles();
+            }
+        }
+
+        async function createSampleArticles() {
+            const sampleArticles = [
+                {
+                    id: 'sample_' + Date.now(),
+                    title: 'Selamat datang di NexeNews! Platform Berita Viral Indonesia',
+                    category: 'fakta',
+                    image: 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80',
+                    content: '<h2>Platform Berita Viral Terbaik</h2><p>NexeNews adalah platform untuk berbagi cerita, fakta unik, dan konten viral dari Indonesia. Mulai buat artikel pertamamu sekarang!</p><h3>Fitur Unggulan</h3><ul><li>Algoritma trending yang canggih</li><li>Sistem like dan komentar real-time</li><li>Editor artikel yang modern</li><li>Dashboard admin yang lengkap</li></ul>',
+                    excerpt: 'Platform berita viral Indonesia dengan fitur lengkap dan modern',
+                    author: 'Admin NexeNews',
+                    authorId: ADMIN_UIDS[0],
+                    authorAvatar: '',
+                    timestamp: Date.now() - 3600000,
+                    views: 250,
+                    likes: 45,
+                    comments: 8,
+                    status: 'published',
+                    score: 450
+                }
+            ];
+            
+            articles = sampleArticles;
+            
+            try {
+                const db = firebase.database();
+                for (const article of sampleArticles) {
+                    await db.ref(`articles/${article.id}`).set(article);
+                }
+            } catch (error) {
+                localStorage.setItem('nexenews_articles', JSON.stringify(articles));
+            }
+            
+            displayTrendingArticles();
+            displayNewestArticles();
+            displayRecommendedArticles();
+            updateStats();
+            updateHeroBanner();
+        }
+
+        // ========== HERO BANNER ==========
+        function updateHeroBanner() {
+            const publishedArticles = articles.filter(a => a.status === 'published');
+            if (publishedArticles.length === 0) {
+                document.getElementById('heroBanner').style.display = 'none';
+                return;
+            }
+            
+            // Cari artikel dengan score tertinggi
+            const topArticle = [...publishedArticles].sort((a, b) => b.score - a.score)[0];
+            
+            if (topArticle) {
+                document.getElementById('heroBanner').style.display = 'block';
+                document.getElementById('heroBannerImage').src = topArticle.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80';
+                document.getElementById('heroBannerTitle').textContent = topArticle.title;
+                document.getElementById('heroBannerExcerpt').textContent = topArticle.excerpt || '';
+                document.getElementById('heroBannerViews').textContent = topArticle.views || 0;
+                document.getElementById('heroBannerLikes').textContent = topArticle.likes || 0;
+                document.getElementById('heroBannerTime').textContent = timeAgo(topArticle.timestamp);
+                
+                // Add click event
+                document.getElementById('heroBanner').onclick = () => openArticle(topArticle.id, true);
+            }
+        }
+
+        // ========== REAL-TIME LIKE SYSTEM ==========
+        async function toggleLike(articleId) {
+            if (!userProfile || userProfile.isGuest) {
+                showNotification('Login dulu untuk like artikel', 'error');
+                showLoginModal();
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                const likeRef = db.ref(`likes/${articleId}/${userProfile.uid}`);
+                const articleRef = db.ref(`articles/${articleId}`);
+                
+                const likeSnapshot = await likeRef.once('value');
+                const alreadyLiked = likeSnapshot.exists();
+                
+                if (alreadyLiked) {
+                    await likeRef.remove();
+                    await articleRef.child('likes').transaction(current => (current || 0) - 1);
+                    
+                    document.getElementById('likeText').textContent = 'Suka';
+                    document.getElementById('likeArticleBtn').classList.remove('liked');
+                    document.getElementById('likeArticleBtn').innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
+                    
+                    await updateUserStats('likes', -1);
+                    
+                    showNotification('Like dihapus', 'info');
+                    
+                } else {
+                    await likeRef.set({
+                        userId: userProfile.uid,
+                        timestamp: Date.now()
+                    });
+                    await articleRef.child('likes').transaction(current => (current || 0) + 1);
+                    
+                    document.getElementById('likeText').textContent = 'Disukai';
+                    document.getElementById('likeArticleBtn').classList.add('liked');
+                    document.getElementById('likeArticleBtn').innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
+                    
+                    await updateUserStats('likes', 1);
+                    
+                    showNotification('Artikel disukai!', 'success');
+                }
+                
+                await reloadArticleData(articleId);
+                updateStats();
+                updateHeroBanner();
+                
+            } catch (error) {
+                console.error('Error toggling like:', error);
+                showNotification('Gagal update like', 'error');
+            }
+        }
+
+        async function checkIfLiked(articleId) {
+            if (!userProfile) return false;
+            
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref(`likes/${articleId}/${userProfile.uid}`).once('value');
+                return snapshot.exists();
+            } catch (error) {
+                return false;
+            }
+        }
+
+        async function reloadArticleData(articleId) {
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref(`articles/${articleId}`).once('value');
+                
+                if (snapshot.exists()) {
+                    const articleData = snapshot.val();
+                    
+                    const index = articles.findIndex(a => a.id === articleId);
+                    if (index !== -1) {
+                        articles[index] = { id: articleId, ...articleData };
+                        articles[index].score = calculateArticleScore(articles[index]);
+                    }
+                    
+                    if (currentArticle && currentArticle.id === articleId) {
+                        document.getElementById('articleLikes').textContent = formatNumber(articleData.likes || 0);
+                        currentArticle.likes = articleData.likes || 0;
+                    }
+                    
+                    displayTrendingArticles();
+                    displayRecommendedArticles();
+                    updateHeroBanner();
+                }
+            } catch (error) {
+                console.error('Error reloading article data:', error);
+            }
+        }
+
+        // ========== REAL-TIME COMMENT SYSTEM ==========
+        async function loadComments(articleId) {
+            try {
+                const db = firebase.database();
+                const snapshot = await db.ref(`comments/${articleId}`).once('value');
+                
+                if (snapshot.exists()) {
+                    const commentsData = snapshot.val();
+                    comments = Object.entries(commentsData)
+                        .map(([id, data]) => ({
+                            id,
+                            ...data
+                        }))
+                        .sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    displayComments();
+                } else {
+                    comments = [];
+                    displayComments();
+                }
+            } catch (error) {
+                console.error('Error loading comments:', error);
+                comments = [];
+                displayComments();
+            }
+        }
+
+        async function submitComment() {
+            if (!userProfile || userProfile.isGuest) {
+                showNotification('Login dulu untuk komentar', 'error');
+                showLoginModal();
+                return;
+            }
+            
+            const text = document.getElementById('commentInput').value.trim();
+            if (!text) {
+                showNotification('Komentar tidak boleh kosong', 'error');
+                return;
+            }
+            
+            if (text.length > 500) {
+                showNotification('Komentar maksimal 500 karakter', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                const commentId = 'comment_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                const newComment = {
+                    text,
+                    authorId: userProfile.uid,
+                    authorName: userProfile.username,
+                    authorAvatar: userProfile.avatar,
+                    timestamp: Date.now()
+                };
+                
+                await db.ref(`comments/${currentArticle.id}/${commentId}`).set(newComment);
+                await db.ref(`articles/${currentArticle.id}/comments`).transaction(current => (current || 0) + 1);
+                
+                document.getElementById('commentInput').value = '';
+                updateCharCount();
+                
+                showNotification('Komentar berhasil ditambahkan', 'success');
+                
+                await loadComments(currentArticle.id);
+                await reloadArticleData(currentArticle.id);
+                
+            } catch (error) {
+                console.error('Error submitting comment:', error);
+                showNotification('Gagal menambahkan komentar', 'error');
+            }
+        }
+
+        async function deleteComment(commentId) {
+            if (!confirm('Hapus komentar ini?')) return;
+            
+            try {
+                const db = firebase.database();
+                
+                await db.ref(`comments/${currentArticle.id}/${commentId}`).remove();
+                await db.ref(`articles/${currentArticle.id}/comments`).transaction(current => Math.max(0, (current || 0) - 1));
+                
+                await loadComments(currentArticle.id);
+                await reloadArticleData(currentArticle.id);
+                
+                showNotification('Komentar berhasil dihapus', 'success');
+                
+            } catch (error) {
+                console.error('Error deleting comment:', error);
+                showNotification('Gagal menghapus komentar', 'error');
+            }
+        }
+
+        function displayComments() {
+            const container = document.getElementById('commentList');
+            if (!container) return;
+            
+            document.getElementById('commentCount').textContent = formatNumber(comments.length);
+            
+            if (comments.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px; color:var(--gray);">
+                        <i class="far fa-comment" style="font-size:2.5rem; margin-bottom:12px; opacity:0.5;"></i>
+                        <p>Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = comments.map(comment => {
+                const firstLetter = comment.authorName?.charAt(0) || 'A';
+                const colors = {
+                    'R': '#F44336', 'A': '#FF5722', 'B': '#FF9800', 'C': '#4CAF50', 
+                    'D': '#FFC107', 'E': '#FF9800', 'F': '#2196F3', 'G': '#00BCD4',
+                    'H': '#8BC34A', 'I': '#FF5722', 'J': '#E91E63', 'K': '#3F51B5',
+                    'L': '#009688', 'M': '#F44336', 'N': '#FF9800', 'O': '#FF5722',
+                    'P': '#4CAF50', 'Q': '#FF9800', 'S': '#FF5722', 'T': '#FF9800',
+                    'U': '#4CAF50', 'V': '#FFC107', 'W': '#FF9800', 'X': '#2196F3',
+                    'Y': '#00BCD4', 'Z': '#8BC34A'
+                };
+                const color = colors[firstLetter.toUpperCase()] || '#FF5722';
+                
+                return `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <div class="comment-author">
+                                <div class="comment-author-avatar" style="background:linear-gradient(135deg, ${color}, ${adjustColor(color, -20)});">
+                                    ${firstLetter}
+                                </div>
+                                ${comment.authorName || 'Anonymous'}
+                            </div>
+                            <div class="comment-time">${timeAgo(comment.timestamp)}</div>
+                        </div>
+                        <div class="comment-content" style="line-height:1.6; font-size:0.95rem;">${comment.text}</div>
+                        ${comment.authorId === userProfile?.uid ? `
+                            <div class="comment-actions">
+                                <button class="btn btn-sm btn-danger" onclick="deleteComment('${comment.id}')">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ========== REAL-TIME VIEW COUNT ==========
+        async function updateViewCount(articleId) {
+            try {
+                const db = firebase.database();
+                await db.ref(`articles/${articleId}/views`).transaction(current => (current || 0) + 1);
+                
+                const article = articles.find(a => a.id === articleId);
+                if (article && article.authorId === userProfile?.uid) {
+                    await updateUserStats('views', 1);
+                }
+                
+                await reloadArticleData(articleId);
+                
+            } catch (error) {
+                console.error('Error updating view count:', error);
+            }
+        }
+
+        // ========== UPDATE USER STATS ==========
+        async function updateUserStats(type, delta) {
+            if (!userProfile) return;
+            
+            try {
+                const db = firebase.database();
+                await db.ref(`users/${userProfile.uid}/stats/${type}`).transaction(current => (current || 0) + delta);
+                
+                if (!userProfile.stats) userProfile.stats = {};
+                userProfile.stats[type] = (userProfile.stats[type] || 0) + delta;
+                
+                // Update localStorage
+                localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+                
+                updateUserUI();
+                
+            } catch (error) {
+                console.error('Error updating user stats:', error);
+            }
+        }
+
+        // ========== LOGIN SYSTEM ==========
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        async function loginUser() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const email = document.getElementById('loginEmail').value.trim();
+            const avatar = document.getElementById('loginAvatar').value.trim();
+            
+            if (!username) {
+                showNotification('Username harus diisi', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                
+                // Generate user ID yang konsisten
+                let userId = userProfile?.uid;
+                if (!userId || userId.startsWith('guest_')) {
+                    userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+                }
+                
+                userProfile = {
+                    uid: userId,
+                    username: username,
+                    email: email || '',
+                    avatar: avatar || '',
+                    isGuest: false,
+                    joinDate: Date.now(),
+                    stats: userProfile?.stats || {
+                        articles: 0,
+                        likes: 0,
+                        views: 0
+                    }
+                };
+                
+                await db.ref(`users/${userId}`).set(userProfile);
+                
+                // Update localStorage
+                localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+                
+                currentUser = { uid: userId };
+                
+                document.getElementById('loginModal').classList.remove('active');
+                
+                updateUserUI();
+                
+                showNotification(`Selamat datang, ${username}!`, 'success');
+                
+                if (currentArticle) {
+                    updateCommentForm();
+                }
+                
+            } catch (error) {
+                console.error('Error logging in:', error);
+                showNotification('Gagal login', 'error');
+            }
+        }
+
+        function loginAsGuest() {
+            document.getElementById('loginModal').classList.remove('active');
+            showNotification('Masuk sebagai tamu. Login untuk fitur lengkap.', 'info');
+        }
+
+        async function logoutUser() {
+            try {
+                // Reset ke guest
+                const guestId = 'guest_' + localStorage.getItem('nexenews_guest_id') || 
+                               'guest_' + Math.random().toString(36).substr(2, 9);
+                
+                if (!localStorage.getItem('nexenews_guest_id')) {
+                    localStorage.setItem('nexenews_guest_id', guestId);
+                }
+                
+                currentUser = { uid: guestId };
+                
+                // Load guest profile
+                const db = firebase.database();
+                const snapshot = await db.ref(`users/${guestId}`).once('value');
+                
+                if (snapshot.exists()) {
+                    userProfile = snapshot.val();
+                } else {
+                    userProfile = {
+                        uid: guestId,
+                        username: 'Pengguna_' + Math.floor(Math.random() * 10000),
+                        email: '',
+                        avatar: '',
+                        isGuest: true,
+                        joinDate: Date.now(),
+                        stats: {
+                            articles: 0,
+                            likes: 0,
+                            views: 0
+                        }
+                    };
+                    
+                    await db.ref(`users/${guestId}`).set(userProfile);
+                }
+                
+                localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+                
+                isAdmin = false;
+                
+                document.getElementById('profilePopup').classList.remove('active');
+                
+                updateUserUI();
+                
+                showNotification('Logout berhasil', 'success');
+                
+                showHomePage();
+                
+            } catch (error) {
+                console.error('Error logging out:', error);
+                showNotification('Logout gagal', 'error');
+            }
+        }
+
+        // ========== CHECK ADMIN STATUS ==========
+        function checkAdminStatus() {
+            if (!userProfile) {
+                isAdmin = false;
+                return;
+            }
+            
+            isAdmin = ADMIN_UIDS.includes(userProfile.uid);
+            
+            if (isAdmin) {
+                document.getElementById('popupAdminBtn').style.display = 'block';
+                userProfile.isAdmin = true;
+                
+                try {
+                    const db = firebase.database();
+                    db.ref(`users/${userProfile.uid}/isAdmin`).set(true);
+                } catch (error) {
+                    console.error('Error updating admin status:', error);
+                }
+            }
+        }
+
+        // ========== CREATE ARTICLE ==========
+        function showCreateArticleModal() {
+            if (!userProfile || userProfile.isGuest) {
+                showNotification('Login dulu untuk membuat artikel', 'error');
+                showLoginModal();
+                return;
+            }
+            
+            document.getElementById('articleTitleInput').value = '';
+            document.getElementById('articleImageInput').value = '';
+            document.getElementById('articleSlugInput').value = '';
+            if (articleEditor) articleEditor.setText('');
+            
+            document.getElementById('createArticleModal').classList.add('active');
+            
+            document.getElementById('articleTitleInput').addEventListener('input', function() {
+                const slug = this.value.toLowerCase()
+                    .replace(/[^\w\s]/g, '')
+                    .replace(/\s+/g, '-')
+                    .substring(0, 50);
+                document.getElementById('articleSlugInput').value = slug;
+            });
+        }
+
+        async function publishArticle() {
+            if (!userProfile || userProfile.isGuest) {
+                showNotification('Login dulu untuk publish artikel', 'error');
+                showLoginModal();
+                return;
+            }
+            
+            const title = document.getElementById('articleTitleInput').value.trim();
+            const category = document.getElementById('articleCategoryInput').value;
+            const image = document.getElementById('articleImageInput').value.trim();
+            const content = articleEditor ? articleEditor.root.innerHTML : '';
+            const slug = document.getElementById('articleSlugInput').value.trim() || 
+                        title.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, '-').substring(0, 50);
+            
+            if (!title || title.length < 10) {
+                showNotification('Judul minimal 10 karakter', 'error');
+                return;
+            }
+            
+            if (!content || content.length < 100) {
+                showNotification('Konten artikel minimal 100 karakter', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                const articleId = 'article_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                const newArticle = {
+                    id: articleId,
+                    title,
+                    category,
+                    image: image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80',
+                    content,
+                    excerpt: content.replace(/<[^>]*>/g, '').substring(0, 200) + '...',
+                    slug,
+                    author: userProfile.username,
+                    authorId: userProfile.uid,
+                    authorAvatar: userProfile.avatar,
+                    timestamp: Date.now(),
+                    views: 0,
+                    likes: 0,
+                    comments: 0,
+                    status: 'pending', // Status awal: pending
+                    score: 0
+                };
+                
+                await db.ref(`articles/${articleId}`).set(newArticle);
+                
+                // Tidak langsung update stats karena masih pending
+                
+                articles.unshift(newArticle);
+                
+                document.getElementById('createArticleModal').classList.remove('active');
+                
+                showNotification('Artikel berhasil dikirim! Menunggu approval admin.', 'success');
+                
+                displayTrendingArticles();
+                displayNewestArticles();
+                displayRecommendedArticles();
+                updateStats();
+                updatePendingCount();
+                
+                // Tidak langsung open article karena masih pending
+                
+            } catch (error) {
+                console.error('Error publishing article:', error);
+                showNotification('Gagal publish artikel: ' + error.message, 'error');
+            }
+        }
+
+        // ========== OPEN ARTICLE ==========
+        async function openArticle(articleId, skipMonetize = false) {
+            const now = Date.now();
+            const timeSinceLastClick = now - lastArticleClickTime;
+            
+            // COOLDOWN: 30 detik antar klik artikel
+            if (timeSinceLastClick < 30000 && !skipMonetize) {
+                showNotification('Tunggu 30 detik sebelum buka artikel lain', 'warning');
+                return;
+            }
+            
+            lastArticleClickTime = now;
+            
+            // Random chance untuk support: 10% (dikurangi)
+            if (!skipMonetize && Math.random() < 0.10) {
+                showSupportModal();
+                return;
+            }
+            
+            const article = articles.find(a => a.id === articleId);
+            if (!article) {
+                showNotification('Artikel tidak ditemukan', 'error');
+                return;
+            }
+            
+            // Cek jika artikel pending
+            if (article.status === 'pending') {
+                showNotification('Artikel sedang menunggu approval admin', 'info');
+                return;
+            }
+            
+            currentArticle = article;
+            
+            showArticlePage();
+            
+            document.getElementById('articleContent').innerHTML = `
+                <div style="text-align:center; padding:50px 20px;">
+                    <div class="loading-spinner" style="margin:0 auto 20px;"></div>
+                    <h3 style="margin-bottom:12px; color:var(--dark); font-size:1.2rem;">Memuat artikel...</h3>
+                </div>
+            `;
+            
+            await updateViewCount(articleId);
+            
+            document.getElementById('articleTitle').textContent = article.title;
+            document.getElementById('articleDate').textContent = new Date(article.timestamp).toLocaleDateString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('articleViews').textContent = formatNumber(article.views || 0);
+            document.getElementById('articleLikes').textContent = formatNumber(article.likes || 0);
+            document.getElementById('articleComments').textContent = formatNumber(article.comments || 0);
+            document.getElementById('authorName').textContent = article.author || 'Anonymous';
+            
+            const categoryBadge = document.getElementById('articleCategoryBadge');
+            categoryBadge.className = 'category-badge';
+            categoryBadge.classList.add(`category-${article.category}`);
+            categoryBadge.textContent = getCategoryName(article.category);
+            
+            const authorFirstLetter = (article.author || 'A').charAt(0).toUpperCase();
+            const colors = {
+                'R': '#F44336', 'A': '#FF5722', 'B': '#FF9800', 'C': '#4CAF50', 
+                'D': '#FFC107', 'E': '#FF9800', 'F': '#2196F3', 'G': '#00BCD4',
+                'H': '#8BC34A', 'I': '#FF5722', 'J': '#E91E63', 'K': '#3F51B5',
+                'L': '#009688', 'M': '#F44336', 'N': '#FF9800', 'O': '#FF5722',
+                'P': '#4CAF50', 'Q': '#FF9800', 'S': '#FF5722', 'T': '#FF9800',
+                'U': '#4CAF50', 'V': '#FFC107', 'W': '#FF9800', 'X': '#2196F3',
+                'Y': '#00BCD4', 'Z': '#8BC34A'
+            };
+            
+            const authorColor = colors[authorFirstLetter] || '#FF5722';
+            document.getElementById('authorAvatar').textContent = authorFirstLetter;
+            document.getElementById('authorAvatar').style.background = `linear-gradient(135deg, ${authorColor}, ${adjustColor(authorColor, -20)})`;
+            
+            document.getElementById('articleTimestamp').textContent = timeAgo(article.timestamp);
+            document.getElementById('articleImage').src = article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80';
+            document.getElementById('articleImage').onerror = function() {
+                this.src = 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=1200&auto=format&fit=crop&q=80';
+            };
+            
+            setTimeout(() => {
+                document.getElementById('articleContent').innerHTML = article.content || '<p>Artikel tidak memiliki konten.</p>';
+            }, 500);
+            
+            const liked = await checkIfLiked(articleId);
+            const likeBtn = document.getElementById('likeArticleBtn');
+            if (liked) {
+                likeBtn.classList.add('liked');
+                likeBtn.innerHTML = '<i class="fas fa-heart"></i> <span id="likeText">Disukai</span>';
+            } else {
+                likeBtn.classList.remove('liked');
+                likeBtn.innerHTML = '<i class="far fa-heart"></i> <span id="likeText">Suka</span>';
+            }
+            
+            updateCommentForm();
+            
+            await loadComments(articleId);
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateCommentForm() {
+            const commentForm = document.getElementById('commentForm');
+            const loginToComment = document.getElementById('loginToComment');
+            
+            if (userProfile && !userProfile.isGuest) {
+                commentForm.style.display = 'block';
+                loginToComment.style.display = 'none';
+            } else {
+                commentForm.style.display = 'none';
+                loginToComment.style.display = 'block';
+            }
+        }
+
+        // ========== DISPLAY FUNCTIONS ==========
+        function displayTrendingArticles() {
+            const container = document.getElementById('trendingArticles');
+            if (!container) return;
+            
+            const trending = [...articles]
+                .filter(a => a.status === 'published')
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 6);
+            
+            if (trending.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:50px 20px; background:white; border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid #FFE0B2;">
+                        <div style="width:70px; height:70px; background:var(--gradient-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:white; font-size:1.8rem;">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3 style="margin-bottom:12px; color:var(--dark); font-size:1.2rem;">Belum ada artikel trending</h3>
+                        <p style="color:var(--gray); margin-bottom:20px; font-size:0.9rem;">Buat artikel pertama dan jadikan trending!</p>
+                        <button class="btn btn-primary" onclick="showCreateArticleModal()">
+                            <i class="fas fa-plus"></i> Buat Artikel Pertama
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = trending.map(article => `
+                <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
+                    <div style="position:relative;">
+                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:200px; object-fit:cover;">
+                        ${article.score > 100 ? '<span class="trending-badge">TRENDING</span>' : ''}
+                        <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding:15px; padding-top:30px;">
+                            <span class="category-badge category-${article.category}" style="font-size:0.75rem;">${getCategoryName(article.category)}</span>
+                        </div>
+                    </div>
+                    <div style="padding:20px;">
+                        <h3 style="margin-bottom:12px; font-size:1.1rem; line-height:1.3; font-weight:700; color:var(--dark);">${article.title}</h3>
+                        <p style="color:var(--gray); margin-bottom:15px; font-size:0.9rem; line-height:1.4;">${article.excerpt || ''}</p>
+                        <div style="display:flex; justify-content:space-between; color:var(--gray); font-size:0.8rem; border-top:1px solid #FFE0B2; padding-top:12px;">
+                            <span><i class="far fa-eye"></i> ${formatNumber(article.views || 0)}</span>
+                            <span><i class="far fa-heart"></i> ${formatNumber(article.likes || 0)}</span>
+                            <span><i class="far fa-comment"></i> ${formatNumber(article.comments || 0)}</span>
+                            <span>${timeAgo(article.timestamp)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayNewestArticles() {
+            const container = document.getElementById('newestArticles');
+            if (!container) return;
+            
+            const newest = [...articles]
+                .filter(a => a.status === 'published')
+                .sort((a, b) => b.timestamp - a.timestamp)
+                .slice(0, 6);
+            
+            if (newest.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--gray);">
+                        <i class="fas fa-clock" style="font-size:2.5rem; margin-bottom:15px; opacity:0.3;"></i>
+                        <p>Belum ada artikel terbaru</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = newest.map(article => `
+                <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
+                    <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:180px; object-fit:cover;">
+                    <div style="padding:20px;">
+                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:12px;">
+                            <span class="category-badge category-${article.category}" style="font-size:0.75rem;">${getCategoryName(article.category)}</span>
+                            ${Date.now() - article.timestamp < 86400000 ? '<span class="new-badge">BARU</span>' : ''}
+                        </div>
+                        <h3 style="margin-bottom:8px; font-size:1rem; line-height:1.3; font-weight:700; color:var(--dark);">${article.title}</h3>
+                        <p style="color:var(--gray); margin-bottom:12px; font-size:0.85rem; line-height:1.4;">${article.excerpt?.substring(0, 100) || ''}...</p>
+                        <div style="font-size:0.8rem; color:var(--gray); display:flex; justify-content:space-between; align-items:center;">
+                            <span>${timeAgo(article.timestamp)}</span>
+                            <span style="display:flex; gap:12px;">
+                                <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
+                                <span><i class="far fa-comment"></i> ${article.comments || 0}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayRecommendedArticles() {
+            const container = document.getElementById('recommendedArticles');
+            if (!container) return;
+            
+            const recommended = [...articles]
+                .filter(a => a.status === 'published')
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 5);
+            
+            if (recommended.length === 0) return;
+            
+            container.innerHTML = recommended.map(article => `
+                <div style="margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid #FFE0B2; cursor:pointer;" onclick="openArticle('${article.id}')">
+                    <div style="display:flex; gap:12px;">
+                        <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=400&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:70px; height:50px; border-radius:var(--radius-sm); object-fit:cover; box-shadow:var(--shadow-sm);">
+                        <div style="flex:1;">
+                            <h4 style="font-size:0.9rem; margin-bottom:6px; line-height:1.2; font-weight:600; color:var(--dark);">${article.title.substring(0, 60)}...</h4>
+                            <div style="font-size:0.75rem; color:var(--gray); display:flex; justify-content:space-between;">
+                                <span>${timeAgo(article.timestamp)}</span>
+                                <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ========== UTILITY FUNCTIONS ==========
+        function calculateArticleScore(article) {
+            const now = Date.now();
+            const articleAge = now - article.timestamp;
+            const ageInHours = articleAge / (1000 * 60 * 60);
+            
+            let score = 0;
+            score += Math.log10((article.views || 0) + 1) * 10;
+            score += (article.likes || 0) * 15;
+            score += (article.comments || 0) * 20;
+            
+            if (ageInHours < 24) {
+                score *= 1.5;
+            } else if (ageInHours < 168) {
+                score *= 1.2;
+            } else {
+                const weeksOld = ageInHours / 168;
+                score *= Math.exp(-weeksOld * 0.5);
+            }
+            
+            if (ageInHours < 2 && (article.likes || 0) > 10) {
+                score += 50;
+            }
+            
+            return Math.max(score, 0);
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function timeAgo(timestamp) {
+            const seconds = Math.floor((Date.now() - timestamp) / 1000);
+            
+            let interval = Math.floor(seconds / 31536000);
+            if (interval >= 1) return interval + ' tahun lalu';
+            
+            interval = Math.floor(seconds / 2592000);
+            if (interval >= 1) return interval + ' bulan lalu';
+            
+            interval = Math.floor(seconds / 86400);
+            if (interval >= 1) return interval + ' hari lalu';
+            
+            interval = Math.floor(seconds / 3600);
+            if (interval >= 1) return interval + ' jam lalu';
+            
+            interval = Math.floor(seconds / 60);
+            if (interval >= 1) return interval + ' menit lalu';
+            
+            return 'Baru saja';
+        }
+
+        function getCategoryName(category) {
+            const categories = {
+                'misteri': '🔮 Misteri',
+                'fakta': '💡 Fakta Unik',
+                'sejarah': '🏛️ Sejarah',
+                'teknologi': '💻 Teknologi',
+                'viral': '🔥 Viral',
+                'hiburan': '🎬 Hiburan',
+                'olahraga': '⚽ Olahraga',
+                'kesehatan': '🏥 Kesehatan',
+                'bisnis': '💼 Bisnis',
+                'pendidikan': '📚 Pendidikan',
+                'politik': '🏛️ Politik',
+                'lifestyle': '🌟 Lifestyle',
+                'travel': '✈️ Travel',
+                'food': '🍕 Food',
+                'otomotif': '🚗 Otomotif',
+                'game': '🎮 Game',
+                'musik': '🎵 Musik'
+            };
+            return categories[category] || 'Artikel';
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            const icon = document.getElementById('notificationIcon');
+            
+            text.textContent = message;
+            
+            switch(type) {
+                case 'error':
+                    notification.style.background = 'linear-gradient(135deg, #F44336, #D32F2F)';
+                    icon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+                    break;
+                case 'success':
+                    notification.style.background = 'linear-gradient(135deg, #4CAF50, #388E3C)';
+                    icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                    break;
+                case 'warning':
+                    notification.style.background = 'linear-gradient(135deg, #FF9800, #F57C00)';
+                    icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                    break;
+                default:
+                    notification.style.background = 'linear-gradient(135deg, #FF5722, #E64A19)';
+                    icon.innerHTML = '<i class="fas fa-info-circle"></i>';
+            }
+            
+            notification.classList.add('active');
+            setTimeout(() => notification.classList.remove('active'), 4000);
+        }
+
+        function updateCharCount() {
+            const input = document.getElementById('commentInput');
+            const charCount = document.getElementById('charCount');
+            if (input && charCount) {
+                const length = input.value.length;
+                charCount.textContent = `${length}/500`;
+                if (length > 450) {
+                    charCount.style.color = 'var(--warning)';
+                } else if (length > 400) {
+                    charCount.style.color = 'var(--gray)';
+                } else {
+                    charCount.style.color = 'var(--success)';
+                }
+            }
+        }
+
+        function adjustColor(color, amount) {
+            let usePound = false;
+            if (color[0] === "#") {
+                color = color.slice(1);
+                usePound = true;
+            }
+            const num = parseInt(color, 16);
+            let r = (num >> 16) + amount;
+            if (r > 255) r = 255;
+            else if (r < 0) r = 0;
+            let b = ((num >> 8) & 0x00FF) + amount;
+            if (b > 255) b = 255;
+            else if (b < 0) b = 0;
+            let g = (num & 0x0000FF) + amount;
+            if (g > 255) g = 255;
+            else if (g < 0) g = 0;
+            return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16).padStart(6, '0');
+        }
+
+        function updateStats() {
+            const publishedArticles = articles.filter(a => a.status === 'published');
+            const totalArticles = publishedArticles.length;
+            const totalLikes = publishedArticles.reduce((sum, article) => sum + (article.likes || 0), 0);
+            
+            document.getElementById('totalArticles').textContent = formatNumber(totalArticles);
+            document.getElementById('totalLikes').textContent = formatNumber(totalLikes);
+        }
+
+        function updatePendingCount() {
+            const pendingCount = articles.filter(a => a.status === 'pending').length;
+            document.getElementById('pendingCount').textContent = pendingCount;
+        }
+
+        // ========== SIDEBAR FUNCTIONS ==========
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebarLeft');
+            sidebar.classList.toggle('active');
+        }
+
+        function filterByCategory(category) {
+            const filtered = articles.filter(a => a.status === 'published' && a.category === category);
+            
+            if (filtered.length === 0) {
+                showNotification(`Tidak ada artikel dalam kategori ${getCategoryName(category)}`, 'info');
+                return;
+            }
+            
+            // Tampilkan hasil filter di halaman utama
+            showHomePage();
+            
+            // Update konten dengan artikel filtered
+            const container = document.getElementById('trendingArticles');
+            if (container) {
+                container.innerHTML = filtered.map(article => `
+                    <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
+                        <div style="position:relative;">
+                            <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:200px; object-fit:cover;">
+                            <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding:15px; padding-top:30px;">
+                                <span class="category-badge category-${article.category}" style="font-size:0.75rem;">${getCategoryName(article.category)}</span>
+                            </div>
+                        </div>
+                        <div style="padding:20px;">
+                            <h3 style="margin-bottom:12px; font-size:1.1rem; line-height:1.3; font-weight:700; color:var(--dark);">${article.title}</h3>
+                            <p style="color:var(--gray); margin-bottom:15px; font-size:0.9rem; line-height:1.4;">${article.excerpt || ''}</p>
+                            <div style="display:flex; justify-content:space-between; color:var(--gray); font-size:0.8rem; border-top:1px solid #FFE0B2; padding-top:12px;">
+                                <span><i class="far fa-eye"></i> ${formatNumber(article.views || 0)}</span>
+                                <span><i class="far fa-heart"></i> ${formatNumber(article.likes || 0)}</span>
+                                <span><i class="far fa-comment"></i> ${formatNumber(article.comments || 0)}</span>
+                                <span>${timeAgo(article.timestamp)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Update title
+                const title = document.querySelector('#homePage h2');
+                if (title) {
+                    title.innerHTML = `<i class="fas fa-filter" style="color:var(--primary);"></i> Kategori: ${getCategoryName(category)} (${filtered.length} artikel)`;
+                }
+            }
+            
+            // Tutup sidebar di mobile
+            if (window.innerWidth <= 1200) {
+                toggleSidebar();
+            }
+        }
+
+        // ========== LEADERBOARD FUNCTIONS ==========
+        function showLeaderboard() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('articlePage').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('leaderboardPage').style.display = 'block';
+            
+            loadLeaderboard('all');
+        }
+
+        function loadLeaderboard(filter) {
+            let filteredArticles = [...articles].filter(a => a.status === 'published');
+            
+            const now = Date.now();
+            switch(filter) {
+                case 'today':
+                    filteredArticles = filteredArticles.filter(a => now - a.timestamp < 86400000);
+                    break;
+                case 'week':
+                    filteredArticles = filteredArticles.filter(a => now - a.timestamp < 604800000);
+                    break;
+                case 'month':
+                    filteredArticles = filteredArticles.filter(a => now - a.timestamp < 2592000000);
+                    break;
+            }
+            
+            filteredArticles.sort((a, b) => b.score - a.score);
+            
+            const container = document.getElementById('leaderboardContent');
+            if (!container) return;
+            
+            if (filteredArticles.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:50px 20px; color:var(--gray);">
+                        <i class="fas fa-trophy" style="font-size:3rem; margin-bottom:15px; opacity:0.3;"></i>
+                        <p>Tidak ada artikel untuk filter ini</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filteredArticles.map((article, index) => {
+                const rank = index + 1;
+                let rankColor = '#FF5722';
+                if (rank === 1) rankColor = '#FFD700';
+                if (rank === 2) rankColor = '#C0C0C0';
+                if (rank === 3) rankColor = '#CD7F32';
+                
+                return `
+                    <div class="leaderboard-item" onclick="openArticle('${article.id}', true)">
+                        <div class="leaderboard-rank" style="background:linear-gradient(135deg, ${rankColor}, ${adjustColor(rankColor, -20)});">
+                            ${rank}
+                        </div>
+                        <div class="leaderboard-content">
+                            <h4 style="margin-bottom:8px; font-weight:600; color:var(--dark);">${article.title}</h4>
+                            <div class="leaderboard-stats">
+                                <span><i class="far fa-eye"></i> ${article.views || 0}</span>
+                                <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
+                                <span><i class="far fa-comment"></i> ${article.comments || 0}</span>
+                                <span>Skor: ${Math.round(article.score || 0)}</span>
+                            </div>
+                        </div>
+                        <span class="category-badge category-${article.category}" style="font-size:0.75rem;">
+                            ${getCategoryName(article.category)}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ========== ADMIN FUNCTIONS ==========
+        function showAdminPanel() {
+            if (!isAdmin) {
+                showNotification('Hanya admin yang bisa mengakses panel ini', 'error');
+                return;
+            }
+            
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('articlePage').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('leaderboardPage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'block';
+            
+            showAllArticlesAdmin();
+            
+            if (userProfile.uid === ADMIN_UIDS[0]) {
+                document.getElementById('addAdminBtn').style.display = 'block';
+            }
+        }
+
+        function showAllArticlesAdmin() {
+            const container = document.getElementById('adminContent');
+            if (!container) return;
+            
+            const allArticles = [...articles].sort((a, b) => b.timestamp - a.timestamp);
+            updatePendingCount();
+            
+            container.innerHTML = `
+                <div style="background:white; border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); border:1px solid #FFE0B2;">
+                    <h3 style="margin-bottom:15px; color:var(--primary); font-size:1.2rem;">Semua Artikel (${allArticles.length})</h3>
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%; border-collapse:collapse;">
+                            <thead>
+                                <tr style="background:#FFF8F0;">
+                                    <th style="padding:12px; text-align:left; border-bottom:2px solid #FFE0B2; font-weight:600; font-size:0.9rem;">Judul</th>
+                                    <th style="padding:12px; text-align:left; border-bottom:2px solid #FFE0B2; font-weight:600; font-size:0.9rem;">Penulis</th>
+                                    <th style="padding:12px; text-align:left; border-bottom:2px solid #FFE0B2; font-weight:600; font-size:0.9rem;">Status</th>
+                                    <th style="padding:12px; text-align:left; border-bottom:2px solid #FFE0B2; font-weight:600; font-size:0.9rem;">Views</th>
+                                    <th style="padding:12px; text-align:left; border-bottom:2px solid #FFE0B2; font-weight:600; font-size:0.9rem;">Likes</th>
+                                    <th style="padding:12px; text-align:left; border-bottom:2px solid #FFE0B2; font-weight:600; font-size:0.9rem;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${allArticles.map(article => `
+                                    <tr style="border-bottom:1px solid #FFE0B2; transition:var(--transition);" onmouseover="this.style.backgroundColor='#FFF8F0'" onmouseout="this.style.backgroundColor='transparent'">
+                                        <td style="padding:12px; vertical-align:top;">
+                                            <div style="font-weight:500; margin-bottom:4px; font-size:0.9rem;">${article.title}</div>
+                                            <div style="font-size:0.8rem; color:var(--gray);">${timeAgo(article.timestamp)}</div>
+                                        </td>
+                                        <td style="padding:12px; vertical-align:top; font-size:0.9rem;">${article.author}</td>
+                                        <td style="padding:12px; vertical-align:top;">
+                                            ${article.status === 'published' ? 
+                                                '<span class="status-approved">Published</span>' : 
+                                                article.status === 'rejected' ?
+                                                '<span class="status-rejected">Rejected</span>' :
+                                                '<span class="status-pending">Pending</span>'
+                                            }
+                                        </td>
+                                        <td style="padding:12px; vertical-align:top; font-size:0.9rem;">${article.views || 0}</td>
+                                        <td style="padding:12px; vertical-align:top; font-size:0.9rem;">${article.likes || 0}</td>
+                                        <td style="padding:12px; vertical-align:top;">
+                                            <div class="approval-actions">
+                                                ${article.status === 'pending' ? `
+                                                    <button class="btn btn-sm btn-success" onclick="approveArticle('${article.id}')" style="padding:6px 12px; font-size:0.8rem;">
+                                                        <i class="fas fa-check"></i> Approve
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" onclick="rejectArticle('${article.id}')" style="padding:6px 12px; font-size:0.8rem;">
+                                                        <i class="fas fa-times"></i> Reject
+                                                    </button>
+                                                ` : ''}
+                                                <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)" style="padding:6px 12px; font-size:0.8rem;">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="deleteArticleAdmin('${article.id}')" style="padding:6px 12px; font-size:0.8rem;">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function approveArticle(articleId) {
+            if (!isAdmin) {
+                showNotification('Hanya admin yang bisa approve artikel', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                
+                await db.ref(`articles/${articleId}/status`).set('published');
+                
+                // Update stats penulis
+                const article = articles.find(a => a.id === articleId);
+                if (article) {
+                    const authorId = article.authorId;
+                    await db.ref(`users/${authorId}/stats/articles`).transaction(current => (current || 0) + 1);
+                    
+                    // Update artikel di array lokal
+                    article.status = 'published';
+                    const index = articles.findIndex(a => a.id === articleId);
+                    if (index !== -1) {
+                        articles[index] = article;
+                    }
+                }
+                
+                showAllArticlesAdmin();
+                
+                displayTrendingArticles();
+                displayNewestArticles();
+                displayRecommendedArticles();
+                updateStats();
+                updateHeroBanner();
+                
+                showNotification('Artikel berhasil di-approve', 'success');
+                
+            } catch (error) {
+                console.error('Error approving article:', error);
+                showNotification('Gagal approve artikel', 'error');
+            }
+        }
+
+        async function rejectArticle(articleId) {
+            if (!isAdmin) {
+                showNotification('Hanya admin yang bisa reject artikel', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.database();
+                
+                await db.ref(`articles/${articleId}/status`).set('rejected');
+                
+                // Update artikel di array lokal
+                const article = articles.find(a => a.id === articleId);
+                if (article) {
+                    article.status = 'rejected';
+                    const index = articles.findIndex(a => a.id === articleId);
+                    if (index !== -1) {
+                        articles[index] = article;
+                    }
+                }
+                
+                showAllArticlesAdmin();
+                updatePendingCount();
+                
+                showNotification('Artikel berhasil di-reject', 'success');
+                
+            } catch (error) {
+                console.error('Error rejecting article:', error);
+                showNotification('Gagal reject artikel', 'error');
+            }
+        }
+
+        async function deleteArticleAdmin(articleId) {
+            if (!isAdmin) {
+                showNotification('Hanya admin yang bisa menghapus artikel', 'error');
+                return;
+            }
+            
+            if (!confirm('Hapus artikel ini? Tindakan ini tidak dapat dibatalkan.')) return;
+            
+            try {
+                const db = firebase.database();
+                
+                await db.ref(`articles/${articleId}`).remove();
+                await db.ref(`comments/${articleId}`).remove();
+                await db.ref(`likes/${articleId}`).remove();
+                
+                const index = articles.findIndex(a => a.id === articleId);
+                if (index !== -1) {
+                    articles.splice(index, 1);
+                }
+                
+                showAllArticlesAdmin();
+                
+                displayTrendingArticles();
+                displayNewestArticles();
+                displayRecommendedArticles();
+                updateStats();
+                updateHeroBanner();
+                
+                showNotification('Artikel berhasil dihapus', 'success');
+                
+            } catch (error) {
+                console.error('Error deleting article:', error);
+                showNotification('Gagal menghapus artikel', 'error');
+            }
+        }
+
+        function addNewAdmin() {
+            if (userProfile.uid !== ADMIN_UIDS[0]) {
+                showNotification('Hanya admin utama yang bisa menambah admin', 'error');
+                return;
+            }
+            
+            const adminId = prompt('Masukkan User ID admin baru:');
+            if (!adminId) return;
+            
+            try {
+                if (!ADMIN_UIDS.includes(adminId)) {
+                    ADMIN_UIDS.push(adminId);
+                    showNotification(`Admin ${adminId} berhasil ditambahkan`, 'success');
+                    
+                    const db = firebase.database();
+                    db.ref('adminUids').set(ADMIN_UIDS);
+                } else {
+                    showNotification('Admin sudah ada', 'error');
+                }
+            } catch (error) {
+                showNotification('Gagal menambahkan admin', 'error');
+            }
+        }
+
+        // ========== SETUP EVENT LISTENERS ==========
+        function setupEventListeners() {
+            // Login button
+            document.getElementById('loginBtn').addEventListener('click', showLoginModal);
+            
+            // Leaderboard button
+            document.getElementById('leaderboardBtn').addEventListener('click', showLeaderboard);
+            
+            // Support button
+            document.getElementById('supportBtn').addEventListener('click', showSupportModal);
+            
+            // Login modal
+            document.getElementById('closeLoginModal').addEventListener('click', () => {
+                document.getElementById('loginModal').classList.remove('active');
+            });
+            
+            document.getElementById('submitLoginBtn').addEventListener('click', loginUser);
+            document.getElementById('continueAsGuestBtn').addEventListener('click', loginAsGuest);
+            
+            // Support modal
+            document.getElementById('closeSupportModal').addEventListener('click', () => {
+                document.getElementById('supportModal').classList.remove('active');
+            });
+            
+            document.getElementById('closeSupportBtn').addEventListener('click', () => {
+                document.getElementById('supportModal').classList.remove('active');
+            });
+            
+            // User avatar click
+            document.getElementById('userAvatar').addEventListener('click', () => {
+                document.getElementById('profilePopup').classList.toggle('active');
+            });
+            
+            // Profile popup buttons
+            document.getElementById('popupProfileBtn').addEventListener('click', () => {
+                document.getElementById('profilePopup').classList.remove('active');
+                showProfilePage();
+            });
+            
+            document.getElementById('popupMyArticlesBtn').addEventListener('click', () => {
+                document.getElementById('profilePopup').classList.remove('active');
+                showProfilePage();
+            });
+            
+            document.getElementById('popupAdminBtn').addEventListener('click', () => {
+                document.getElementById('profilePopup').classList.remove('active');
+                showAdminPanel();
+            });
+            
+            document.getElementById('popupLogoutBtn').addEventListener('click', logoutUser);
+            
+            // Create article modal
+            document.getElementById('closeCreateModal').addEventListener('click', () => {
+                document.getElementById('createArticleModal').classList.remove('active');
+            });
+            
+            document.getElementById('publishArticleBtn').addEventListener('click', publishArticle);
+            
+            // Like button
+            document.getElementById('likeArticleBtn').addEventListener('click', () => {
+                if (currentArticle) {
+                    toggleLike(currentArticle.id);
+                }
+            });
+            
+            // Share button
+            document.getElementById('shareArticleBtn').addEventListener('click', () => {
+                if (currentArticle) {
+                    const url = window.location.href.split('?')[0] + '?article=' + currentArticle.id;
+                    navigator.clipboard.writeText(url).then(() => {
+                        showNotification('Link artikel disalin!', 'success');
+                    }).catch(() => {
+                        prompt('Salin link berikut:', url);
+                    });
+                }
+            });
+            
+            // Comment form
+            document.getElementById('submitCommentBtn').addEventListener('click', submitComment);
+            
+            document.getElementById('loginForCommentBtn').addEventListener('click', showLoginModal);
+            
+            // Profile edit buttons
+            document.getElementById('saveUsernameBtn').addEventListener('click', async () => {
+                const newUsername = document.getElementById('editUsername').value.trim();
+                if (!newUsername) {
+                    showNotification('Username tidak boleh kosong', 'error');
+                    return;
+                }
+                
+                try {
+                    const db = firebase.database();
+                    userProfile.username = newUsername;
+                    await db.ref(`users/${userProfile.uid}/username`).set(newUsername);
+                    
+                    // Update localStorage
+                    localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+                    
+                    updateUserUI();
+                    showNotification('Username berhasil diperbarui', 'success');
+                } catch (error) {
+                    showNotification('Gagal memperbarui username', 'error');
+                }
+            });
+            
+            document.getElementById('saveAvatarBtn').addEventListener('click', async () => {
+                const newAvatar = document.getElementById('editAvatarUrl').value.trim();
+                try {
+                    const db = firebase.database();
+                    userProfile.avatar = newAvatar;
+                    await db.ref(`users/${userProfile.uid}/avatar`).set(newAvatar);
+                    
+                    // Update localStorage
+                    localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+                    
+                    updateUserUI();
+                    showNotification('Avatar berhasil diperbarui', 'success');
+                } catch (error) {
+                    showNotification('Gagal memperbarui avatar', 'error');
+                }
+            });
+            
+            // Search
+            document.getElementById('searchBox').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const resultsContainer = document.getElementById('searchResults');
+                
+                if (searchTerm.length < 2) {
+                    resultsContainer.classList.remove('active');
+                    return;
+                }
+                
+                const filtered = articles.filter(article => 
+                    article.title.toLowerCase().includes(searchTerm) ||
+                    article.content.toLowerCase().includes(searchTerm) ||
+                    article.author?.toLowerCase().includes(searchTerm)
+                ).slice(0, 5);
+                
+                if (filtered.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div class="search-result-item" style="cursor:default; padding:25px 15px; text-align:center;">
+                            <div class="search-result-content">
+                                <i class="fas fa-search" style="font-size:1.3rem; margin-bottom:8px; color:var(--gray);"></i>
+                                <p style="font-size:0.9rem;">Tidak ditemukan artikel</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultsContainer.innerHTML = filtered.map(article => `
+                        <div class="search-result-item" onclick="openArticle('${article.id}')">
+                            <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=200&auto=format&fit=crop&q=80'}" class="search-result-image">
+                            <div class="search-result-content">
+                                <h4>${article.title.substring(0, 50)}...</h4>
+                                <p>${getCategoryName(article.category)} • ${timeAgo(article.timestamp)}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                resultsContainer.classList.add('active');
+            });
+            
+            // Close popups when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#userAvatar') && !e.target.closest('.profile-popup')) {
+                    document.getElementById('profilePopup').classList.remove('active');
+                }
+                if (e.target.classList.contains('modal')) {
+                    document.getElementById('loginModal').classList.remove('active');
+                    document.getElementById('supportModal').classList.remove('active');
+                    document.getElementById('createArticleModal').classList.remove('active');
+                }
+                if (!e.target.closest('.search-container')) {
+                    document.getElementById('searchResults').classList.remove('active');
+                }
+                if (!e.target.closest('#sidebarLeft') && !e.target.closest('#sidebarToggle')) {
+                    const sidebar = document.getElementById('sidebarLeft');
+                    if (window.innerWidth <= 1200) {
+                        sidebar.classList.remove('active');
+                    }
+                }
+            });
+            
+            // Title input for slug generation
+            document.getElementById('articleTitleInput').addEventListener('input', function() {
+                const slug = this.value.toLowerCase()
+                    .replace(/[^\w\s]/g, '')
+                    .replace(/\s+/g, '-')
+                    .substring(0, 50);
+                document.getElementById('articleSlugInput').value = slug;
+            });
+            
+            // Admin buttons
+            document.getElementById('adminAllArticlesBtn').addEventListener('click', showAllArticlesAdmin);
+            document.getElementById('adminPendingBtn').addEventListener('click', showAllArticlesAdmin);
+            document.getElementById('addAdminBtn').addEventListener('click', addNewAdmin);
+        }
+
+        // ========== PAGE NAVIGATION ==========
+        function showHomePage() {
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('articlePage').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('leaderboardPage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('profilePopup').classList.remove('active');
+            
+            displayTrendingArticles();
+            displayNewestArticles();
+            displayRecommendedArticles();
+            updateStats();
+            updateHeroBanner();
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showArticlePage() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('articlePage').style.display = 'block';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('leaderboardPage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('profilePopup').classList.remove('active');
+        }
+
+        function showProfilePage() {
+            if (!userProfile || userProfile.isGuest) {
+                showNotification('Login dulu untuk melihat profil', 'error');
+                showLoginModal();
+                return;
+            }
+            
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('articlePage').style.display = 'none';
+            document.getElementById('leaderboardPage').style.display = 'none';
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'block';
+            
+            document.getElementById('profileBigUsername').textContent = userProfile.username;
+            document.getElementById('profileBigEmail').textContent = userProfile.email || 'Tidak ada email';
+            
+            const firstLetter = userProfile.username.charAt(0).toUpperCase();
+            const colors = {
+                'R': '#F44336', 'A': '#FF5722', 'B': '#FF9800', 'C': '#4CAF50', 
+                'D': '#FFC107', 'E': '#FF9800', 'F': '#2196F3', 'G': '#00BCD4',
+                'H': '#8BC34A', 'I': '#FF5722', 'J': '#E91E63', 'K': '#3F51B5',
+                'L': '#009688', 'M': '#F44336', 'N': '#FF9800', 'O': '#FF5722',
+                'P': '#4CAF50', 'Q': '#FF9800', 'S': '#FF5722', 'T': '#FF9800',
+                'U': '#4CAF50', 'V': '#FFC107', 'W': '#FF9800', 'X': '#2196F3',
+                'Y': '#00BCD4', 'Z': '#8BC34A'
+            };
+            const color = colors[firstLetter] || '#FF5722';
+            
+            document.getElementById('profileBigAvatar').textContent = firstLetter;
+            document.getElementById('profileBigAvatar').style.background = `linear-gradient(135deg, ${color}, ${adjustColor(color, -20)})`;
+            document.getElementById('profileBigArticles').textContent = userProfile.stats?.articles || 0;
+            document.getElementById('profileBigLikes').textContent = userProfile.stats?.likes || 0;
+            document.getElementById('profileBigViews').textContent = userProfile.stats?.views || 0;
+            document.getElementById('editUsername').value = userProfile.username;
+            document.getElementById('editAvatarUrl').value = userProfile.avatar || '';
+            document.getElementById('profileUserId').textContent = userProfile.uid;
+            document.getElementById('profileJoinDate').textContent = new Date(userProfile.joinDate).toLocaleDateString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            loadMyArticles();
+        }
+
+        function loadMyArticles() {
+            if (!userProfile) return;
+            
+            const myArticles = articles.filter(article => article.authorId === userProfile.uid);
+            const container = document.getElementById('myArticlesList');
+            
+            if (myArticles.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:50px 20px; color:var(--gray);">
+                        <div style="width:70px; height:70px; background:var(--gradient-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 15px; color:white; font-size:1.8rem;">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        <p style="font-size:1rem; margin-bottom:15px;">Belum ada artikel</p>
+                        <button class="btn btn-primary" onclick="showCreateArticleModal()">
+                            <i class="fas fa-plus"></i> Buat Artikel Pertama
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = myArticles.map(article => `
+                <div class="glass-effect" style="padding:15px; border-radius:var(--radius); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; transition:var(--transition); border:1px solid #FFE0B2;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                    <div style="flex:1;">
+                        <h4 style="margin-bottom:6px; font-weight:600; color:var(--dark); font-size:0.95rem;">${article.title}</h4>
+                        <div style="font-size:0.8rem; color:var(--gray); display:flex; gap:15px;">
+                            <span><i class="far fa-eye"></i> ${article.views || 0}</span>
+                            <span><i class="far fa-heart"></i> ${article.likes || 0}</span>
+                            <span><i class="far fa-comment"></i> ${article.comments || 0}</span>
+                            <span>
+                                ${article.status === 'published' ? 
+                                    '<span class="status-approved">Published</span>' : 
+                                    article.status === 'rejected' ?
+                                    '<span class="status-rejected">Rejected</span>' :
+                                    '<span class="status-pending">Pending</span>'
+                                }
+                            </span>
+                            <span>${timeAgo(article.timestamp)}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        ${article.status === 'published' ? `
+                            <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)" style="padding:6px 12px; font-size:0.8rem;">
+                                <i class="fas fa-external-link-alt"></i> Buka
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-sm btn-danger" onclick="deleteMyArticle('${article.id}')" style="padding:6px 12px; font-size:0.8rem;">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteMyArticle(articleId) {
+            if (!confirm('Hapus artikel ini?')) return;
+            
+            try {
+                const db = firebase.database();
+                
+                const article = articles.find(a => a.id === articleId);
+                if (!article || article.authorId !== userProfile.uid) {
+                    showNotification('Hanya penulis yang bisa menghapus artikel ini', 'error');
+                    return;
+                }
+                
+                await db.ref(`articles/${articleId}`).remove();
+                await db.ref(`comments/${articleId}`).remove();
+                await db.ref(`likes/${articleId}`).remove();
+                
+                const index = articles.findIndex(a => a.id === articleId);
+                if (index !== -1) {
+                    articles.splice(index, 1);
+                }
+                
+                // Update stats jika artikel sudah published
+                if (article.status === 'published') {
+                    await updateUserStats('articles', -1);
+                }
+                
+                showNotification('Artikel berhasil dihapus', 'success');
+                
+                displayTrendingArticles();
+                displayNewestArticles();
+                displayRecommendedArticles();
+                updateStats();
+                updateHeroBanner();
+                updatePendingCount();
+                
+                if (document.getElementById('profilePage').style.display === 'block') {
+                    loadMyArticles();
+                }
+                
+            } catch (error) {
+                console.error('Error deleting article:', error);
+                showNotification('Gagal menghapus artikel', 'error');
+            }
+        }
+
+        // ========== CHECK URL FOR ARTICLE ==========
+        function checkUrlForArticle() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleId = urlParams.get('article');
+            
+            if (articleId) {
+                const article = articles.find(a => a.id === articleId || a.slug === articleId);
+                if (article) {
+                    setTimeout(() => openArticle(article.id, true), 1000);
+                }
+            }
+        }
+
+        // ========== INITIALIZE APP ==========
+        document.addEventListener('DOMContentLoaded', initializeApp);
+        
+        // Export functions to global scope
+        window.showHomePage = showHomePage;
+        window.openArticle = openArticle;
+        window.showCreateArticleModal = showCreateArticleModal;
+        window.showLoginModal = showLoginModal;
+        window.showAdminPanel = showAdminPanel;
+        window.deleteArticleAdmin = deleteArticleAdmin;
+        window.deleteMyArticle = deleteMyArticle;
+        window.addNewAdmin = addNewAdmin;
+        window.showSupportModal = showSupportModal;
+        window.supportWithDirectLink = supportWithDirectLink;
+        window.supportWithSaweria = supportWithSaweria;
+        window.showLeaderboard = showLeaderboard;
+        window.loadLeaderboard = loadLeaderboard;
+        window.filterByCategory = filterByCategory;
+        window.approveArticle = approveArticle;
+        window.rejectArticle = rejectArticle;
+        window.toggleSidebar = toggleSidebar;
+    </script>
 </body>
 </html>
