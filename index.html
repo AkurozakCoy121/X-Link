@@ -15,19 +15,6 @@
     <!-- FAVICON -->
     <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/841/841364.png">
     
-    <!-- ADS SCRIPTS - PropellerAds -->
-    <script>
-        self.options = {
-            domain: '3nbf4.com',
-            zoneId: 10380831
-        };
-    </script>
-    <script src="https://3nbf4.com/act/files/service-worker.min.js?r=sw"></script>
-    
-    <!-- Adsterra Popunder -->
-    <script src="https://pl28354765.effectivegatecpm.com/4e/ae/a3/4eaea3d589b3192c4d7c30b94bad1c4e.js"></script>
-    <!-- END ADS -->
-    
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         :root {
@@ -1041,7 +1028,7 @@
     <!-- ==================== HEADER ==================== -->
     <header class="header">
         <div class="header-container">
-            <a href="#" class="logo" onclick="showHomePage(); return false;">
+            <a href="#" class="logo">
                 <div class="logo-icon">
                     <i class="fas fa-newspaper"></i>
                 </div>
@@ -1170,14 +1157,14 @@
                 </div>
                 
                 <div class="support-options">
-                    <div class="support-option" onclick="supportWithDirectLink()">
+                    <div class="support-option">
                         <i class="fas fa-external-link-alt"></i>
                         <h4>Direct Link</h4>
                         <p>Klik link untuk support kami melalui affiliate</p>
                         <span class="btn btn-warning">Support Sekarang</span>
                     </div>
                     
-                    <div class="support-option" onclick="supportWithSaweria()">
+                    <div class="support-option">
                         <i class="fas fa-donate"></i>
                         <h4>Saweria</h4>
                         <p>Support langsung ke saweria kami</p>
@@ -1279,31 +1266,23 @@
             <div style="background:white; border-radius:var(--radius); padding:20px; margin-bottom:20px; box-shadow:var(--shadow); border:1px solid #FFE0B2;">
                 <h3 style="margin-bottom:15px; color:var(--primary); font-size:1.1rem;"><i class="fas fa-tags"></i> Semua Kategori</h3>
                 <div style="display:flex; flex-direction:column; gap:8px;">
-                    <span class="category-badge category-misteri" onclick="filterByCategory('misteri')" style="cursor:pointer;">🔮 Misteri</span>
-                    <span class="category-badge category-fakta" onclick="filterByCategory('fakta')" style="cursor:pointer;">💡 Fakta</span>
-                    <span class="category-badge category-teknologi" onclick="filterByCategory('teknologi')" style="cursor:pointer;">💻 Teknologi</span>
-                    <span class="category-badge category-viral" onclick="filterByCategory('viral')" style="cursor:pointer;">🔥 Viral</span>
-                    <span class="category-badge category-sejarah" onclick="filterByCategory('sejarah')" style="cursor:pointer;">🏛️ Sejarah</span>
-                    <span class="category-badge category-hiburan" onclick="filterByCategory('hiburan')" style="cursor:pointer;">🎬 Hiburan</span>
-                    <span class="category-badge category-olahraga" onclick="filterByCategory('olahraga')" style="cursor:pointer;">⚽ Olahraga</span>
-                    <span class="category-badge category-kesehatan" onclick="filterByCategory('kesehatan')" style="cursor:pointer;">🏥 Kesehatan</span>
-                    <span class="category-badge category-bisnis" onclick="filterByCategory('bisnis')" style="cursor:pointer;">💼 Bisnis</span>
-                    <span class="category-badge category-pendidikan" onclick="filterByCategory('pendidikan')" style="cursor:pointer;">📚 Pendidikan</span>
-                    <span class="category-badge category-politik" onclick="filterByCategory('politik')" style="cursor:pointer;">🏛️ Politik</span>
-                    <span class="category-badge category-lifestyle" onclick="filterByCategory('lifestyle')" style="cursor:pointer;">🌟 Lifestyle</span>
-                    <span class="category-badge category-travel" onclick="filterByCategory('travel')" style="cursor:pointer;">✈️ Travel</span>
-                    <span class="category-badge category-food" onclick="filterByCategory('food')" style="cursor:pointer;">🍕 Food</span>
-                    <span class="category-badge category-otomotif" onclick="filterByCategory('otomotif')" style="cursor:pointer;">🚗 Otomotif</span>
-                    <span class="category-badge category-game" onclick="filterByCategory('game')" style="cursor:pointer;">🎮 Game</span>
-                    <span class="category-badge category-musik" onclick="filterByCategory('musik')" style="cursor:pointer;">🎵 Musik</span>
-                </div>
-            </div>
-            
-            <!-- PropellerAds Vertical -->
-            <div class="ad-banner vertical" style="margin-bottom:25px;">
-                <span class="ad-label">IKLAN</span>
-                <div class="ad-content">
-                    <div data-zone="10380855"></div>
+                    <span class="category-badge category-misteri" style="cursor:pointer;">🔮 Misteri</span>
+                    <span class="category-badge category-fakta" style="cursor:pointer;">💡 Fakta</span>
+                    <span class="category-badge category-teknologi" style="cursor:pointer;">💻 Teknologi</span>
+                    <span class="category-badge category-viral" style="cursor:pointer;">🔥 Viral</span>
+                    <span class="category-badge category-sejarah" style="cursor:pointer;">🏛️ Sejarah</span>
+                    <span class="category-badge category-hiburan" style="cursor:pointer;">🎬 Hiburan</span>
+                    <span class="category-badge category-olahraga" style="cursor:pointer;">⚽ Olahraga</span>
+                    <span class="category-badge category-kesehatan" style="cursor:pointer;">🏥 Kesehatan</span>
+                    <span class="category-badge category-bisnis" style="cursor:pointer;">💼 Bisnis</span>
+                    <span class="category-badge category-pendidikan" style="cursor:pointer;">📚 Pendidikan</span>
+                    <span class="category-badge category-politik" style="cursor:pointer;">🏛️ Politik</span>
+                    <span class="category-badge category-lifestyle" style="cursor:pointer;">🌟 Lifestyle</span>
+                    <span class="category-badge category-travel" style="cursor:pointer;">✈️ Travel</span>
+                    <span class="category-badge category-food" style="cursor:pointer;">🍕 Food</span>
+                    <span class="category-badge category-otomotif" style="cursor:pointer;">🚗 Otomotif</span>
+                    <span class="category-badge category-game" style="cursor:pointer;">🎮 Game</span>
+                    <span class="category-badge category-musik" style="cursor:pointer;">🎵 Musik</span>
                 </div>
             </div>
         </aside>
@@ -1326,14 +1305,6 @@
                     </div>
                 </div>
                 
-                <!-- PropellerAds Top -->
-                <div class="ad-banner horizontal" style="margin-bottom:25px;">
-                    <span class="ad-label">IKLAN</span>
-                    <div class="ad-content">
-                        <div data-zone="10380831"></div>
-                    </div>
-                </div>
-                
                 <!-- TRENDING ARTICLES -->
                 <section style="margin:30px 0;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
@@ -1343,7 +1314,6 @@
                         <span style="font-size:0.85rem; color:var(--gray); font-weight:500;">Algoritma: Views + Likes + Comments</span>
                     </div>
                     <div id="trendingArticles" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:25px;">
-                        <!-- Trending articles loaded here -->
                         <div style="grid-column:1/-1; text-align:center; padding:50px 20px; background:white; border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid #FFE0B2;">
                             <div class="loading-spinner" style="margin:0 auto 20px;"></div>
                             <h3 style="margin-bottom:12px; color:var(--dark); font-size:1.2rem;">Memuat artikel trending...</h3>
@@ -1351,14 +1321,6 @@
                         </div>
                     </div>
                 </section>
-                
-                <!-- PropellerAds Mid -->
-                <div class="ad-banner horizontal" style="margin:30px 0;">
-                    <span class="ad-label">IKLAN</span>
-                    <div class="ad-content">
-                        <div data-zone="10380895"></div>
-                    </div>
-                </div>
                 
                 <!-- NEWEST ARTICLES -->
                 <section style="margin:40px 0;">
@@ -1369,14 +1331,6 @@
                         <!-- Newest articles loaded here -->
                     </div>
                 </section>
-                
-                <!-- Bottom ADS -->
-                <div class="ad-banner horizontal" style="margin-top:40px; margin-bottom:20px;">
-                    <span class="ad-label">IKLAN</span>
-                    <div class="ad-content">
-                        <div data-zone="10380855"></div>
-                    </div>
-                </div>
             </div>
             
             <!-- ARTICLE READING PAGE -->
@@ -1402,16 +1356,6 @@
                     
                     <img id="articleImage" class="article-image" alt="Article Image">
                     
-                    <!-- PropellerAds In-Article -->
-                    <div class="inline-ad" style="margin:30px 0;">
-                        <div class="ad-banner horizontal" style="height:90px;">
-                            <span class="ad-label">IKLAN</span>
-                            <div class="ad-content">
-                                <div data-zone="10380895"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <div class="article-content" id="articleContent">
                         <div style="text-align:center; padding:50px 20px;">
                             <div class="loading-spinner" style="margin:0 auto 20px;"></div>
@@ -1427,7 +1371,7 @@
                         <button class="action-btn" id="shareArticleBtn">
                             <i class="fas fa-share-alt"></i> Share
                         </button>
-                        <button class="btn btn-primary" id="readMoreBtn" style="margin-left:auto;" onclick="showHomePage()">
+                        <button class="btn btn-primary" id="readMoreBtn" style="margin-left:auto;">
                             <i class="fas fa-book-open"></i> Baca Artikel Lain
                         </button>
                     </div>
@@ -1467,16 +1411,6 @@
                             <div style="text-align:center; padding:30px; color:var(--gray);">
                                 <i class="far fa-comment" style="font-size:2.5rem; margin-bottom:12px; opacity:0.5;"></i>
                                 <p>Belum ada komentar. Jadilah yang pertama berkomentar!</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bottom of article ADS -->
-                    <div class="inline-ad" style="margin-top:40px;">
-                        <div class="ad-banner horizontal">
-                            <span class="ad-label">IKLAN</span>
-                            <div class="ad-content">
-                                <div data-zone="10380831"></div>
                             </div>
                         </div>
                     </div>
@@ -1563,7 +1497,7 @@
                                 <i class="fas fa-newspaper"></i> Artikel Saya
                             </h3>
                             <div style="display:flex; gap:12px;">
-                                <button class="btn btn-primary" onclick="showCreateArticleModal()">
+                                <button class="btn btn-primary" id="createArticleBtn">
                                     <i class="fas fa-plus"></i> Buat Artikel
                                 </button>
                                 <button class="btn btn-secondary btn-icon" id="refreshMyArticlesBtn">
@@ -1575,7 +1509,7 @@
                             <div style="text-align:center; padding:50px 20px; color:var(--gray);">
                                 <i class="fas fa-newspaper" style="font-size:3rem; margin-bottom:15px; opacity:0.3;"></i>
                                 <p style="font-size:1rem; margin-bottom:15px;">Belum ada artikel</p>
-                                <button class="btn btn-primary" onclick="showCreateArticleModal()">
+                                <button class="btn btn-primary" id="createFirstArticleBtn">
                                     <i class="fas fa-plus"></i> Buat Artikel Pertama
                                 </button>
                             </div>
@@ -1600,16 +1534,16 @@
                     </div>
                     <div style="padding:25px;">
                         <div style="display:flex; gap:12px; margin-bottom:25px; flex-wrap:wrap;">
-                            <button class="btn btn-primary" id="lbAllBtn" onclick="loadLeaderboard('all')">
+                            <button class="btn btn-primary" id="lbAllBtn">
                                 <i class="fas fa-list"></i> Semua
                             </button>
-                            <button class="btn btn-secondary" id="lbTodayBtn" onclick="loadLeaderboard('today')">
+                            <button class="btn btn-secondary" id="lbTodayBtn">
                                 <i class="fas fa-calendar-day"></i> Hari Ini
                             </button>
-                            <button class="btn btn-warning" id="lbWeekBtn" onclick="loadLeaderboard('week')">
+                            <button class="btn btn-warning" id="lbWeekBtn">
                                 <i class="fas fa-calendar-week"></i> Minggu Ini
                             </button>
-                            <button class="btn btn-success" id="lbMonthBtn" onclick="loadLeaderboard('month')">
+                            <button class="btn btn-success" id="lbMonthBtn">
                                 <i class="fas fa-calendar-alt"></i> Bulan Ini
                             </button>
                         </div>
@@ -1668,14 +1602,6 @@
         
         <!-- RIGHT SIDEBAR -->
         <aside class="sidebar-right">
-            <!-- PropellerAds Right -->
-            <div class="ad-banner vertical" style="margin-bottom:25px;">
-                <span class="ad-label">IKLAN</span>
-                <div class="ad-content">
-                    <div data-zone="10380895"></div>
-                </div>
-            </div>
-            
             <!-- RECOMMENDED ARTICLES -->
             <div class="glass-effect" style="padding:20px; margin-bottom:20px; border:1px solid #FFE0B2;">
                 <h3 style="margin-bottom:15px; color:var(--primary); font-size:1.1rem; display:flex; align-items:center; gap:8px;">
@@ -1706,19 +1632,11 @@
                 </div>
             </div>
             
-            <!-- PropellerAds Horizontal di sidebar -->
-            <div class="ad-banner horizontal" style="height:100px; margin-bottom:20px;">
-                <span class="ad-label">IKLAN</span>
-                <div class="ad-content">
-                    <div data-zone="10380831"></div>
-                </div>
-            </div>
-            
-            <!-- DIRECT LINK -->
+            <!-- SUPPORT INFO -->
             <div style="text-align:center; padding:20px; background:var(--gradient-primary); border-radius:var(--radius); color:white;">
-                <p style="margin-bottom:12px; font-size:0.9rem;">Support kami untuk perkembangan platform</p>
-                <button class="btn btn-warning" onclick="showSupportModal()" style="width:100%;">
-                    <i class="fas fa-heart"></i> Support NexeNews
+                <p style="margin-bottom:12px; font-size:0.9rem;">Platform berita gratis untuk semua</p>
+                <button class="btn btn-warning" id="sidebarSupportBtn" style="width:100%;">
+                    <i class="fas fa-heart"></i> Dukung NexeNews
                 </button>
             </div>
         </aside>
@@ -1786,29 +1704,6 @@
                             ]
                         }
                     });
-                    
-                    // Enable link tooltip
-                    articleEditor.getModule('toolbar').addHandler('link', function(value) {
-                        if (value) {
-                            const range = articleEditor.getSelection();
-                            if (range) {
-                                const url = prompt('Masukkan URL:');
-                                if (url) {
-                                    const title = prompt('Masukkan title link (opsional):');
-                                    articleEditor.formatText(range.index, range.length, 'link', url);
-                                    if (title) {
-                                        // Add title attribute
-                                        const link = articleEditor.getLeaf(range.index)[0].domNode;
-                                        if (link && link.tagName === 'A') {
-                                            link.title = title;
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            articleEditor.format('link', false);
-                        }
-                    });
                 }
                 
                 // Setup Firebase auth dengan error handling
@@ -1826,9 +1721,6 @@
                 // Update stats
                 updateStats();
                 
-                // Load PropellerAds
-                loadPropellerAds();
-                
                 // Setup character counter untuk komentar
                 document.getElementById('commentInput')?.addEventListener('input', updateCharCount);
                 
@@ -1841,51 +1733,6 @@
                 console.error('Initialization error:', error);
                 showNotification('Error loading application', 'error');
             }
-        }
-
-        // ========== LOAD PROPELLERADS ==========
-        function loadPropellerAds() {
-            try {
-                console.log('Loading PropellerAds...');
-                
-                // Script pertama dari kode yang diberikan
-                const script1 = document.createElement('script');
-                script1.innerHTML = `(function(s){s.dataset.zone='10380855',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`;
-                document.body.appendChild(script1);
-                
-                // Script kedua dari kode yang diberikan
-                const script2 = document.createElement('script');
-                script2.innerHTML = `(function(s){s.dataset.zone='10380895',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`;
-                document.body.appendChild(script2);
-                
-                console.log('PropellerAds loaded successfully');
-                
-            } catch (error) {
-                console.log('PropellerAds error:', error);
-            }
-        }
-
-        // ========== SUPPORT FUNCTIONS ==========
-        function showSupportModal() {
-            document.getElementById('supportModal').classList.add('active');
-        }
-
-        function supportWithDirectLink() {
-            const affiliateLinks = [
-                'https://example.com/affiliate1',
-                'https://example.com/affiliate2',
-                'https://example.com/donation'
-            ];
-            
-            const randomLink = affiliateLinks[Math.floor(Math.random() * affiliateLinks.length)];
-            window.open(randomLink, '_blank');
-            
-            showNotification('Terima kasih atas support melalui direct link!', 'success');
-        }
-
-        function supportWithSaweria() {
-            window.open('https://saweria.co/omedonation', '_blank');
-            showNotification('Terima kasih atas support melalui Saweria!', 'success');
         }
 
         // ========== FIREBASE AUTHENTICATION ==========
@@ -2077,9 +1924,6 @@
                 document.getElementById('heroBannerViews').textContent = topArticle.views || 0;
                 document.getElementById('heroBannerLikes').textContent = topArticle.likes || 0;
                 document.getElementById('heroBannerTime').textContent = timeAgo(topArticle.timestamp);
-                
-                // Add click event
-                document.getElementById('heroBanner').onclick = () => openArticle(topArticle.id, true);
             }
         }
 
@@ -2486,14 +2330,6 @@
             if (articleEditor) articleEditor.setText('');
             
             document.getElementById('createArticleModal').classList.add('active');
-            
-            document.getElementById('articleTitleInput').addEventListener('input', function() {
-                const slug = this.value.toLowerCase()
-                    .replace(/[^\w\s]/g, '')
-                    .replace(/\s+/g, '-')
-                    .substring(0, 50);
-                document.getElementById('articleSlugInput').value = slug;
-            });
         }
 
         async function publishArticle() {
@@ -2545,8 +2381,6 @@
                 
                 await db.ref(`articles/${articleId}`).set(newArticle);
                 
-                // Tidak langsung update stats karena masih pending
-                
                 articles.unshift(newArticle);
                 
                 document.getElementById('createArticleModal').classList.remove('active');
@@ -2558,8 +2392,6 @@
                 displayRecommendedArticles();
                 updateStats();
                 updatePendingCount();
-                
-                // Tidak langsung open article karena masih pending
                 
             } catch (error) {
                 console.error('Error publishing article:', error);
@@ -2579,12 +2411,6 @@
             }
             
             lastArticleClickTime = now;
-            
-            // Random chance untuk support: 10% (dikurangi)
-            if (!skipMonetize && Math.random() < 0.10) {
-                showSupportModal();
-                return;
-            }
             
             const article = articles.find(a => a.id === articleId);
             if (!article) {
@@ -2700,7 +2526,7 @@
                         </div>
                         <h3 style="margin-bottom:12px; color:var(--dark); font-size:1.2rem;">Belum ada artikel trending</h3>
                         <p style="color:var(--gray); margin-bottom:20px; font-size:0.9rem;">Buat artikel pertama dan jadikan trending!</p>
-                        <button class="btn btn-primary" onclick="showCreateArticleModal()">
+                        <button class="btn btn-primary" id="createFirstTrendingBtn">
                             <i class="fas fa-plus"></i> Buat Artikel Pertama
                         </button>
                     </div>
@@ -2709,7 +2535,7 @@
             }
             
             container.innerHTML = trending.map(article => `
-                <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
+                <div class="article-card hover-lift" data-article-id="${article.id}">
                     <div style="position:relative;">
                         <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:200px; object-fit:cover;">
                         ${article.score > 100 ? '<span class="trending-badge">TRENDING</span>' : ''}
@@ -2751,7 +2577,7 @@
             }
             
             container.innerHTML = newest.map(article => `
-                <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
+                <div class="article-card hover-lift" data-article-id="${article.id}">
                     <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:180px; object-fit:cover;">
                     <div style="padding:20px;">
                         <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:12px;">
@@ -2784,7 +2610,7 @@
             if (recommended.length === 0) return;
             
             container.innerHTML = recommended.map(article => `
-                <div style="margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid #FFE0B2; cursor:pointer;" onclick="openArticle('${article.id}')">
+                <div style="margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid #FFE0B2; cursor:pointer;" data-article-id="${article.id}">
                     <div style="display:flex; gap:12px;">
                         <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=400&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:70px; height:50px; border-radius:var(--radius-sm); object-fit:cover; box-shadow:var(--shadow-sm);">
                         <div style="flex:1;">
@@ -2960,54 +2786,6 @@
             sidebar.classList.toggle('active');
         }
 
-        function filterByCategory(category) {
-            const filtered = articles.filter(a => a.status === 'published' && a.category === category);
-            
-            if (filtered.length === 0) {
-                showNotification(`Tidak ada artikel dalam kategori ${getCategoryName(category)}`, 'info');
-                return;
-            }
-            
-            // Tampilkan hasil filter di halaman utama
-            showHomePage();
-            
-            // Update konten dengan artikel filtered
-            const container = document.getElementById('trendingArticles');
-            if (container) {
-                container.innerHTML = filtered.map(article => `
-                    <div class="article-card hover-lift" onclick="openArticle('${article.id}')">
-                        <div style="position:relative;">
-                            <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:200px; object-fit:cover;">
-                            <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding:15px; padding-top:30px;">
-                                <span class="category-badge category-${article.category}" style="font-size:0.75rem;">${getCategoryName(article.category)}</span>
-                            </div>
-                        </div>
-                        <div style="padding:20px;">
-                            <h3 style="margin-bottom:12px; font-size:1.1rem; line-height:1.3; font-weight:700; color:var(--dark);">${article.title}</h3>
-                            <p style="color:var(--gray); margin-bottom:15px; font-size:0.9rem; line-height:1.4;">${article.excerpt || ''}</p>
-                            <div style="display:flex; justify-content:space-between; color:var(--gray); font-size:0.8rem; border-top:1px solid #FFE0B2; padding-top:12px;">
-                                <span><i class="far fa-eye"></i> ${formatNumber(article.views || 0)}</span>
-                                <span><i class="far fa-heart"></i> ${formatNumber(article.likes || 0)}</span>
-                                <span><i class="far fa-comment"></i> ${formatNumber(article.comments || 0)}</span>
-                                <span>${timeAgo(article.timestamp)}</span>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-                
-                // Update title
-                const title = document.querySelector('#homePage h2');
-                if (title) {
-                    title.innerHTML = `<i class="fas fa-filter" style="color:var(--primary);"></i> Kategori: ${getCategoryName(category)} (${filtered.length} artikel)`;
-                }
-            }
-            
-            // Tutup sidebar di mobile
-            if (window.innerWidth <= 1200) {
-                toggleSidebar();
-            }
-        }
-
         // ========== LEADERBOARD FUNCTIONS ==========
         function showLeaderboard() {
             document.getElementById('homePage').style.display = 'none';
@@ -3058,7 +2836,7 @@
                 if (rank === 3) rankColor = '#CD7F32';
                 
                 return `
-                    <div class="leaderboard-item" onclick="openArticle('${article.id}', true)">
+                    <div class="leaderboard-item" data-article-id="${article.id}">
                         <div class="leaderboard-rank" style="background:linear-gradient(135deg, ${rankColor}, ${adjustColor(rankColor, -20)});">
                             ${rank}
                         </div>
@@ -3142,17 +2920,17 @@
                                         <td style="padding:12px; vertical-align:top;">
                                             <div class="approval-actions">
                                                 ${article.status === 'pending' ? `
-                                                    <button class="btn btn-sm btn-success" onclick="approveArticle('${article.id}')" style="padding:6px 12px; font-size:0.8rem;">
+                                                    <button class="btn btn-sm btn-success" data-article-id="${article.id}" data-action="approve" style="padding:6px 12px; font-size:0.8rem;">
                                                         <i class="fas fa-check"></i> Approve
                                                     </button>
-                                                    <button class="btn btn-sm btn-danger" onclick="rejectArticle('${article.id}')" style="padding:6px 12px; font-size:0.8rem;">
+                                                    <button class="btn btn-sm btn-danger" data-article-id="${article.id}" data-action="reject" style="padding:6px 12px; font-size:0.8rem;">
                                                         <i class="fas fa-times"></i> Reject
                                                     </button>
                                                 ` : ''}
-                                                <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)" style="padding:6px 12px; font-size:0.8rem;">
+                                                <button class="btn btn-sm btn-primary" data-article-id="${article.id}" data-action="view" style="padding:6px 12px; font-size:0.8rem;">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger" onclick="deleteArticleAdmin('${article.id}')" style="padding:6px 12px; font-size:0.8rem;">
+                                                <button class="btn btn-sm btn-danger" data-article-id="${article.id}" data-action="delete" style="padding:6px 12px; font-size:0.8rem;">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
@@ -3301,6 +3079,12 @@
 
         // ========== SETUP EVENT LISTENERS ==========
         function setupEventListeners() {
+            // Logo click
+            document.querySelector('.logo').addEventListener('click', (e) => {
+                e.preventDefault();
+                showHomePage();
+            });
+            
             // Login button
             document.getElementById('loginBtn').addEventListener('click', showLoginModal);
             
@@ -3308,7 +3092,14 @@
             document.getElementById('leaderboardBtn').addEventListener('click', showLeaderboard);
             
             // Support button
-            document.getElementById('supportBtn').addEventListener('click', showSupportModal);
+            document.getElementById('supportBtn').addEventListener('click', () => {
+                document.getElementById('supportModal').classList.add('active');
+            });
+            
+            // Sidebar support button
+            document.getElementById('sidebarSupportBtn').addEventListener('click', () => {
+                document.getElementById('supportModal').classList.add('active');
+            });
             
             // Login modal
             document.getElementById('closeLoginModal').addEventListener('click', () => {
@@ -3357,6 +3148,20 @@
             
             document.getElementById('publishArticleBtn').addEventListener('click', publishArticle);
             
+            // Create article buttons
+            document.getElementById('createArticleBtn').addEventListener('click', showCreateArticleModal);
+            document.getElementById('createFirstArticleBtn').addEventListener('click', showCreateArticleModal);
+            document.getElementById('createFirstTrendingBtn').addEventListener('click', showCreateArticleModal);
+            
+            // Title input for slug generation
+            document.getElementById('articleTitleInput').addEventListener('input', function() {
+                const slug = this.value.toLowerCase()
+                    .replace(/[^\w\s]/g, '')
+                    .replace(/\s+/g, '-')
+                    .substring(0, 50);
+                document.getElementById('articleSlugInput').value = slug;
+            });
+            
             // Like button
             document.getElementById('likeArticleBtn').addEventListener('click', () => {
                 if (currentArticle) {
@@ -3375,6 +3180,9 @@
                     });
                 }
             });
+            
+            // Read more button
+            document.getElementById('readMoreBtn').addEventListener('click', showHomePage);
             
             // Comment form
             document.getElementById('submitCommentBtn').addEventListener('click', submitComment);
@@ -3421,6 +3229,9 @@
                 }
             });
             
+            // Refresh my articles button
+            document.getElementById('refreshMyArticlesBtn').addEventListener('click', loadMyArticles);
+            
             // Search
             document.getElementById('searchBox').addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
@@ -3448,7 +3259,7 @@
                     `;
                 } else {
                     resultsContainer.innerHTML = filtered.map(article => `
-                        <div class="search-result-item" onclick="openArticle('${article.id}')">
+                        <div class="search-result-item" data-article-id="${article.id}">
                             <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=200&auto=format&fit=crop&q=80'}" class="search-result-image">
                             <div class="search-result-content">
                                 <h4>${article.title.substring(0, 50)}...</h4>
@@ -3459,6 +3270,61 @@
                 }
                 
                 resultsContainer.classList.add('active');
+            });
+            
+            // Leaderboard filter buttons
+            document.getElementById('lbAllBtn').addEventListener('click', () => loadLeaderboard('all'));
+            document.getElementById('lbTodayBtn').addEventListener('click', () => loadLeaderboard('today'));
+            document.getElementById('lbWeekBtn').addEventListener('click', () => loadLeaderboard('week'));
+            document.getElementById('lbMonthBtn').addEventListener('click', () => loadLeaderboard('month'));
+            
+            // Category badges event delegation
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('category-badge')) {
+                    const categoryClass = Array.from(e.target.classList).find(c => c.startsWith('category-'));
+                    if (categoryClass) {
+                        const category = categoryClass.replace('category-', '');
+                        filterByCategory(category);
+                    }
+                }
+            });
+            
+            // Article cards event delegation
+            document.addEventListener('click', (e) => {
+                let articleCard = e.target.closest('[data-article-id]');
+                if (articleCard) {
+                    const articleId = articleCard.dataset.articleId;
+                    openArticle(articleId);
+                }
+            });
+            
+            // Admin buttons
+            document.getElementById('adminAllArticlesBtn').addEventListener('click', showAllArticlesAdmin);
+            document.getElementById('adminPendingBtn').addEventListener('click', showAllArticlesAdmin);
+            document.getElementById('addAdminBtn').addEventListener('click', addNewAdmin);
+            
+            // Admin actions event delegation
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('[data-action]')) {
+                    const button = e.target.closest('[data-action]');
+                    const articleId = button.dataset.articleId;
+                    const action = button.dataset.action;
+                    
+                    switch(action) {
+                        case 'approve':
+                            approveArticle(articleId);
+                            break;
+                        case 'reject':
+                            rejectArticle(articleId);
+                            break;
+                        case 'view':
+                            openArticle(articleId, true);
+                            break;
+                        case 'delete':
+                            deleteArticleAdmin(articleId);
+                            break;
+                    }
+                }
             });
             
             // Close popups when clicking outside
@@ -3481,20 +3347,6 @@
                     }
                 }
             });
-            
-            // Title input for slug generation
-            document.getElementById('articleTitleInput').addEventListener('input', function() {
-                const slug = this.value.toLowerCase()
-                    .replace(/[^\w\s]/g, '')
-                    .replace(/\s+/g, '-')
-                    .substring(0, 50);
-                document.getElementById('articleSlugInput').value = slug;
-            });
-            
-            // Admin buttons
-            document.getElementById('adminAllArticlesBtn').addEventListener('click', showAllArticlesAdmin);
-            document.getElementById('adminPendingBtn').addEventListener('click', showAllArticlesAdmin);
-            document.getElementById('addAdminBtn').addEventListener('click', addNewAdmin);
         }
 
         // ========== PAGE NAVIGATION ==========
@@ -3582,11 +3434,13 @@
                             <i class="fas fa-newspaper"></i>
                         </div>
                         <p style="font-size:1rem; margin-bottom:15px;">Belum ada artikel</p>
-                        <button class="btn btn-primary" onclick="showCreateArticleModal()">
+                        <button class="btn btn-primary" id="createFirstArticleBtn2">
                             <i class="fas fa-plus"></i> Buat Artikel Pertama
                         </button>
                     </div>
                 `;
+                
+                document.getElementById('createFirstArticleBtn2').addEventListener('click', showCreateArticleModal);
                 return;
             }
             
@@ -3611,11 +3465,11 @@
                     </div>
                     <div style="display:flex; gap:8px;">
                         ${article.status === 'published' ? `
-                            <button class="btn btn-sm btn-primary" onclick="openArticle('${article.id}', true)" style="padding:6px 12px; font-size:0.8rem;">
+                            <button class="btn btn-sm btn-primary" data-article-id="${article.id}" data-action="view" style="padding:6px 12px; font-size:0.8rem;">
                                 <i class="fas fa-external-link-alt"></i> Buka
                             </button>
                         ` : ''}
-                        <button class="btn btn-sm btn-danger" onclick="deleteMyArticle('${article.id}')" style="padding:6px 12px; font-size:0.8rem;">
+                        <button class="btn btn-sm btn-danger" data-article-id="${article.id}" data-action="delete-my" style="padding:6px 12px; font-size:0.8rem;">
                             <i class="fas fa-trash"></i> Hapus
                         </button>
                     </div>
@@ -3665,6 +3519,55 @@
             } catch (error) {
                 console.error('Error deleting article:', error);
                 showNotification('Gagal menghapus artikel', 'error');
+            }
+        }
+
+        // ========== FILTER BY CATEGORY ==========
+        function filterByCategory(category) {
+            const filtered = articles.filter(a => a.status === 'published' && a.category === category);
+            
+            if (filtered.length === 0) {
+                showNotification(`Tidak ada artikel dalam kategori ${getCategoryName(category)}`, 'info');
+                return;
+            }
+            
+            // Tampilkan hasil filter di halaman utama
+            showHomePage();
+            
+            // Update konten dengan artikel filtered
+            const container = document.getElementById('trendingArticles');
+            if (container) {
+                container.innerHTML = filtered.map(article => `
+                    <div class="article-card hover-lift" data-article-id="${article.id}">
+                        <div style="position:relative;">
+                            <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=800&auto=format&fit=crop&q=80'}" alt="${article.title}" style="width:100%; height:200px; object-fit:cover;">
+                            <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding:15px; padding-top:30px;">
+                                <span class="category-badge category-${article.category}" style="font-size:0.75rem;">${getCategoryName(article.category)}</span>
+                            </div>
+                        </div>
+                        <div style="padding:20px;">
+                            <h3 style="margin-bottom:12px; font-size:1.1rem; line-height:1.3; font-weight:700; color:var(--dark);">${article.title}</h3>
+                            <p style="color:var(--gray); margin-bottom:15px; font-size:0.9rem; line-height:1.4;">${article.excerpt || ''}</p>
+                            <div style="display:flex; justify-content:space-between; color:var(--gray); font-size:0.8rem; border-top:1px solid #FFE0B2; padding-top:12px;">
+                                <span><i class="far fa-eye"></i> ${formatNumber(article.views || 0)}</span>
+                                <span><i class="far fa-heart"></i> ${formatNumber(article.likes || 0)}</span>
+                                <span><i class="far fa-comment"></i> ${formatNumber(article.comments || 0)}</span>
+                                <span>${timeAgo(article.timestamp)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Update title
+                const title = document.querySelector('#homePage h2');
+                if (title) {
+                    title.innerHTML = `<i class="fas fa-filter" style="color:var(--primary);"></i> Kategori: ${getCategoryName(category)} (${filtered.length} artikel)`;
+                }
+            }
+            
+            // Tutup sidebar di mobile
+            if (window.innerWidth <= 1200) {
+                toggleSidebar();
             }
         }
 
@@ -3730,27 +3633,23 @@
             }
         }
 
+        // ========== DELETE MY ARTICLE EVENT LISTENER ==========
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('[data-action="delete-my"]')) {
+                const button = e.target.closest('[data-action="delete-my"]');
+                const articleId = button.dataset.articleId;
+                deleteMyArticle(articleId);
+            }
+            
+            if (e.target.closest('[data-action="view"]') && !e.target.closest('[data-action="delete-my"]')) {
+                const button = e.target.closest('[data-action="view"]');
+                const articleId = button.dataset.articleId;
+                openArticle(articleId, true);
+            }
+        });
+
         // ========== INITIALIZE APP ==========
         document.addEventListener('DOMContentLoaded', initializeApp);
-        
-        // Export functions to global scope
-        window.showHomePage = showHomePage;
-        window.openArticle = openArticle;
-        window.showCreateArticleModal = showCreateArticleModal;
-        window.showLoginModal = showLoginModal;
-        window.showAdminPanel = showAdminPanel;
-        window.deleteArticleAdmin = deleteArticleAdmin;
-        window.deleteMyArticle = deleteMyArticle;
-        window.addNewAdmin = addNewAdmin;
-        window.showSupportModal = showSupportModal;
-        window.supportWithDirectLink = supportWithDirectLink;
-        window.supportWithSaweria = supportWithSaweria;
-        window.showLeaderboard = showLeaderboard;
-        window.loadLeaderboard = loadLeaderboard;
-        window.filterByCategory = filterByCategory;
-        window.approveArticle = approveArticle;
-        window.rejectArticle = rejectArticle;
-        window.toggleSidebar = toggleSidebar;
     </script>
 </body>
 </html>
