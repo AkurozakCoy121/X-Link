@@ -3077,160 +3077,378 @@
             }
         }
 
-        // ========== SETUP EVENT LISTENERS ==========
-        function setupEventListeners() {
-            // Logo click
-            document.querySelector('.logo').addEventListener('click', (e) => {
+// ========== SETUP EVENT LISTENERS ==========
+function setupEventListeners() {
+    console.log('Setting up event listeners...');
+    
+    // Helper function untuk safely add event listeners
+    function safeAddListener(id, event, handler) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener(event, handler);
+            console.log(`✅ Added listener for #${id}`);
+        } else {
+            console.warn(`⚠️ Element #${id} not found for event listener`);
+        }
+    }
+    
+    // Helper untuk elemen yang mungkin null
+    function getElement(id) {
+        const el = document.getElementById(id);
+        if (!el) console.warn(`⚠️ Element #${id} not found`);
+        return el;
+    }
+    
+    try {
+        // ===== HEADER & NAVIGATION =====
+        // Logo click
+        const logo = document.querySelector('.logo');
+        if (logo) {
+            logo.addEventListener('click', (e) => {
                 e.preventDefault();
                 showHomePage();
             });
-            
-            // Login button
-            document.getElementById('loginBtn').addEventListener('click', showLoginModal);
-            
-            // Leaderboard button
-            document.getElementById('leaderboardBtn').addEventListener('click', showLeaderboard);
-            
-            // Support button
-            document.getElementById('supportBtn').addEventListener('click', () => {
-                document.getElementById('supportModal').classList.add('active');
+            console.log('✅ Added logo listener');
+        }
+        
+        // Main navigation buttons
+        safeAddListener('loginBtn', 'click', showLoginModal);
+        safeAddListener('leaderboardBtn', 'click', showLeaderboard);
+        safeAddListener('supportBtn', () => {
+            const modal = getElement('supportModal');
+            if (modal) modal.classList.add('active');
+        });
+        
+        // ===== MODALS =====
+        // Login Modal
+        safeAddListener('closeLoginModal', 'click', () => {
+            const modal = getElement('loginModal');
+            if (modal) modal.classList.remove('active');
+        });
+        safeAddListener('submitLoginBtn', 'click', loginUser);
+        safeAddListener('continueAsGuestBtn', 'click', loginAsGuest);
+        
+        // Support Modal
+        safeAddListener('closeSupportModal', 'click', () => {
+            const modal = getElement('supportModal');
+            if (modal) modal.classList.remove('active');
+        });
+        safeAddListener('closeSupportBtn', 'click', () => {
+            const modal = getElement('supportModal');
+            if (modal) modal.classList.remove('active');
+        });
+        
+        // Create Article Modal
+        safeAddListener('closeCreateModal', 'click', () => {
+            const modal = getElement('createArticleModal');
+            if (modal) modal.classList.remove('active');
+        });
+        safeAddListener('publishArticleBtn', 'click', publishArticle);
+        
+        // ===== USER PROFILE =====
+        const userAvatar = getElement('userAvatar');
+        if (userAvatar) {
+            userAvatar.addEventListener('click', () => {
+                const popup = getElement('profilePopup');
+                if (popup) popup.classList.toggle('active');
             });
+        }
+        
+        safeAddListener('popupProfileBtn', 'click', () => {
+            const popup = getElement('profilePopup');
+            if (popup) popup.classList.remove('active');
+            showProfilePage();
+        });
+        
+        safeAddListener('popupMyArticlesBtn', 'click', () => {
+            const popup = getElement('profilePopup');
+            if (popup) popup.classList.remove('active');
+            showProfilePage();
+        });
+        
+        safeAddListener('popupAdminBtn', 'click', () => {
+            const popup = getElement('profilePopup');
+            if (popup) popup.classList.remove('active');
+            showAdminPanel();
+        });
+        
+        safeAddListener('popupLogoutBtn', 'click', logoutUser);
+        
+        // ===== ARTICLE ACTIONS =====
+        safeAddListener('likeArticleBtn', 'click', () => {
+            if (currentArticle) {
+                toggleLike(currentArticle.id);
+            }
+        });
+        
+        safeAddListener('shareArticleBtn', 'click', () => {
+            if (currentArticle) {
+                const url = window.location.href.split('?')[0] + '?article=' + currentArticle.id;
+                navigator.clipboard.writeText(url).then(() => {
+                    showNotification('Link artikel disalin!', 'success');
+                }).catch(() => {
+                    prompt('Salin link berikut:', url);
+                });
+            }
+        });
+        
+        safeAddListener('readMoreBtn', 'click', showHomePage);
+        
+        // ===== COMMENT SYSTEM =====
+        safeAddListener('submitCommentBtn', 'click', submitComment);
+        safeAddListener('loginForCommentBtn', 'click', showLoginModal);
+        
+        // ===== PROFILE EDIT =====
+        safeAddListener('saveUsernameBtn', 'click', async () => {
+            const newUsername = document.getElementById('editUsername')?.value.trim();
+            if (!newUsername) {
+                showNotification('Username tidak boleh kosong', 'error');
+                return;
+            }
             
-            // Sidebar support button
-            document.getElementById('sidebarSupportBtn').addEventListener('click', () => {
-                document.getElementById('supportModal').classList.add('active');
+            try {
+                const db = firebase.database();
+                userProfile.username = newUsername;
+                await db.ref(`users/${userProfile.uid}/username`).set(newUsername);
+                
+                localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+                updateUserUI();
+                showNotification('Username berhasil diperbarui', 'success');
+            } catch (error) {
+                showNotification('Gagal memperbarui username', 'error');
+            }
+        });
+        
+        safeAddListener('saveAvatarBtn', 'click', async () => {
+            const newAvatar = document.getElementById('editAvatarUrl')?.value.trim();
+            try {
+                const db = firebase.database();
+                userProfile.avatar = newAvatar;
+                await db.ref(`users/${userProfile.uid}/avatar`).set(newAvatar);
+                
+                localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
+                updateUserUI();
+                showNotification('Avatar berhasil diperbarui', 'success');
+            } catch (error) {
+                showNotification('Gagal memperbarui avatar', 'error');
+            }
+        });
+        
+        // ===== CREATE ARTICLE BUTTONS =====
+        // Cek dulu elementnya ada atau tidak
+        const createArticleBtn = getElement('createArticleBtn');
+        if (createArticleBtn) {
+            createArticleBtn.addEventListener('click', showCreateArticleModal);
+        }
+        
+        const createFirstArticleBtn = getElement('createFirstArticleBtn');
+        if (createFirstArticleBtn) {
+            createFirstArticleBtn.addEventListener('click', showCreateArticleModal);
+        }
+        
+        // ===== SEARCH =====
+        const searchBox = getElement('searchBox');
+        if (searchBox) {
+            searchBox.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const resultsContainer = getElement('searchResults');
+                
+                if (!resultsContainer) return;
+                
+                if (searchTerm.length < 2) {
+                    resultsContainer.classList.remove('active');
+                    return;
+                }
+                
+                const filtered = articles.filter(article => 
+                    article.title.toLowerCase().includes(searchTerm) ||
+                    article.content.toLowerCase().includes(searchTerm) ||
+                    article.author?.toLowerCase().includes(searchTerm)
+                ).slice(0, 5);
+                
+                if (filtered.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div class="search-result-item" style="cursor:default; padding:25px 15px; text-align:center;">
+                            <div class="search-result-content">
+                                <i class="fas fa-search" style="font-size:1.3rem; margin-bottom:8px; color:var(--gray);"></i>
+                                <p style="font-size:0.9rem;">Tidak ditemukan artikel</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultsContainer.innerHTML = filtered.map(article => `
+                        <div class="search-result-item" data-article-id="${article.id}">
+                            <img src="${article.image || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=200&auto=format&fit=crop&q=80'}" class="search-result-image">
+                            <div class="search-result-content">
+                                <h4>${article.title.substring(0, 50)}...</h4>
+                                <p>${getCategoryName(article.category)} • ${timeAgo(article.timestamp)}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                resultsContainer.classList.add('active');
             });
-            
-            // Login modal
-            document.getElementById('closeLoginModal').addEventListener('click', () => {
-                document.getElementById('loginModal').classList.remove('active');
+        }
+        
+        // ===== SIDEBAR =====
+        const sidebarToggle = getElement('sidebarToggle');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', toggleSidebar);
+        }
+        
+        const sidebarSupportBtn = getElement('sidebarSupportBtn');
+        if (sidebarSupportBtn) {
+            sidebarSupportBtn.addEventListener('click', () => {
+                const modal = getElement('supportModal');
+                if (modal) modal.classList.add('active');
             });
+        }
+        
+        // ===== LEADERBOARD =====
+        safeAddListener('lbAllBtn', 'click', () => loadLeaderboard('all'));
+        safeAddListener('lbTodayBtn', 'click', () => loadLeaderboard('today'));
+        safeAddListener('lbWeekBtn', 'click', () => loadLeaderboard('week'));
+        safeAddListener('lbMonthBtn', 'click', () => loadLeaderboard('month'));
+        
+        // ===== ADMIN PANEL =====
+        safeAddListener('adminAllArticlesBtn', 'click', showAllArticlesAdmin);
+        safeAddListener('adminPendingBtn', 'click', showAllArticlesAdmin);
+        safeAddListener('addAdminBtn', 'click', addNewAdmin);
+        
+        // ===== EVENT DELEGATION =====
+        // Untuk elemen yang dibuat dinamis
+        document.addEventListener('click', (e) => {
+            // Article cards
+            if (e.target.closest('.article-card')) {
+                const articleCard = e.target.closest('.article-card');
+                const articleId = articleCard.dataset.articleId;
+                if (articleId) openArticle(articleId);
+            }
             
-            document.getElementById('submitLoginBtn').addEventListener('click', loginUser);
-            document.getElementById('continueAsGuestBtn').addEventListener('click', loginAsGuest);
+            // Leaderboard items
+            if (e.target.closest('.leaderboard-item')) {
+                const item = e.target.closest('.leaderboard-item');
+                const articleId = item.dataset.articleId;
+                if (articleId) openArticle(articleId, true);
+            }
             
-            // Support modal
-            document.getElementById('closeSupportModal').addEventListener('click', () => {
-                document.getElementById('supportModal').classList.remove('active');
-            });
+            // Search results
+            if (e.target.closest('.search-result-item')) {
+                const item = e.target.closest('.search-result-item');
+                const articleId = item.dataset.articleId;
+                if (articleId) openArticle(articleId);
+            }
             
-            document.getElementById('closeSupportBtn').addEventListener('click', () => {
-                document.getElementById('supportModal').classList.remove('active');
-            });
+            // Category badges
+            if (e.target.classList.contains('category-badge')) {
+                const categoryClass = Array.from(e.target.classList).find(c => c.startsWith('category-'));
+                if (categoryClass) {
+                    const category = categoryClass.replace('category-', '');
+                    filterByCategory(category);
+                }
+            }
             
-            // User avatar click
-            document.getElementById('userAvatar').addEventListener('click', () => {
-                document.getElementById('profilePopup').classList.toggle('active');
-            });
+            // Recommended articles
+            if (e.target.closest('[data-article-id]') && !e.target.closest('.article-card') && !e.target.closest('.leaderboard-item')) {
+                const element = e.target.closest('[data-article-id]');
+                const articleId = element.dataset.articleId;
+                if (articleId) openArticle(articleId);
+            }
             
-            // Profile popup buttons
-            document.getElementById('popupProfileBtn').addEventListener('click', () => {
-                document.getElementById('profilePopup').classList.remove('active');
-                showProfilePage();
-            });
+            // Admin actions
+            if (e.target.closest('[data-action]')) {
+                const button = e.target.closest('[data-action]');
+                const articleId = button.dataset.articleId;
+                const action = button.dataset.action;
+                
+                switch(action) {
+                    case 'approve':
+                        approveArticle(articleId);
+                        break;
+                    case 'reject':
+                        rejectArticle(articleId);
+                        break;
+                    case 'view':
+                        openArticle(articleId, true);
+                        break;
+                    case 'delete':
+                        deleteArticleAdmin(articleId);
+                        break;
+                    case 'delete-my':
+                        deleteMyArticle(articleId);
+                        break;
+                }
+            }
+        });
+        
+        // Close popups when clicking outside
+        document.addEventListener('click', (e) => {
+            // Close profile popup
+            if (!e.target.closest('#userAvatar') && !e.target.closest('.profile-popup')) {
+                const popup = getElement('profilePopup');
+                if (popup) popup.classList.remove('active');
+            }
             
-            document.getElementById('popupMyArticlesBtn').addEventListener('click', () => {
-                document.getElementById('profilePopup').classList.remove('active');
-                showProfilePage();
-            });
+            // Close modals
+            if (e.target.classList.contains('modal')) {
+                const loginModal = getElement('loginModal');
+                const supportModal = getElement('supportModal');
+                const createModal = getElement('createArticleModal');
+                
+                if (loginModal) loginModal.classList.remove('active');
+                if (supportModal) supportModal.classList.remove('active');
+                if (createModal) createModal.classList.remove('active');
+            }
             
-            document.getElementById('popupAdminBtn').addEventListener('click', () => {
-                document.getElementById('profilePopup').classList.remove('active');
-                showAdminPanel();
-            });
+            // Close search results
+            if (!e.target.closest('.search-container')) {
+                const results = getElement('searchResults');
+                if (results) results.classList.remove('active');
+            }
             
-            document.getElementById('popupLogoutBtn').addEventListener('click', logoutUser);
-            
-            // Create article modal
-            document.getElementById('closeCreateModal').addEventListener('click', () => {
-                document.getElementById('createArticleModal').classList.remove('active');
-            });
-            
-            document.getElementById('publishArticleBtn').addEventListener('click', publishArticle);
-            
-            // Create article buttons
-            document.getElementById('createArticleBtn').addEventListener('click', showCreateArticleModal);
-            document.getElementById('createFirstArticleBtn').addEventListener('click', showCreateArticleModal);
-            document.getElementById('createFirstTrendingBtn').addEventListener('click', showCreateArticleModal);
-            
-            // Title input for slug generation
-            document.getElementById('articleTitleInput').addEventListener('input', function() {
+            // Close sidebar on mobile
+            if (!e.target.closest('#sidebarLeft') && !e.target.closest('#sidebarToggle')) {
+                const sidebar = getElement('sidebarLeft');
+                if (sidebar && window.innerWidth <= 1200) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+        
+        // ===== FORM INPUTS =====
+        // Article title for slug generation
+        const articleTitleInput = getElement('articleTitleInput');
+        if (articleTitleInput) {
+            articleTitleInput.addEventListener('input', function() {
                 const slug = this.value.toLowerCase()
                     .replace(/[^\w\s]/g, '')
                     .replace(/\s+/g, '-')
                     .substring(0, 50);
-                document.getElementById('articleSlugInput').value = slug;
+                const slugInput = getElement('articleSlugInput');
+                if (slugInput) slugInput.value = slug;
             });
-            
-            // Like button
-            document.getElementById('likeArticleBtn').addEventListener('click', () => {
-                if (currentArticle) {
-                    toggleLike(currentArticle.id);
-                }
-            });
-            
-            // Share button
-            document.getElementById('shareArticleBtn').addEventListener('click', () => {
-                if (currentArticle) {
-                    const url = window.location.href.split('?')[0] + '?article=' + currentArticle.id;
-                    navigator.clipboard.writeText(url).then(() => {
-                        showNotification('Link artikel disalin!', 'success');
-                    }).catch(() => {
-                        prompt('Salin link berikut:', url);
-                    });
-                }
-            });
-            
-            // Read more button
-            document.getElementById('readMoreBtn').addEventListener('click', showHomePage);
-            
-            // Comment form
-            document.getElementById('submitCommentBtn').addEventListener('click', submitComment);
-            
-            document.getElementById('loginForCommentBtn').addEventListener('click', showLoginModal);
-            
-            // Profile edit buttons
-            document.getElementById('saveUsernameBtn').addEventListener('click', async () => {
-                const newUsername = document.getElementById('editUsername').value.trim();
-                if (!newUsername) {
-                    showNotification('Username tidak boleh kosong', 'error');
-                    return;
-                }
-                
-                try {
-                    const db = firebase.database();
-                    userProfile.username = newUsername;
-                    await db.ref(`users/${userProfile.uid}/username`).set(newUsername);
-                    
-                    // Update localStorage
-                    localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
-                    
-                    updateUserUI();
-                    showNotification('Username berhasil diperbarui', 'success');
-                } catch (error) {
-                    showNotification('Gagal memperbarui username', 'error');
-                }
-            });
-            
-            document.getElementById('saveAvatarBtn').addEventListener('click', async () => {
-                const newAvatar = document.getElementById('editAvatarUrl').value.trim();
-                try {
-                    const db = firebase.database();
-                    userProfile.avatar = newAvatar;
-                    await db.ref(`users/${userProfile.uid}/avatar`).set(newAvatar);
-                    
-                    // Update localStorage
-                    localStorage.setItem('nexenews_user', JSON.stringify(userProfile));
-                    
-                    updateUserUI();
-                    showNotification('Avatar berhasil diperbarui', 'success');
-                } catch (error) {
-                    showNotification('Gagal memperbarui avatar', 'error');
-                }
-            });
-            
-            // Refresh my articles button
-            document.getElementById('refreshMyArticlesBtn').addEventListener('click', loadMyArticles);
+        }
+        
+        // Comment character counter
+        const commentInput = getElement('commentInput');
+        if (commentInput) {
+            commentInput.addEventListener('input', updateCharCount);
+        }
+        
+        // Refresh my articles button
+        const refreshBtn = getElement('refreshMyArticlesBtn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', loadMyArticles);
+        }
+        
+        console.log('✅ Event listeners setup complete');
+        
+    } catch (error) {
+        console.error('❌ Error setting up event listeners:', error);
+        console.error('Error details:', error.message);
+    }
+}
             
             // Search
             document.getElementById('searchBox').addEventListener('input', (e) => {
