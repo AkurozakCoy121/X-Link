@@ -3,97 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexeID - Katalog Game Masa Kini</title>
+    <title>NexeID - Game Library</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0f172a; color: white; }
-        .game-card:hover { transform: translateY(-5px); transition: 0.3s; }
+        body { background-color: #0c0c0c; color: #eeeeee; }
+        .yellow-accent { color: #facc15; }
+        .bg-yellow-accent { background-color: #facc15; }
+        .border-yellow-accent { border-color: #facc15; }
+        .game-card:hover { border-color: #facc15; transform: scale(1.02); transition: 0.3s; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #facc15; border-radius: 10px; }
+        
+        /* Modal Animation */
+        .modal { transition: opacity 0.25s ease; }
+        body.modal-active { overflow: hidden; }
     </style>
 </head>
 <body class="font-sans">
 
-    <nav class="p-6 border-b border-gray-800 flex justify-between items-center bg-slate-900 sticky top-0 z-50">
-        <h1 class="text-2xl font-bold text-indigo-500 tracking-tighter">NEXE<span class="text-white">ID</span></h1>
-        <div class="relative w-1/2">
+    <nav class="p-6 border-b border-yellow-500/30 flex flex-col md:flex-row justify-between items-center bg-black sticky top-0 z-40 gap-4">
+        <h1 class="text-3xl font-black yellow-accent tracking-tighter">NEXE<span class="text-white">ID</span></h1>
+        <div class="relative w-full md:w-1/2">
             <input type="text" id="searchInput" placeholder="Cari game seru..." 
-                class="w-full bg-slate-800 border border-gray-700 rounded-full px-4 py-2 focus:outline-none focus:border-indigo-500">
+                class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2 focus:outline-none focus:border-yellow-500 text-white">
         </div>
     </nav>
 
-    <header class="py-10 text-center">
-        <h2 class="text-4xl font-extrabold mb-2">Trending Games</h2>
-        <p class="text-gray-400">Eksplorasi ribuan database game tanpa makan storage server lo.</p>
-    </header>
-
-    <main class="container mx-auto px-4">
-        <div id="gameList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <p class="text-center col-span-full py-20 text-gray-500">Memuat data game...</p>
-        </div>
+    <main class="container mx-auto px-4 py-10">
+        <h2 class="text-2xl font-bold mb-8 border-l-4 border-yellow-500 pl-4">TRENDING <span class="yellow-accent">GAMES</span></h2>
+        <div id="gameList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            </div>
     </main>
 
-    <footer class="mt-20 py-10 border-t border-gray-800 text-center text-gray-500">
-        <p>&copy; 2024 NexeID - Powered by RAWG API</p>
-    </footer>
+    <div id="modal" class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
+        <div class="modal-overlay absolute w-full h-full bg-black opacity-80" onclick="closeModal()"></div>
+        <div class="modal-container bg-zinc-900 w-11/12 md:max-w-2xl mx-auto rounded-xl shadow-2xl z-50 overflow-y-auto max-h-[90vh] border border-yellow-500/50">
+            <div id="modalContent" class="p-6">
+                </div>
+        </div>
+    </div>
 
     <script>
         const API_KEY = '7ac2abb044514681b32c559bc713812a';
-        const gameListElement = document.getElementById('gameList');
-        const searchInput = document.getElementById('searchInput');
+        const gameList = document.getElementById('gameList');
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modalContent');
 
-        // Fungsi Ambil Data dari RAWG
         async function fetchGames(query = '') {
+            gameList.innerHTML = '<p class="yellow-accent">Loading data...</p>';
             let url = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=12`;
             if (query) url += `&search=${query}`;
 
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                displayGames(data.results);
-            } catch (error) {
-                console.error("Gagal ambil data:", error);
-                gameListElement.innerHTML = `<p class="col-span-full text-center text-red-500">Gagal memuat data. Cek koneksi atau API Key.</p>`;
-            }
+            const res = await fetch(url);
+            const data = await res.json();
+            renderGames(data.results);
         }
 
-        // Fungsi Tampilin Game ke HTML
-        function displayGames(games) {
-            gameListElement.innerHTML = '';
-            if (games.length === 0) {
-                gameListElement.innerHTML = `<p class="col-span-full text-center">Game gak ketemu nih...</p>`;
-                return;
-            }
-
-            games.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'game-card bg-slate-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg';
-                card.innerHTML = `
-                    <img src="${game.background_image || 'https://via.placeholder.com/400x200?text=No+Image'}" 
-                         alt="${game.name}" class="w-full h-48 object-cover">
+        function renderGames(games) {
+            gameList.innerHTML = games.map(game => `
+                <div class="game-card bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 cursor-pointer">
+                    <img src="${game.background_image || 'https://via.placeholder.com/400x200'}" class="w-full h-48 object-cover">
                     <div class="p-4">
-                        <h3 class="font-bold text-lg mb-1 truncate">${game.name}</h3>
-                        <div class="flex justify-between items-center text-sm">
-                            <span class="text-yellow-400 font-semibold">⭐ ${game.rating || 'N/A'}</span>
-                            <span class="text-gray-400">${game.released ? game.released.split('-')[0] : '-'}</span>
+                        <h3 class="font-bold text-lg truncate">${game.name}</h3>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="yellow-accent font-bold">⭐ ${game.rating}</span>
+                            <button onclick="showDetail(${game.id})" class="text-xs bg-yellow-500 text-black px-3 py-1 rounded font-bold hover:bg-yellow-400">DETAIL</button>
                         </div>
-                        <button class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm transition">
-                            Lihat Detail
-                        </button>
                     </div>
-                `;
-                gameListElement.appendChild(card);
-            });
+                </div>
+            `).join('');
         }
 
-        // Fitur Pencarian (Debounce)
-        let timeout = null;
-        searchInput.addEventListener('input', () => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                fetchGames(searchInput.value);
-            }, 500);
+        async function showDetail(gameId) {
+            modalContent.innerHTML = '<p class="yellow-accent">Mencari info detail...</p>';
+            toggleModal();
+
+            const res = await fetch(`https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`);
+            const game = await res.json();
+
+            modalContent.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-3xl font-black yellow-accent">${game.name}</h2>
+                    <button onclick="toggleModal()" class="text-white hover:text-yellow-500 text-2xl">&times;</button>
+                </div>
+                <img src="${game.background_image}" class="w-full rounded-lg mb-4 border border-zinc-700">
+                <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+                    <div class="bg-zinc-800 p-2 rounded"><span class="text-gray-400">Rilis:</span> <br> ${game.released}</div>
+                    <div class="bg-zinc-800 p-2 rounded"><span class="text-gray-400">Rating:</span> <br> <span class="yellow-accent font-bold">★ ${game.rating}</span></div>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-bold yellow-accent mb-1 text-sm uppercase">Tentang Game:</h4>
+                    <div class="text-gray-300 text-sm leading-relaxed h-40 overflow-y-auto pr-2">
+                        ${game.description_raw || 'Gak ada deskripsi.'}
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-4">
+                    ${game.genres.map(g => `<span class="bg-yellow-600/20 text-yellow-500 border border-yellow-500/50 px-2 py-1 rounded text-xs">${g.name}</span>`).join('')}
+                </div>
+            `;
+        }
+
+        function toggleModal() {
+            modal.classList.toggle('opacity-0');
+            modal.classList.toggle('pointer-events-none');
+            document.body.classList.toggle('modal-active');
+        }
+
+        // Search dengan delay (debounce)
+        let timer;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => fetchGames(e.target.value), 500);
         });
 
-        // Load awal
         fetchGames();
     </script>
 </body>
