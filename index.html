@@ -3,123 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexeID - Game Library</title>
+    <title>NexeID - Ultimate Game Database</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0c0c0c; color: #eeeeee; }
+        body { background-color: #050505; color: #e5e5e5; font-family: 'Inter', sans-serif; }
+        .cyber-font { font-family: 'Orbitron', sans-serif; }
         .yellow-accent { color: #facc15; }
         .bg-yellow-accent { background-color: #facc15; }
-        .border-yellow-accent { border-color: #facc15; }
-        .game-card:hover { border-color: #facc15; transform: scale(1.02); transition: 0.3s; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        .game-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #27272a; }
+        .game-card:hover { border-color: #facc15; transform: translateY(-8px); box-shadow: 0 10px 30px -10px rgba(250, 204, 21, 0.3); }
+        .modal { transition: all 0.3s ease; backdrop-filter: blur(8px); }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #facc15; border-radius: 10px; }
-        
-        /* Modal Animation */
-        .modal { transition: opacity 0.25s ease; }
-        body.modal-active { overflow: hidden; }
     </style>
 </head>
-<body class="font-sans">
+<body>
 
-    <nav class="p-6 border-b border-yellow-500/30 flex flex-col md:flex-row justify-between items-center bg-black sticky top-0 z-40 gap-4">
-        <h1 class="text-3xl font-black yellow-accent tracking-tighter">NEXE<span class="text-white">ID</span></h1>
-        <div class="relative w-full md:w-1/2">
-            <input type="text" id="searchInput" placeholder="Cari game seru..." 
-                class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2 focus:outline-none focus:border-yellow-500 text-white">
+    <header class="sticky top-0 z-40 bg-black/80 border-b border-yellow-500/20 px-6 py-4">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-3xl font-black yellow-accent cyber-font tracking-widest">NEXE<span class="text-white">ID</span></h1>
+            
+            <div class="flex flex-1 w-full max-w-2xl gap-2">
+                <input type="text" id="searchInput" placeholder="Cari 500.000+ game..." 
+                    class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2 focus:outline-none focus:border-yellow-500 transition">
+                <select id="platformFilter" class="bg-zinc-900 border border-zinc-700 rounded-lg px-2 text-sm focus:outline-none">
+                    <option value="">Semua Platform</option>
+                    <option value="4">PC</option>
+                    <option value="187">PlayStation 5</option>
+                    <option value="186">Xbox Series S/X</option>
+                    <option value="7">Nintendo Switch</option>
+                </select>
+            </div>
         </div>
+    </header>
+
+    <nav class="container mx-auto px-4 mt-6">
+        <div id="genreList" class="flex flex-wrap gap-2 justify-center">
+            </div>
     </nav>
 
     <main class="container mx-auto px-4 py-10">
-        <h2 class="text-2xl font-bold mb-8 border-l-4 border-yellow-500 pl-4">TRENDING <span class="yellow-accent">GAMES</span></h2>
-        <div id="gameList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div id="gameList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             </div>
+        <div class="flex justify-center mt-12">
+            <button id="loadMore" class="bg-yellow-500 text-black font-black px-10 py-3 rounded-full hover:bg-yellow-400 transition transform hover:scale-105">LOAD MORE GAMES</button>
+        </div>
     </main>
 
-    <div id="modal" class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
-        <div class="modal-overlay absolute w-full h-full bg-black opacity-80" onclick="closeModal()"></div>
-        <div class="modal-container bg-zinc-900 w-11/12 md:max-w-2xl mx-auto rounded-xl shadow-2xl z-50 overflow-y-auto max-h-[90vh] border border-yellow-500/50">
-            <div id="modalContent" class="p-6">
-                </div>
-        </div>
+    <div id="modal" class="modal opacity-0 pointer-events-none fixed inset-0 flex items-center justify-center z-50 p-4">
+        <div class="absolute inset-0 bg-black/90" onclick="toggleModal()"></div>
+        <div id="modalContent" class="relative bg-zinc-950 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl border border-yellow-500/30 shadow-2xl p-6 md:p-10">
+            </div>
     </div>
 
     <script>
         const API_KEY = '7ac2abb044514681b32c559bc713812a';
-        const gameList = document.getElementById('gameList');
-        const modal = document.getElementById('modal');
-        const modalContent = document.getElementById('modalContent');
+        let currentPage = 1;
+        let currentSearch = '';
+        let currentPlatform = '';
+        let currentGenre = '';
 
-        async function fetchGames(query = '') {
-            gameList.innerHTML = '<p class="yellow-accent">Loading data...</p>';
-            let url = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=12`;
-            if (query) url += `&search=${query}`;
-
-            const res = await fetch(url);
-            const data = await res.json();
-            renderGames(data.results);
+        // Initialize
+        async function init() {
+            await fetchGenres();
+            await fetchGames();
         }
 
-        function renderGames(games) {
-            gameList.innerHTML = games.map(game => `
-                <div class="game-card bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 cursor-pointer">
-                    <img src="${game.background_image || 'https://via.placeholder.com/400x200'}" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <h3 class="font-bold text-lg truncate">${game.name}</h3>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="yellow-accent font-bold">⭐ ${game.rating}</span>
-                            <button onclick="showDetail(${game.id})" class="text-xs bg-yellow-500 text-black px-3 py-1 rounded font-bold hover:bg-yellow-400">DETAIL</button>
-                        </div>
-                    </div>
-                </div>
+        // 1. Fitur Genre (Kategori)
+        async function fetchGenres() {
+            const res = await fetch(`https://api.rawg.io/api/genres?key=${API_KEY}`);
+            const data = await res.json();
+            const genreList = document.getElementById('genreList');
+            genreList.innerHTML += data.results.slice(0, 8).map(g => `
+                <button onclick="filterGenre('${g.slug}')" class="px-4 py-1 border border-zinc-700 rounded-full text-xs hover:border-yellow-500 transition">${g.name}</button>
             `).join('');
         }
 
-        async function showDetail(gameId) {
-            modalContent.innerHTML = '<p class="yellow-accent">Mencari info detail...</p>';
-            toggleModal();
+        // 2. Fitur List Game dengan Filters
+        async function fetchGames(append = false) {
+            if (!append) {
+                currentPage = 1;
+                document.getElementById('gameList').innerHTML = '<p class="col-span-full text-center yellow-accent animate-pulse">Scanning Database...</p>';
+            }
 
-            const res = await fetch(`https://api.rawg.io/api/games/${gameId}?key=${API_KEY}`);
-            const game = await res.json();
+            let url = `https://api.rawg.io/api/games?key=${API_KEY}&page=${currentPage}&page_size=12`;
+            if (currentSearch) url += `&search=${currentSearch}`;
+            if (currentPlatform) url += `&platforms=${currentPlatform}`;
+            if (currentGenre) url += `&genres=${currentGenre}`;
 
-            modalContent.innerHTML = `
-                <div class="flex justify-between items-start mb-4">
-                    <h2 class="text-3xl font-black yellow-accent">${game.name}</h2>
-                    <button onclick="toggleModal()" class="text-white hover:text-yellow-500 text-2xl">&times;</button>
-                </div>
-                <img src="${game.background_image}" class="w-full rounded-lg mb-4 border border-zinc-700">
-                <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
-                    <div class="bg-zinc-800 p-2 rounded"><span class="text-gray-400">Rilis:</span> <br> ${game.released}</div>
-                    <div class="bg-zinc-800 p-2 rounded"><span class="text-gray-400">Rating:</span> <br> <span class="yellow-accent font-bold">★ ${game.rating}</span></div>
-                </div>
-                <div class="mb-4">
-                    <h4 class="font-bold yellow-accent mb-1 text-sm uppercase">Tentang Game:</h4>
-                    <div class="text-gray-300 text-sm leading-relaxed h-40 overflow-y-auto pr-2">
-                        ${game.description_raw || 'Gak ada deskripsi.'}
+            const res = await fetch(url);
+            const data = await res.json();
+            renderGames(data.results, append);
+        }
+
+        function renderGames(games, append) {
+            const list = document.getElementById('gameList');
+            const html = games.map(game => `
+                <div class="game-card bg-zinc-900/50 rounded-xl overflow-hidden group shadow-lg">
+                    <div class="relative overflow-hidden">
+                        <img src="${game.background_image || 'https://via.placeholder.com/400x225'}" class="w-full h-52 object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute top-2 right-2 bg-black/70 px-2 py-1 rounded text-yellow-500 font-bold text-xs border border-yellow-500/50">
+                            ★ ${game.rating}
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="cyber-font text-sm font-bold truncate mb-3 uppercase tracking-wider">${game.name}</h3>
+                        <div class="flex flex-wrap gap-1 mb-4 h-6 overflow-hidden">
+                            ${game.genres.slice(0, 2).map(g => `<span class="text-[10px] text-zinc-400">#${g.name}</span>`).join('')}
+                        </div>
+                        <button onclick="showDetail(${game.id})" class="w-full bg-zinc-800 hover:bg-yellow-500 hover:text-black py-2 rounded font-black text-xs transition">LIHAT DETAIL</button>
                     </div>
                 </div>
-                <div class="flex flex-wrap gap-2 mt-4">
-                    ${game.genres.map(g => `<span class="bg-yellow-600/20 text-yellow-500 border border-yellow-500/50 px-2 py-1 rounded text-xs">${g.name}</span>`).join('')}
+            `).join('');
+
+            if (append) list.innerHTML += html;
+            else list.innerHTML = html;
+        }
+
+        // 3. Fitur Detail Lengkap (Screenshots + Stores)
+        async function showDetail(id) {
+            toggleModal();
+            document.getElementById('modalContent').innerHTML = '<div class="text-center py-20 yellow-accent animate-spin text-4xl font-black">N</div>';
+
+            const [gameRes, screenRes, storeRes] = await Promise.all([
+                fetch(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`),
+                fetch(`https://api.rawg.io/api/games/${id}/screenshots?key=${API_KEY}`),
+                fetch(`https://api.rawg.io/api/games/${id}/stores?key=${API_KEY}`)
+            ]);
+
+            const game = await gameRes.json();
+            const screens = await screenRes.json();
+            const stores = await storeRes.json();
+
+            document.getElementById('modalContent').innerHTML = `
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <img src="${game.background_image}" class="w-full rounded-xl border border-yellow-500/20 mb-4">
+                        <div class="grid grid-cols-3 gap-2">
+                            ${screens.results.slice(0, 3).map(s => `<img src="${s.image}" class="rounded h-20 w-full object-cover border border-zinc-800">`).join('')}
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-4xl font-black yellow-accent cyber-font mb-2">${game.name}</h2>
+                        <p class="text-zinc-500 text-sm mb-6">Released: ${game.released} | Publisher: ${game.publishers?.[0]?.name || 'N/A'}</p>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-xs font-bold text-yellow-500 uppercase mb-2 tracking-widest">Tentang Game</h4>
+                            <div class="text-zinc-300 text-sm leading-relaxed max-h-40 overflow-y-auto pr-2 custom-scroll">
+                                ${game.description_raw}
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <h4 class="text-xs font-bold text-yellow-500 uppercase mb-2 tracking-widest">Tersedia di Store</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${stores.results.map(s => `<a href="${s.url}" target="_blank" class="bg-zinc-800 hover:bg-white hover:text-black px-3 py-2 rounded text-[10px] font-bold transition">STORE #${s.store_id}</a>`).join('')}
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <button onclick="toggleModal()" class="absolute top-4 right-6 text-3xl hover:text-yellow-500">&times;</button>
             `;
         }
 
+        // Controllers
         function toggleModal() {
-            modal.classList.toggle('opacity-0');
-            modal.classList.toggle('pointer-events-none');
-            document.body.classList.toggle('modal-active');
+            const m = document.getElementById('modal');
+            m.classList.toggle('opacity-0');
+            m.classList.toggle('pointer-events-none');
         }
 
-        // Search dengan delay (debounce)
-        let timer;
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            clearTimeout(timer);
-            timer = setTimeout(() => fetchGames(e.target.value), 500);
-        });
+        function filterGenre(slug) {
+            currentGenre = slug;
+            fetchGames();
+        }
 
-        fetchGames();
+        document.getElementById('platformFilter').onchange = (e) => {
+            currentPlatform = e.target.value;
+            fetchGames();
+        };
+
+        document.getElementById('loadMore').onclick = () => {
+            currentPage++;
+            fetchGames(true);
+        };
+
+        let timer;
+        document.getElementById('searchInput').oninput = (e) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                currentSearch = e.target.value;
+                fetchGames();
+            }, 500);
+        };
+
+        init();
     </script>
 </body>
 </html>
